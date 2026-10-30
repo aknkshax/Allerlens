@@ -1,0 +1,299 @@
+{
+ "disclaimer": "Informational only. Not a diagnosis, not a prediction of an individual reaction, and not a guarantee that a product is safe.",
+ "exclusions": [
+  "coconut milk",
+  "cocoa butter",
+  "nutmeg",
+  "butternut"
+ ],
+ "precautionary_pattern": "may contain|traces? of|(manufactured|processed|made|produced) in a facility",
+ "allergens": {
+  "milk": {
+   "name": "Milk / Dairy",
+   "icon": "🥛",
+   "terms": [
+    "milk solids",
+    "milk powder",
+    "skimmed milk",
+    "milk",
+    "casein",
+    "caseinate",
+    "whey",
+    "lactose",
+    "lactalbumin",
+    "lactoglobulin",
+    "ghee",
+    "paneer",
+    "curd",
+    "butter",
+    "cream",
+    "cheese",
+    "yoghurt",
+    "yogurt",
+    "khoa",
+    "milk fat"
+   ],
+   "protein": "Casein and whey proteins (β-lactoglobulin, α-lactalbumin)",
+   "basics": "Milk allergy is an immune reaction to milk proteins, not to lactose sugar (that is intolerance).",
+   "science": "Casein is heat-stable, so baking rarely removes it. Whey proteins are more heat-sensitive.",
+   "cross_reacts_with": "Goat and sheep milk; beef in a few people"
+  },
+  "peanut": {
+   "name": "Peanut / Groundnut",
+   "icon": "🥜",
+   "terms": [
+    "peanuts",
+    "peanut",
+    "groundnut",
+    "groundnuts",
+    "arachis",
+    "monkey nut"
+   ],
+   "protein": "Storage proteins Ara h 1, Ara h 2, Ara h 3",
+   "basics": "Peanut is a legume, not a true nut. Its storage proteins survive cooking and digestion.",
+   "science": "Ara h 2 is a major allergen linked to more severe reactions in many studies.",
+   "cross_reacts_with": "Tree nuts (separate allergy, often co-occurs); lupin in some people"
+  },
+  "tree": {
+   "name": "Tree nuts",
+   "icon": "🌰",
+   "terms": [
+    "cashew",
+    "kaju",
+    "almond",
+    "badam",
+    "walnut",
+    "akhrot",
+    "pistachio",
+    "pista",
+    "hazelnut",
+    "pecan",
+    "brazil nut",
+    "macadamia",
+    "tree nuts",
+    "nuts"
+   ],
+   "protein": "2S albumins and vicilins (e.g. Ana o 3 in cashew)",
+   "basics": "Tree nut allergy involves storage proteins that are similar across several nuts.",
+   "science": "Cashew and pistachio share closely related proteins, so reacting to one can mean both.",
+   "cross_reacts_with": "Cashew ↔ pistachio; walnut ↔ pecan; others vary by person"
+  },
+  "egg": {
+   "name": "Egg",
+   "icon": "🥚",
+   "terms": [
+    "egg",
+    "eggs",
+    "egg white",
+    "egg yolk",
+    "albumin",
+    "ovalbumin",
+    "ovomucoid",
+    "lysozyme",
+    "mayonnaise",
+    "egg powder"
+   ],
+   "protein": "Ovomucoid, ovalbumin (egg white proteins)",
+   "basics": "Most egg allergens are in the white. Ovomucoid is heat-stable, so cooked egg can still trigger reactions.",
+   "science": "\"Albumin\" or \"lysozyme\" on a label can be egg-derived. Check the source.",
+   "cross_reacts_with": "Other bird eggs (duck, quail)"
+  },
+  "wheat": {
+   "name": "Wheat / Gluten",
+   "icon": "🌾",
+   "terms": [
+    "wheat flour",
+    "wheat",
+    "maida",
+    "atta",
+    "semolina",
+    "suji",
+    "rava",
+    "gluten",
+    "wheat starch",
+    "durum",
+    "spelt",
+    "barley",
+    "rye"
+   ],
+   "protein": "Gliadins, glutenins and other wheat proteins",
+   "basics": "Wheat allergy is an IgE reaction to wheat proteins. It differs from coeliac disease, an autoimmune condition triggered by gluten.",
+   "science": "Barley and rye are listed because gluten-related proteins are shared (relevant mainly to coeliac disease).",
+   "cross_reacts_with": "Barley, rye; grass pollen in some people"
+  },
+  "soy": {
+   "name": "Soy",
+   "icon": "🫘",
+   "terms": [
+    "soy lecithin",
+    "soya lecithin",
+    "soybean",
+    "soya",
+    "soy",
+    "tofu",
+    "miso",
+    "tempeh",
+    "textured vegetable protein",
+    "tvp",
+    "edamame"
+   ],
+   "protein": "Glycinin, β-conglycinin, Gly m 4",
+   "basics": "Soy proteins are widely used as additives, so soy can appear in unexpected foods.",
+   "science": "Highly refined soy oil has little protein, but soy lecithin and soy flour contain more.",
+   "cross_reacts_with": "Other legumes, including peanut, in some people"
+  },
+  "fish": {
+   "name": "Fish",
+   "icon": "🐟",
+   "terms": [
+    "fish",
+    "cod",
+    "tuna",
+    "salmon",
+    "anchovy",
+    "anchovies",
+    "sardine",
+    "fish sauce",
+    "fish oil",
+    "pomfret",
+    "hilsa"
+   ],
+   "protein": "Parvalbumin (muscle protein)",
+   "basics": "Parvalbumin is found in many fish species and is stable to cooking.",
+   "science": "Parvalbumins are structurally similar across fish, so many people react to several species.",
+   "cross_reacts_with": "Many other fish species; not usually shellfish"
+  },
+  "shell": {
+   "name": "Shellfish",
+   "icon": "🦐",
+   "terms": [
+    "shrimp",
+    "prawn",
+    "prawns",
+    "crab",
+    "lobster",
+    "shellfish",
+    "crustacean",
+    "krill",
+    "squid",
+    "oyster",
+    "mussel",
+    "clam"
+   ],
+   "protein": "Tropomyosin (muscle protein)",
+   "basics": "Tropomyosin is the best-known shellfish allergen and is heat-stable.",
+   "science": "Tropomyosin is similar across crustaceans, molluscs and house-dust mites, which explains broad cross-reactivity.",
+   "cross_reacts_with": "Other crustaceans; sometimes molluscs; house-dust mite"
+  },
+  "sesame": {
+   "name": "Sesame",
+   "icon": "🌱",
+   "terms": [
+    "sesame",
+    "til",
+    "tahini",
+    "gingelly",
+    "sesame oil",
+    "sesamum"
+   ],
+   "protein": "Seed storage proteins (e.g. Ses i 1)",
+   "basics": "Sesame appears in breads, snacks, chutneys, hummus and spice blends.",
+   "science": "Sesame storage proteins are related to those of other seeds and nuts.",
+   "cross_reacts_with": "Other seeds and some tree nuts in a few people"
+  }
+ },
+ "proteins": {
+  "peanut": {
+   "allergen": "peanut",
+   "title": "Ara h 2 (peanut)",
+   "record": "UniProt Q6PSU2",
+   "family": "Seed-storage protein (conglutin family)",
+   "note": "Often described as a major peanut allergen. Verify ID before final use.",
+   "epitopes_demo": [
+    {
+     "start": 11,
+     "end": 18,
+     "kind": "reported_epitope"
+    },
+    {
+     "start": 45,
+     "end": 53,
+     "kind": "reported_epitope"
+    },
+    {
+     "start": 71,
+     "end": 77,
+     "kind": "computational_prediction"
+    }
+   ]
+  },
+  "milk": {
+   "allergen": "milk",
+   "title": "Bos d 5 (beta-lactoglobulin)",
+   "record": "UniProt P02754",
+   "family": "Lipocalin, whey protein",
+   "note": "Major whey protein in cow milk.",
+   "epitopes_demo": [
+    {
+     "start": 7,
+     "end": 14,
+     "kind": "reported_epitope"
+    },
+    {
+     "start": 31,
+     "end": 39,
+     "kind": "reported_epitope"
+    },
+    {
+     "start": 61,
+     "end": 69,
+     "kind": "computational_prediction"
+    }
+   ]
+  },
+  "egg": {
+   "allergen": "egg",
+   "title": "Gal d 1 (ovomucoid)",
+   "record": "UniProt P01005",
+   "family": "Kazal-type protease inhibitor",
+   "note": "Heat-stable glycoprotein in egg white.",
+   "epitopes_demo": [
+    {
+     "start": 15,
+     "end": 22,
+     "kind": "reported_epitope"
+    },
+    {
+     "start": 51,
+     "end": 59,
+     "kind": "computational_prediction"
+    }
+   ]
+  },
+  "shell": {
+   "allergen": "shell",
+   "title": "Pen a 1 (shrimp tropomyosin)",
+   "record": "UniProt Q3Y8M6",
+   "family": "Muscle protein, highly conserved",
+   "note": "Conservation across species is why cross-reactivity is discussed. Verify ID before final use.",
+   "epitopes_demo": [
+    {
+     "start": 21,
+     "end": 29,
+     "kind": "reported_epitope"
+    },
+    {
+     "start": 41,
+     "end": 48,
+     "kind": "reported_epitope"
+    },
+    {
+     "start": 76,
+     "end": 83,
+     "kind": "computational_prediction"
+    }
+   ]
+  }
+ },
+ "sample_label": "Wheat flour (maida), sugar, palm oil, milk solids, soy lecithin, cashew paste, salt, natural flavour. May contain peanuts and sesame."
+}
