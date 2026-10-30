@@ -1654,16 +1654,332 @@ table.retro-table tr:hover {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-  }
+/* ==========================================================================
+   BACKGROUND CANVAS (persistent, low-intensity, behind content)
+   ========================================================================== */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+body {
+  isolation: isolate;
+}
+
+.app-container, .retro-header, .retro-taskbar {
+  position: relative;
+  z-index: 1;
 }
 
 /* ==========================================================================
-   PROTEIN INTRO OVERLAY
+   NEON FOCUS RING — keyboard users
    ========================================================================== */
+:focus-visible {
+  outline: 2px solid #00f0ff !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(0,240,255,0.25), 0 0 14px rgba(0,240,255,0.35) !important;
+}
+
+/* Tighter ring on small elements */
+.chip:focus-visible,
+.food:focus-visible,
+.win-btn:focus-visible,
+.player-btn:focus-visible {
+  outline-offset: 1px !important;
+}
+
+/* ==========================================================================
+   ENHANCED ALLERGEN BADGE NEON COLORS
+   ========================================================================== */
+.badge-risk {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  font-size: 0.72rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  position: relative;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.badge-risk:hover { transform: scale(1.06); }
+
+/* HIGH RISK — vivid magenta */
+.badge-risk.high {
+  background: rgba(255, 0, 110, 0.18);
+  border: 1px solid #ff006e;
+  color: #ff70aa;
+  box-shadow: 0 0 8px rgba(255,0,110,0.55), inset 0 0 6px rgba(255,0,110,0.15);
+  text-shadow: 0 0 8px #ff006e;
+}
+.badge-risk.high::before { content: '⚠ '; }
+
+/* MED RISK — amber */
+.badge-risk.med {
+  background: rgba(255,170,0,0.18);
+  border: 1px solid #ffaa00;
+  color: #ffd280;
+  box-shadow: 0 0 8px rgba(255,170,0,0.45), inset 0 0 6px rgba(255,170,0,0.12);
+  text-shadow: 0 0 8px #ffaa00;
+}
+
+/* SAFE / CLEAR — lime green */
+.badge-risk.safe, .badge-risk.low {
+  background: rgba(57,255,20,0.12);
+  border: 1px solid #39ff14;
+  color: #7fff6e;
+  box-shadow: 0 0 8px rgba(57,255,20,0.4), inset 0 0 6px rgba(57,255,20,0.1);
+  text-shadow: 0 0 8px #39ff14;
+}
+
+/* ==========================================================================
+   ENHANCED BUTTONS — neon hover/active states
+   ========================================================================== */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.18s ease, box-shadow 0.18s ease;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,255,102,0.25) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+.btn-primary:hover::after { transform: translateX(100%); }
+.btn-primary:hover {
+  box-shadow: 0 0 24px var(--cyber-green), 0 0 6px var(--cyber-green);
+  letter-spacing: 0.1em;
+}
+.btn-primary:active { transform: translate(1px,1px); box-shadow: 0 0 10px var(--cyber-green); }
+
+.btn-secondary {
+  transition: all 0.18s ease;
+}
+.btn-secondary:hover {
+  color: var(--electric-blue);
+  border-color: var(--electric-blue);
+  box-shadow: 0 0 12px rgba(0,240,255,0.35);
+  background: linear-gradient(180deg, #1a2536 0%, #0d1520 100%);
+}
+.btn-secondary:active { transform: translate(1px,1px); }
+
+/* ==========================================================================
+   ENHANCED CHIP/ALLERGEN SELECTOR
+   ========================================================================== */
+.chip {
+  transition: all 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+.chip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,240,255,0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.chip:hover::after { opacity: 1; }
+.chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--electric-blue);
+  box-shadow: 0 4px 16px rgba(0,240,255,0.3), 0 0 8px rgba(0,240,255,0.2);
+}
+.chip[aria-pressed="true"] {
+  animation: chip-pulse 2s infinite alternate;
+}
+@keyframes chip-pulse {
+  from { box-shadow: 0 0 10px var(--cyber-green-soft), inset 0 0 8px rgba(0,255,102,0.2); }
+  to   { box-shadow: 0 0 22px var(--cyber-green), inset 0 0 12px rgba(0,255,102,0.3); }
+}
+
+/* ==========================================================================
+   ENHANCED FOOD ALLERGEN EMOJI BUTTONS
+   ========================================================================== */
+.food {
+  position: relative;
+}
+.food::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+.food:hover::after {
+  border-color: var(--cyber-green);
+  box-shadow: 0 0 18px var(--cyber-green), 0 0 40px rgba(0,255,102,0.25);
+}
+.food[aria-pressed="true"] {
+  animation: float-bob 3.5s ease-in-out infinite, food-glow 2s ease-in-out infinite alternate;
+}
+@keyframes food-glow {
+  from { box-shadow: 0 0 20px var(--cyber-green), inset 0 0 12px var(--cyber-green); }
+  to   { box-shadow: 0 0 35px #00ff66, inset 0 0 20px rgba(0,255,102,0.4); }
+}
+
+/* ==========================================================================
+   ENHANCED TEXTAREA / DB SEARCH INPUT
+   ========================================================================== */
+textarea#txt {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  caret-color: var(--cyber-green);
+}
+textarea#txt:focus {
+  outline: none;
+  border-color: var(--cyber-green);
+  box-shadow: 0 0 0 3px rgba(0,255,102,0.15), 0 0 20px rgba(0,255,102,0.2), inset 0 2px 8px rgba(0,0,0,0.9);
+}
+
+.db-search-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  caret-color: var(--cyber-green);
+  outline: none;
+}
+.db-search-input:focus {
+  border-color: var(--electric-blue);
+  box-shadow: 0 0 0 3px rgba(0,240,255,0.15), 0 0 16px rgba(0,240,255,0.2);
+}
+
+/* ==========================================================================
+   ENHANCED OS WINDOWS & CARDS
+   ========================================================================== */
+.os-window {
+  transition: box-shadow 0.3s ease;
+}
+.os-window:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 28px rgba(0,240,255,0.1);
+}
+
+.scan-result-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.exp {
+  transition: border-left-color 0.2s ease, background 0.2s ease;
+}
+.exp:hover {
+  background: #0a0e15;
+  border-left-color: var(--electric-blue);
+}
+
+/* ==========================================================================
+   ENHANCED VERDICT / RESULT CARDS
+   ========================================================================== */
+.verdict {
+  transition: box-shadow 0.3s ease;
+}
+.v-r { animation: verdict-pulse-red  3s ease-in-out infinite alternate; }
+.v-g { animation: verdict-pulse-green 3s ease-in-out infinite alternate; }
+.v-a { animation: verdict-pulse-amber 3s ease-in-out infinite alternate; }
+
+@keyframes verdict-pulse-red {
+  from { box-shadow: 0 0 18px var(--alert-red-glow); }
+  to   { box-shadow: 0 0 32px rgba(255,42,95,0.6), 0 0 60px rgba(255,42,95,0.2); }
+}
+@keyframes verdict-pulse-green {
+  from { box-shadow: 0 0 18px var(--cyber-green-glow); }
+  to   { box-shadow: 0 0 32px rgba(0,255,102,0.55), 0 0 60px rgba(0,255,102,0.2); }
+}
+@keyframes verdict-pulse-amber {
+  from { box-shadow: 0 0 18px var(--alert-amber-glow); }
+  to   { box-shadow: 0 0 32px rgba(255,170,0,0.5), 0 0 60px rgba(255,170,0,0.18); }
+}
+
+/* ==========================================================================
+   RETRO TAB ENHANCEMENTS
+   ========================================================================== */
+.retro-tab {
+  position: relative;
+  overflow: hidden;
+}
+.retro-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 0; height: 2px;
+  background: var(--electric-blue);
+  box-shadow: 0 0 8px var(--electric-blue);
+  transition: width 0.25s ease, left 0.25s ease;
+}
+.retro-tab:hover::after { width: 100%; left: 0; }
+.retro-tab.active::after { width: 100%; left: 0; background: var(--cyber-green); box-shadow: 0 0 8px var(--cyber-green); }
+
+/* Player button neon */
+.player-btn {
+  transition: all 0.18s ease;
+}
+.player-btn:hover {
+  color: var(--cyber-green);
+  box-shadow: 0 0 14px rgba(0,255,102,0.35);
+  background: linear-gradient(180deg, #263a28 0%, #131e14 100%);
+}
+.player-btn.active {
+  color: var(--electric-blue);
+  border-color: var(--electric-blue);
+  box-shadow: 0 0 14px rgba(0,240,255,0.4);
+}
+
+/* Tree items */
+.tree-item {
+  transition: all 0.15s ease;
+}
+.tree-item:hover {
+  padding-left: 12px;
+}
+
+/* Win buttons */
+.win-btn {
+  transition: all 0.12s ease;
+}
+
+/* Table row pulse on hover */
+table.retro-table tr {
+  transition: background 0.15s ease;
+}
+table.retro-table tr:hover {
+  background: rgba(0,255,102,0.1) !important;
+  box-shadow: inset 0 0 20px rgba(0,255,102,0.05);
+}
+
+/* ==========================================================================
+   SCROLL-REVEAL ANIMATION
+   ========================================================================== */
+.sr-hidden {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1);
+}
+.sr-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered delay for children */
+.sr-hidden:nth-child(1) { transition-delay: 0ms; }
+.sr-hidden:nth-child(2) { transition-delay: 80ms; }
+.sr-hidden:nth-child(3) { transition-delay: 160ms; }
+.sr-hidden:nth-child(4) { transition-delay: 240ms; }
+.sr-hidden:nth-child(5) { transition-delay: 320ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-hidden { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+</style>
+<style>
 #intro-overlay {
   position: fixed;
   inset: 0;
@@ -1715,6 +2031,9 @@ table.retro-table tr:hover {
 </style>
 </head>
 <body>
+
+<!-- Background persistent canvas -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
 
 <!-- ==========================================================================
      PROTEIN CHAIN INTRO OVERLAY
@@ -3605,7 +3924,210 @@ window.addEventListener('DOMContentLoaded', () => {
     // Run intro; boot screen is beneath and will initialise normally in parallel
     window.runIntroAnimation();
   }
+  // --- Start persistent background canvas ---
+  initBgCanvas();
+
+  // --- Scroll-reveal ---
+  initScrollReveal();
 });
+
+// ===========================================================================
+//  PERSISTENT BACKGROUND CANVAS  (low-intensity protein chains + grid)
+// ===========================================================================
+(function() {
+  'use strict';
+
+  const BG_PALETTE = ['#00f0ff','#ff2a8f','#39ff14','#bf5fff'];
+  const isMobile   = window.innerWidth < 600;
+  const N_CHAINS   = isMobile ? 8 : 18;   // keep low for GPU budget
+
+  let bgCanvas, bgCtx, bgW, bgH, bgDpr = 1;
+  let bgRAF = null, bgPaused = false;
+  const bgChains = [];
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick(arr)  { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function initBgCanvas() {
+    bgCanvas = document.getElementById('bg-canvas');
+    if (!bgCanvas) return;
+    bgCtx = bgCanvas.getContext('2d');
+    resizeBg();
+    window.addEventListener('resize', resizeBg);
+
+    // Pause when tab is hidden to save GPU
+    document.addEventListener('visibilitychange', () => {
+      bgPaused = document.hidden;
+      if (!bgPaused && !bgRAF) bgRAF = requestAnimationFrame(bgLoop);
+    });
+
+    spawnBgChains();
+    bgRAF = requestAnimationFrame(bgLoop);
+  }
+
+  function resizeBg() {
+    if (!bgCanvas) return;
+    bgDpr = Math.min(window.devicePixelRatio || 1, 2);
+    bgW   = window.innerWidth;
+    bgH   = window.innerHeight;
+    bgCanvas.width  = bgW * bgDpr;
+    bgCanvas.height = bgH * bgDpr;
+    bgCanvas.style.width  = bgW + 'px';
+    bgCanvas.style.height = bgH + 'px';
+    bgCtx.setTransform(bgDpr, 0, 0, bgDpr, 0, 0);
+  }
+
+  function spawnBgChains() {
+    bgChains.length = 0;
+    for (let c = 0; c < N_CHAINS; c++) {
+      const len   = 3 + Math.floor(Math.random() * 4);
+      const color = pick(BG_PALETTE);
+      const nodes = [];
+      let x = rand(0, bgW || window.innerWidth);
+      let y = rand(0, bgH || window.innerHeight);
+      const speed = rand(0.18, 0.55);
+      const ang   = rand(0, Math.PI * 2);
+      for (let i = 0; i < len; i++) {
+        nodes.push({
+          x: x - Math.cos(ang) * i * 14,
+          y: y - Math.sin(ang) * i * 14,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed,
+          rad: rand(2.5, 4.5)
+        });
+      }
+      bgChains.push({ nodes, color, angle: rand(0, Math.PI * 2), angV: rand(-0.004, 0.004) });
+    }
+  }
+
+  let bgTick = 0;
+  function bgLoop() {
+    if (bgPaused) { bgRAF = null; return; }
+    bgTick++;
+
+    const ctx = bgCtx;
+    const w = bgW, h = bgH;
+
+    // Very dark trail for ghost effect
+    ctx.fillStyle = 'rgba(5,5,8,0.18)';
+    ctx.fillRect(0, 0, w, h);
+
+    // --- Perspective Grid (Y2K floor) ---
+    // Draw every 4 frames to save GPU
+    if (bgTick % 4 === 0) {
+      const horizon = h * 0.52;
+      const vp      = { x: w / 2, y: horizon };
+      const gridLines = 10;
+      const gridSpread = w * 1.5;
+
+      ctx.save();
+      ctx.globalAlpha = 0.06;
+      ctx.strokeStyle = '#00f0ff';
+      ctx.lineWidth   = 1;
+
+      // Perspective lines converging at vanishing point
+      for (let i = 0; i <= gridLines; i++) {
+        const t  = i / gridLines;
+        const bx = -gridSpread / 2 + t * gridSpread;
+        ctx.beginPath();
+        ctx.moveTo(vp.x, vp.y);
+        ctx.lineTo(w / 2 + bx, h);
+        ctx.stroke();
+      }
+
+      // Horizontal parallels
+      const hLines = 7;
+      for (let i = 0; i <= hLines; i++) {
+        const t  = i / hLines;
+        // Perspective foreshortening: closer to bottom = more space between lines
+        const y  = horizon + Math.pow(t, 2.2) * (h - horizon);
+        const xw = (t * gridSpread) / 2;
+        ctx.beginPath();
+        ctx.moveTo(vp.x - xw, y);
+        ctx.lineTo(vp.x + xw, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // --- Protein chains ---
+    bgChains.forEach(ch => {
+      ch.angle += ch.angV;
+      ch.nodes.forEach((n, i) => {
+        if (i === 0) {
+          n.x += n.vx; n.y += n.vy;
+          // Wrap around edges (seamless torus)
+          if (n.x < -30)  n.x = w + 30;
+          if (n.x > w+30) n.x = -30;
+          if (n.y < -30)  n.y = h + 30;
+          if (n.y > h+30) n.y = -30;
+        } else {
+          const prev = ch.nodes[i-1];
+          const dx = prev.x - n.x, dy = prev.y - n.y;
+          const d  = Math.sqrt(dx*dx + dy*dy);
+          if (d > 14) { n.x += dx * 0.09; n.y += dy * 0.09; }
+        }
+      });
+
+      const nodes = ch.nodes;
+      // Bond line
+      if (nodes.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(nodes[0].x, nodes[0].y);
+        for (let i = 1; i < nodes.length; i++) ctx.lineTo(nodes[i].x, nodes[i].y);
+        ctx.strokeStyle = ch.color;
+        ctx.globalAlpha = 0.22;
+        ctx.lineWidth   = 1.5;
+        ctx.shadowColor = ch.color;
+        ctx.shadowBlur  = 10;
+        ctx.stroke();
+        ctx.shadowBlur  = 0;
+      }
+      // Nodes
+      nodes.forEach((node, i) => {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
+        ctx.fillStyle   = i === 0 ? '#ffffff' : ch.color;
+        ctx.globalAlpha = i === 0 ? 0.35 : 0.22;
+        ctx.shadowColor = ch.color;
+        ctx.shadowBlur  = 12;
+        ctx.fill();
+        ctx.shadowBlur  = 0;
+      });
+      ctx.globalAlpha = 1;
+    });
+
+    bgRAF = requestAnimationFrame(bgLoop);
+  }
+
+  // Expose so DOMContentLoaded can call it
+  window.initBgCanvas = initBgCanvas;
+}());
+
+// ===========================================================================
+//  SCROLL-REVEAL  (IntersectionObserver, one-shot reveal)
+// ===========================================================================
+function initScrollReveal() {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) return;
+
+  // Apply sr-hidden to OS windows, sections, and table wraps
+  const targets = document.querySelectorAll('.os-window, .winamp-player, .retro-table-wrap, .db-filter-row, .hero-tagline-wrap, .food-matrix-row, .scan-result-card');
+  targets.forEach(el => {
+    if (!el.classList.contains('sr-hidden')) el.classList.add('sr-hidden');
+  });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.replace('sr-hidden', 'sr-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  targets.forEach(el => io.observe(el));
+}
 </script>
 </body>
 </html>
