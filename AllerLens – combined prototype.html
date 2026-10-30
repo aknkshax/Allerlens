@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AllerLens – decode a label, meet the protein</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e6f6ee;--card:#fff;--ink:#1e2a44;--mute:#5b6781;--line:#cfe3d9;--red:#ff6b81;--amb:#ffc233;--grn:#9be3c0;--ok:#22a06b;--blue:#9cc3ff;--vio:#c9b5fb;--on:#1e2a44;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a22;--card:#192633;--ink:#e8f1f5;--mute:#9fb0bd;--line:#2a3b4a}}
+:root[data-theme="dark"]{--bg:#101a22;--card:#192633;--ink:#e8f1f5;--mute:#9fb0bd;--line:#2a3b4a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',Figtree,sans-serif;line-height:1.1;margin:0 0 .5em}
+h1{font-size:clamp(2.1rem,6vw,3.6rem);font-weight:800}h2{font-size:1.6rem}h3{font-size:1.1rem}
+main,header{max-width:900px;margin:0 auto;padding:0 18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:16px;padding-bottom:10px}
+.logo{font:800 1.4rem 'Bricolage Grotesque',sans-serif}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav button,.chip,.btn{font:600 .95rem Figtree,sans-serif;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 15px;cursor:pointer;min-height:40px}
+nav button.on,.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+:focus-visible{outline:3px solid #3b82f6;outline-offset:2px}
+.btn{background:var(--amb);color:var(--on);border-color:var(--on);box-shadow:3px 3px 0 var(--ink);padding:10px 20px}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+section{display:none;padding:20px 0 50px}section.on{display:block}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:18px;margin-bottom:16px}
+.hero{display:grid;gap:20px;grid-template-columns:1.2fr 1fr;align-items:center}
+@media(max-width:700px){.hero{grid-template-columns:1fr}}
+.lead{font-size:1.1rem;color:var(--mute);max-width:48ch}
+.foods{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.food{font-size:2.3rem;width:68px;height:68px;border-radius:50%;border:2px solid var(--ink);background:var(--card);cursor:pointer;animation:bob 3s ease-in-out infinite}
+.food:nth-child(2n){animation-delay:-1s}.food:nth-child(3n){animation-delay:-2s}
+.food[aria-pressed="true"]{background:var(--amb);box-shadow:0 0 0 4px var(--ink)}
+.food:hover{transform:scale(1.15) rotate(-8deg)}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.pep{display:flex;gap:12px;align-items:center;margin-top:14px}.pep .face{font-size:2.4rem}
+.bubble{background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:10px 14px;font-size:.95rem;flex:1}
+.disc{border-left:6px solid var(--amb);background:var(--card);padding:10px 14px;border-radius:0 12px 12px 0;font-size:.9rem;color:var(--mute)}
+textarea{width:100%;min-height:100px;border:2px solid var(--ink);border-radius:14px;padding:12px;font:inherit;background:var(--card);color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tag{display:inline-block;border-radius:99px;padding:3px 12px;font-weight:600;margin:3px 4px 3px 0;border:2px solid var(--on);color:var(--on)}
+.t-c{background:var(--red)}.t-m{background:var(--amb)}.t-e{background:var(--blue)}.t-p{background:var(--vio)}
+.verdict{display:flex;gap:14px;align-items:center;border:2px solid var(--on);border-radius:16px;padding:14px;color:var(--on)}
+.verdict .ic{font-size:2rem}.verdict b{font-size:1.15rem;display:block}
+.v-r{background:var(--red)}.v-a{background:var(--amb)}.v-g{background:var(--grn)}
+.scan{position:relative;line-height:2.1;overflow:hidden;font-size:1.05rem}
+.scan.run::after{content:"";position:absolute;left:0;right:0;height:5px;background:var(--ok);box-shadow:0 0 14px var(--ok);animation:sweep 1.1s ease-in-out}
+@keyframes sweep{from{top:0}to{top:100%}}
+mark{border-radius:8px;padding:2px 7px;color:var(--on);cursor:pointer;font-weight:600;border:2px solid var(--on)}
+mark.r{background:var(--red)}mark.a{background:var(--amb)}mark.n{background:transparent;color:var(--ink);border:2px dashed var(--mute)}
+.leg{font-size:.85rem;color:var(--mute);margin-top:8px}
+.exp{border-left:6px solid var(--red);padding:10px 14px;margin:10px 0;background:var(--bg);border-radius:0 14px 14px 0}
+.exp.t{border-color:var(--amb)}.exp h3{margin:0 0 4px}.exp p{margin:4px 0;font-size:.93rem}
+.lv{display:inline-flex;gap:6px;margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{text-align:center;border:2px solid var(--ink);border-radius:16px;padding:10px;background:var(--card)}
+.stat b{display:block;font:800 1.7rem 'Bricolage Grotesque',sans-serif}.stat span{font-size:.8rem;color:var(--mute)}
+.beads{display:flex;flex-wrap:wrap;gap:3px;margin:12px 0}
+.bead{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--ink);font:600 .7rem/21px Figtree;text-align:center;background:var(--card);transition:transform .15s}
+.bead.ep{background:var(--blue);cursor:pointer;color:var(--on)}.bead.pr{background:var(--vio);cursor:pointer;color:var(--on)}
+.bead:hover{transform:translateY(-4px) scale(1.2)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{text-align:left;border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<header><div class="logo">🔬 AllerLens</div>
+<nav aria-label="Main"><button data-go="home" class="on">Home</button><button data-go="scan">Decode a label</button><button data-go="protein">Protein explorer</button><button data-go="sources">Sources &amp; limits</button></nav></header>
+<main>
+<section id="home" class="on">
+ <div class="hero"><div>
+  <h1>Decode the label. Meet the protein.</h1>
+  <p class="lead">Pick the allergens you avoid, paste an ingredient list, and AllerLens highlights what matters to you and explains why.</p>
+  <p><button class="btn" data-go="scan">Decode a label</button></p></div>
+  <div><div class="foods" id="foods"></div>
+  <div class="pep"><span class="face" aria-hidden="true">🧬</span><div class="bubble" id="pepsay" aria-live="polite">Hi, I'm Pep the peptide. Tap a food to add it to your allergens and I'll tell you about it.</div></div></div></div>
+ <h2 style="margin-top:30px">What our survey of 186 people found</h2>
+ <div class="stats"><div class="stat"><b>67.2%</b><span>find labels hard to understand at least sometimes</span></div><div class="stat"><b>24.7%</b><span>feel confident (4–5 of 5) reading labels</span></div><div class="stat"><b>51.1%</b><span>would trust a tool more if it showed the trigger</span></div><div class="stat"><b>94.1%</b><span>use no allergen website or app</span></div></div>
+ <p class="disc" style="margin-top:24px"><b>Information only.</b> AllerLens does not diagnose allergy, predict your reaction, or confirm that a product is safe. Always read the full label and follow your doctor's advice.</p>
+</section>
+
+<section id="scan">
+ <h2>Decode a label</h2>
+ <h3>1. Your allergens <small style="font-weight:400;color:var(--mute)">(saved in this browser only)</small></h3>
+ <div class="row" id="chips" role="group" aria-label="Your allergens"></div>
+ <h3>2. Ingredient list</h3>
+ <textarea id="txt" aria-label="Ingredient list"></textarea>
+ <div class="row"><button class="btn" id="go">Decode label</button><button class="chip" id="smp">Try a sample</button><button class="chip" id="clr">Clear</button></div>
+ <div id="res" hidden class="card" style="margin-top:18px">
+  <div id="ver"></div>
+  <h3 style="margin-top:16px">Decoded label</h3><div class="scan" id="scn"></div>
+  <div class="leg"><mark class="r">your allergen</mark> <mark class="a">may contain</mark> <mark class="n">other allergen</mark> · tap a highlight for its hidden names</div>
+  <div id="tip" class="leg" aria-live="polite"></div>
+  <h3 style="margin-top:18px">Why these ingredients?</h3>
+  <div class="lv" role="group" aria-label="Detail level"><button class="chip" data-l="0" aria-pressed="true">Basics</button><button class="chip" data-l="1" aria-pressed="false">Science</button></div>
+  <div id="why"></div></div>
+</section>
+
+<section id="protein">
+ <h2>Protein explorer</h2>
+ <p class="lead">Each bead is one amino acid. Tap a coloured bead to see what the evidence says.</p>
+ <div class="tabs" id="ptabs"></div><div class="card" id="pbox"></div>
+ <div><span class="tag t-e">Reported epitope</span><span class="tag t-p">Computational prediction</span></div>
+ <p class="disc">Demo data: sequences and residue ranges are illustrative placeholders, not real records. The final version will use verified UniProt and IEDB entries.</p>
+</section>
+
+<section id="sources">
+ <h2>Sources &amp; limits</h2>
+ <div class="card"><h3>How to read the tags</h3><table>
+  <tr><td><span class="tag t-c">Contains</span></td><td>Listed as an ingredient.</td></tr>
+  <tr><td><span class="tag t-m">May contain</span></td><td>Precautionary statement: possible cross-contact, not a confirmed ingredient.</td></tr>
+  <tr><td><span class="tag t-e">Evidence</span></td><td>Reported in a database or paper (UniProt, IEDB).</td></tr>
+  <tr><td><span class="tag t-p">Prediction</span></td><td>Computational output: a lead to explore, not proof.</td></tr></table></div>
+ <div class="card"><h3>Planned sources</h3><p>UniProt, IEDB, FSSAI, Codex Alimentarius and FAO/WHO.</p>
+  <h3>Known limits</h3><p>Keyword matching can miss unusual ingredient names and flag harmless words. The demo covers 9 allergen groups and 4 protein pages. "No listed allergen found" is never a safety guarantee. Cross-reactivity notes are general science, not a prediction for any individual.</p></div>
+</section>
+</main>
+<script>
+const A={
+milk:{n:'Milk / Dairy',e:'🥛',t:['milk solids','milk powder','skimmed milk','milk','casein','caseinate','whey','lactose','lactalbumin','lactoglobulin','ghee','paneer','curd','butter','cream','cheese','yoghurt','yogurt','khoa','milk fat'],p:'Casein and whey proteins (β-lactoglobulin, α-lactalbumin)',b:'Milk allergy is an immune reaction to milk proteins, not to lactose sugar (that is intolerance).',s:'Casein is heat-stable, so baking rarely removes it. Whey proteins are more heat-sensitive.',x:'Goat and sheep milk; beef in a few people'},
+peanut:{n:'Peanut / Groundnut',e:'🥜',t:['peanuts','peanut','groundnut','groundnuts','arachis','monkey nut'],p:'Storage proteins Ara h 1, Ara h 2, Ara h 3',b:'Peanut is a legume, not a true nut. Its storage proteins survive cooking and digestion.',s:'Ara h 2 is a major allergen linked to more severe reactions in many studies.',x:'Tree nuts (separate allergy, often co-occurs); lupin in some people'},
+tree:{n:'Tree nuts',e:'🌰',t:['cashew','kaju','almond','badam','walnut','akhrot','pistachio','pista','hazelnut','pecan','brazil nut','macadamia','tree nuts','nuts'],p:'2S albumins and vicilins (e.g. Ana o 3 in cashew)',b:'Tree nut allergy involves storage proteins that are similar across several nuts.',s:'Cashew and pistachio share closely related proteins, so reacting to one can mean both.',x:'Cashew ↔ pistachio; walnut ↔ pecan; others vary by person'},
+egg:{n:'Egg',e:'🥚',t:['egg','eggs','egg white','egg yolk','albumin','ovalbumin','ovomucoid','lysozyme','mayonnaise','egg powder'],p:'Ovomucoid, ovalbumin (egg white proteins)',b:'Most egg allergens are in the white. Ovomucoid is heat-stable, so cooked egg can still trigger reactions.',s:'"Albumin" or "lysozyme" on a label can be egg-derived. Check the source.',x:'Other bird eggs (duck, quail)'},
+wheat:{n:'Wheat / Gluten',e:'🌾',t:['wheat flour','wheat','maida','atta','semolina','suji','rava','gluten','wheat starch','durum','spelt','barley','rye'],p:'Gliadins, glutenins and other wheat proteins',b:'Wheat allergy is an IgE reaction to wheat proteins. It differs from coeliac disease, an autoimmune condition triggered by gluten.',s:'Barley and rye are listed because gluten-related proteins are shared (relevant mainly to coeliac disease).',x:'Barley, rye; grass pollen in some people'},
+soy:{n:'Soy',e:'🫘',t:['soy lecithin','soya lecithin','soybean','soya','soy','tofu','miso','tempeh','textured vegetable protein','tvp','edamame'],p:'Glycinin, β-conglycinin, Gly m 4',b:'Soy proteins are widely used as additives, so soy can appear in unexpected foods.',s:'Highly refined soy oil has little protein, but soy lecithin and soy flour contain more.',x:'Other legumes, including peanut, in some people'},
+fish:{n:'Fish',e:'🐟',t:['fish','cod','tuna','salmon','anchovy','anchovies','sardine','fish sauce','fish oil','pomfret','hilsa'],p:'Parvalbumin (muscle protein)',b:'Parvalbumin is found in many fish species and is stable to cooking.',s:'Parvalbumins are structurally similar across fish, so many people react to several species.',x:'Many other fish species; not usually shellfish'},
+shell:{n:'Shellfish',e:'🦐',t:['shrimp','prawn','prawns','crab','lobster','shellfish','crustacean','krill','squid','oyster','mussel','clam'],p:'Tropomyosin (muscle protein)',b:'Tropomyosin is the best-known shellfish allergen and is heat-stable.',s:'Tropomyosin is similar across crustaceans, molluscs and house-dust mites, which explains broad cross-reactivity.',x:'Other crustaceans; sometimes molluscs; house-dust mite'},
+sesame:{n:'Sesame',e:'🌱',t:['sesame','til','tahini','gingelly','sesame oil','sesamum'],p:'Seed storage proteins (e.g. Ses i 1)',b:'Sesame appears in breads, snacks, chutneys, hummus and spice blends.',s:'Sesame storage proteins are related to those of other seeds and nuts.',x:'Other seeds and some tree nuts in a few people'}};
+const P={peanut:{k:'peanut',t:'Ara h 2 (peanut)',id:'UniProt Q6PSU2',f:'Seed-storage protein (conglutin family)',n:'Often described as a major peanut allergen. Verify ID before final use.'},
+milk:{k:'milk',t:'Bos d 5 (beta-lactoglobulin)',id:'UniProt P02754',f:'Lipocalin, whey protein',n:'Major whey protein in cow milk.'},
+egg:{k:'egg',t:'Gal d 1 (ovomucoid)',id:'UniProt P01005',f:'Kazal-type protease inhibitor',n:'Heat-stable glycoprotein in egg white.'},
+shell:{k:'shell',t:'Pen a 1 (shrimp tropomyosin)',id:'UniProt Q3Y8M6',f:'Muscle protein, highly conserved',n:'Conservation across species is why cross-reactivity is discussed. Verify ID before final use.'}};
+const EP={peanut:[[10,17,'e'],[44,52,'e'],[70,76,'p']],milk:[[6,13,'e'],[30,38,'e'],[60,68,'p']],egg:[[14,21,'e'],[50,58,'p']],shell:[[20,28,'e'],[40,47,'e'],[75,82,'p']]};
+const EX=['coconut milk','cocoa butter','nutmeg','butternut'];
+const SAMPLE='Wheat flour (maida), sugar, palm oil, milk solids, soy lecithin, cashew paste, salt, natural flavour. May contain peanuts and sesame.';
+let sel=new Set(['peanut','milk']),lvl=0,hits=[];
+const $=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+try{const s=JSON.parse(localStorage.getItem('al_sel'));if(Array.isArray(s))sel=new Set(s.filter(k=>A[k]))}catch(e){}
+function save(){try{localStorage.setItem('al_sel',JSON.stringify([...sel]))}catch(e){}}
+function go(id){$$('section').forEach(s=>s.classList.toggle('on',s.id===id));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));scrollTo(0,0)}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
+function draw(){
+ $('chips').innerHTML=Object.keys(A).map(k=>`<button class="chip" data-k="${k}" aria-pressed="${sel.has(k)}">${A[k].e} ${A[k].n}</button>`).join('');
+ $$('.food').forEach(b=>b.setAttribute('aria-pressed',sel.has(b.dataset.k)));
+}
+function toggle(k){sel.has(k)?sel.delete(k):sel.add(k);save();draw()}
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(b)toggle(b.dataset.k)};
+$('foods').innerHTML=Object.keys(A).map(k=>`<button class="food" data-k="${k}" aria-label="${A[k].n}" aria-pressed="false">${A[k].e}</button>`).join('');
+$('foods').onclick=e=>{const b=e.target.closest('.food');if(!b)return;const k=b.dataset.k;toggle(k);$('pepsay').textContent=(sel.has(k)?'Added to your allergens. ':'Removed from your allergens. ')+A[k].n+': '+A[k].b};
+const terms=[];for(const k in A)A[k].t.forEach(t=>terms.push([t,k]));terms.sort((a,b)=>b[0].length-a[0].length);
+const map={};terms.forEach(([t,k])=>map[t]=k);
+const re=new RegExp('\\b('+terms.map(t=>t[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\b','gi');
+function decode(){
+ const raw=$('txt').value.trim();
+ if(!raw){$('res').hidden=false;$('ver').innerHTML='<div class="verdict v-a" role="status"><span class="ic">✍️</span><div><b>Nothing to decode yet</b>Paste an ingredient list or try a sample.</div></div>';$('scn').textContent='';$('why').innerHTML='';return}
+ let masked=raw;EX.forEach(x=>{masked=masked.replace(new RegExp(x,'gi'),m=>'\u0000'.repeat(m.length))});
+ const ti=masked.search(/may contain|traces? of|(manufactured|processed|made|produced) in a facility/i),h={};let out='',last=0,m;re.lastIndex=0;
+ while((m=re.exec(masked))){const k=map[m[1].toLowerCase()],tr=ti>=0&&m.index>=ti,mine=sel.has(k),c=!mine?'n':tr?'a':'r';
+  out+=esc(raw.slice(last,m.index))+`<mark class="${c}" data-k="${k}" tabindex="0">${esc(raw.slice(m.index,m.index+m[0].length))}</mark>`;last=m.index+m[0].length;
+  if(mine){h[k]=h[k]||{c:0,t:0};tr?h[k].t++:h[k].c++}}
+ out+=esc(raw.slice(last));$('scn').innerHTML=out;$('scn').classList.remove('run');void $('scn').offsetWidth;$('scn').classList.add('run');
+ const ks=Object.keys(h),con=ks.filter(k=>h[k].c),tra=ks.filter(k=>!h[k].c),nm=a=>a.map(k=>A[k].n).join(', ');let v;
+ if(!sel.size)v=['v-a','👆','Pick your allergens first','Choose at least one allergen above to personalise the result.'];
+ else if(con.length)v=['v-r','🚫','Contains your allergen: '+nm(con),'Found as a listed ingredient.'+(tra.length?' Also possible traces: '+nm(tra)+'.':'')];
+ else if(tra.length)v=['v-a','⚠️','Caution: may contain '+nm(tra),'Listed only in a "may contain" statement. Follow your doctor\'s advice.'];
+ else v=['v-g','✅','No listed allergen found','None of your selected allergens were found in this text. This is not a guarantee of safety.'];
+ $('ver').innerHTML=`<div class="verdict ${v[0]}" role="status"><span class="ic" aria-hidden="true">${v[1]}</span><div><b>${esc(v[2])}</b>${esc(v[3])}</div></div>`;
+ hits=ks.map(k=>[k,h[k].c?0:1]);why();$('res').hidden=false;$('res').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function why(){
+ $('why').innerHTML=hits.length?hits.map(([k,t])=>{const a=A[k];return `<div class="exp ${t?'t':''}"><h3>${a.e} ${a.n}${t?' (possible trace)':''}</h3><p><b>What it is:</b> ${a.b}</p>`+(lvl?`<p><b>Protein(s):</b> ${a.p}</p><p><b>Science note:</b> ${a.s}</p>`:'')+`<p><b>May cross-react with:</b> ${a.x}</p>`+(P[k]?`<button class="chip" data-p="${k}">See the protein</button>`:'')+'</div>'}).join(''):'<p style="color:var(--mute)">Nothing to explain for your selected allergens.</p>';
+ $$('[data-p]').forEach(b=>b.onclick=()=>{showP(b.dataset.p);go('protein')});
+}
+$('scn').onclick=$('scn').onkeydown=e=>{const m=e.target.closest('mark');if(!m||(e.type=='keydown'&&e.key!='Enter'))return;const a=A[m.dataset.k];$('tip').innerHTML=`<b>${esc(m.textContent)}</b> counts as <b>${a.n}</b>. Hidden names to watch: ${a.t.slice(0,8).join(', ')}…`};
+document.querySelector('.lv').onclick=e=>{const b=e.target.closest('button');if(!b)return;lvl=+b.dataset.l;$$('.lv button').forEach(x=>x.setAttribute('aria-pressed',x===b));why()};
+$('go').onclick=decode;$('smp').onclick=()=>{$('txt').value=SAMPLE;decode()};$('clr').onclick=()=>{$('txt').value='';$('res').hidden=true;$('txt').focus()};
+function seq(k){let s=[...k].reduce((a,c)=>a*31+c.charCodeAt(0),7),aa='ACDEFGHIKLMNPQRSTVWY',o=[];for(let i=0;i<90;i++){s=(s*1103515245+12345)&0x7fffffff;o.push(aa[s%20])}return o}
+function showP(k){
+ $$('#ptabs button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));$$('#ptabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+ const p=P[k],ep=EP[k];
+ $('pbox').innerHTML=`<h3>${A[k].e} ${p.t}</h3><table><tr><th>Record</th><td>${p.id}</td></tr><tr><th>Family</th><td>${p.f}</td></tr><tr><th>Note</th><td>${p.n}</td></tr></table><div class="beads">`+seq(k).map((c,i)=>{const r=ep.find(x=>i>=x[0]&&i<=x[1]);return `<span class="bead ${r?(r[2]=='e'?'ep':'pr'):''}" ${r?`tabindex="0" data-t="${r[2]}" data-r="${r[0]+1}–${r[1]+1}"`:''}>${c}</span>`}).join('')+`</div><div class="bubble" id="bs" aria-live="polite">Tap a coloured bead.</div>`;
+ const say=e=>{const b=e.target.closest('.bead[data-t]');if(!b)return;$('bs').innerHTML=b.dataset.t=='e'?`<b>Reported epitope</b> (demo), residues ${b.dataset.r}. The final version links to the IEDB record and assay type.`:`<b>Computational prediction</b> (demo), residues ${b.dataset.r}. A prediction is a lead to explore, not evidence of allergy.`};
+ document.querySelector('.beads').onclick=say;document.querySelector('.beads').onkeydown=e=>{if(e.key==='Enter')say(e)};
+}
+$('ptabs').innerHTML=Object.keys(P).map(k=>`<button class="chip" data-k="${k}" aria-pressed="false">${A[k].e} ${A[k].n.split(' /')[0]}</button>`).join('');
+$('ptabs').onclick=e=>{const b=e.target.closest('.chip');if(b)showP(b.dataset.k)};
+$('txt').value=SAMPLE;draw();showP('peanut');
+</script></body></html>
