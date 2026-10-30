@@ -1660,9 +1660,69 @@ table.retro-table tr:hover {
     transition: none !important;
   }
 }
+
+/* ==========================================================================
+   PROTEIN INTRO OVERLAY
+   ========================================================================== */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  background: #050508;
+  overflow: hidden;
+  pointer-events: all;
+}
+
+#intro-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#intro-skip-btn {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  z-index: 10;
+  background: transparent;
+  border: 1px dashed rgba(0,240,255,0.5);
+  color: rgba(0,240,255,0.7);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  border-radius: 2px;
+}
+#intro-skip-btn:hover {
+  color: #00f0ff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0,240,255,0.3);
+}
+
+/* Iris/aperture wipe — overlay contracts inward like a camera aperture */
+@keyframes intro-iris-close {
+  0%   { clip-path: circle(120% at 50% 50%); }
+  100% { clip-path: circle(0%   at 50% 50%); }
+}
+#intro-overlay.iris-wipe {
+  animation: intro-iris-close 1s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+  pointer-events: none;
+}
 </style>
 </head>
 <body>
+
+<!-- ==========================================================================
+     PROTEIN CHAIN INTRO OVERLAY
+     ========================================================================== -->
+<div id="intro-overlay" role="dialog" aria-modal="true" aria-label="AllerLens Intro Animation" aria-live="polite">
+  <canvas id="intro-canvas"></canvas>
+  <button id="intro-skip-btn" onclick="skipIntro()" aria-label="Skip intro animation">[ SKIP INTRO ]</button>
+</div>
 
 <!-- ==========================================================================
      BOOT SCREEN: ALLERLENS_BOOT.EXE
@@ -2351,94 +2411,516 @@ function finishBoot() {
   }
 }
 
-// Particle Canvas in Boot Window (Connected protein chains)
+// ---------------------------------------------------------------------------
+// PROTEIN INTRO ANIMATION ENGINE
+// ---------------------------------------------------------------------------
+(function () {
+  'use strict';
+
+  /* -- Colour palette ---------------------------------------------------- */
+  const PALETTE = ['#00f0ff','#ff2a8f','#39ff14','#bf5fff'];
+  const isMobile = window.innerWidth < 600;
+  const MAX_CHAINS = isMobile ? 32 : 60;
+  const SPARK_TTL  = 28;  // frames
+
+  /* -- State ------------------------------------------------------------- */
+  let introRAF  = null;
+  let introStartT = null;
+  let introCanvas, introCtx;
+  let cw, ch;           // logical (CSS) size
+  let dpr = 1;
+  const chains  = [];   // [{nodes, color, angle, angularV, phase}]
+  const sparks  = [];   // [{x,y,vx,vy,life,maxLife,color}]
+  let flashAlpha = 0;   // white flash intensity 0-1
+  let flashDir   = 0;   // +1 = brightening, -1 = fading
+  let introPhase = 'drift';   // 'drift' | 'collide' | 'attract' | 'iris'
+  let irisT      = 0;   // 0→1 iris reveal progress
+
+  /* Wordmark target positions (centre-relative) — computed at runtime */
+  let wordmarkTargets = [];
+
+  /* -- Helpers ----------------------------------------------------------- */
+  function rand(min, max) { return min + Math.random() * (max - min); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+  /* -- Canvas setup ------------------------------------------------------- */
+  function setupCanvas() {
+    introCanvas = $('intro-canvas');
+    if (!introCanvas) return false;
+    introCtx = introCanvas.getContext('2d');
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return true;
+  }
+
+  function resizeCanvas() {
+    if (!introCanvas) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cw  = window.innerWidth;
+    ch  = window.innerHeight;
+    introCanvas.width  = cw * dpr;
+    introCanvas.height = ch * dpr;
+    introCanvas.style.width  = cw + 'px';
+    introCanvas.style.height = ch + 'px';
+    introCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Regenerate wordmark targets when size changes
+    wordmarkTargets = buildWordmarkTargets(cw / 2, ch / 2);
+  }
+
+  /* -- Wordmark target points ------------------------------------------- */
+  /* Approximates 'AllerLens' + a lens ring with ~60-ish sample points.     */
+  function buildWordmarkTargets(cx, cy) {
+    const pts = [];
+    // Lens circle
+    const R = Math.min(cw, ch) * 0.12;
+    for (let i = 0; i < 20; i++) {
+      const a = (i / 20) * Math.PI * 2;
+      pts.push({ x: cx + Math.cos(a) * R,       y: cy + Math.sin(a) * R });
+      pts.push({ x: cx + Math.cos(a) * R * 0.5, y: cy + Math.sin(a) * R * 0.5 });
+    }
+    // Cross-hairs
+    for (let i = -4; i <= 4; i++) {
+      pts.push({ x: cx + i * R * 0.18, y: cy });
+      pts.push({ x: cx,                y: cy + i * R * 0.18 });
+    }
+    // Centre dot cluster
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      pts.push({ x: cx + Math.cos(a) * R * 0.18, y: cy + Math.sin(a) * R * 0.18 });
+    }
+    // "AllerLens" text-shape point cloud (hand-sampled letter centres)
+    const fs   = Math.min(cw * 0.085, 64);
+    const ty   = cy + R + fs * 1.2;
+    const word = 'AllerLens';
+    const totalW = word.length * fs * 0.6;
+    let tx = cx - totalW / 2;
+    for (let c = 0; c < word.length; c++) {
+      const lx = tx + c * fs * 0.6 + fs * 0.3;
+      for (let row = 0; row < 4; row++) {
+        pts.push({ x: lx + rand(-fs * 0.15, fs * 0.15), y: ty + row * fs * 0.2 });
+      }
+    }
+    return pts;
+  }
+
+  /* -- Spawn a chain from a random screen edge --------------------------- */
+  function spawnChain() {
+    const len   = 3 + Math.floor(Math.random() * 4); // 3-6 nodes
+    const color = pick(PALETTE);
+    const edge  = Math.floor(Math.random() * 4);  // 0=top 1=right 2=bottom 3=left
+    let sx, sy;
+    switch (edge) {
+      case 0: sx = rand(0, cw); sy = -30;      break;
+      case 1: sx = cw + 30;    sy = rand(0, ch); break;
+      case 2: sx = rand(0, cw); sy = ch + 30;  break;
+      default: sx = -30;       sy = rand(0, ch);
+    }
+    const speed = rand(0.8, 2.2);
+    const ang   = Math.atan2(ch / 2 - sy, cw / 2 - sx) + rand(-0.7, 0.7);
+    const nodes = [];
+    for (let i = 0; i < len; i++) {
+      nodes.push({
+        x:   sx - Math.cos(ang) * i * 14,
+        y:   sy - Math.sin(ang) * i * 14,
+        vx:  Math.cos(ang) * speed,
+        vy:  Math.sin(ang) * speed,
+        rad: rand(3.5, 6),
+        // attraction target (filled during attract phase)
+        tx: 0, ty: 0
+      });
+    }
+    chains.push({ nodes, color, angle: rand(0, Math.PI * 2), angularV: rand(-0.015, 0.015) });
+  }
+
+  /* -- Emit sparks on collision ----------------------------------------- */
+  function emitSparks(x, y, color) {
+    for (let i = 0; i < 6; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = rand(1.5, 4);
+      sparks.push({
+        x, y,
+        vx: Math.cos(a) * s,
+        vy: Math.sin(a) * s,
+        life: SPARK_TTL,
+        maxLife: SPARK_TTL,
+        color
+      });
+    }
+  }
+
+  /* -- Simple circle-vs-circle collision between chain leaders ----------- */
+  function handleCollisions() {
+    // Only check first node of each chain (the "head")
+    for (let a = 0; a < chains.length; a++) {
+      for (let b = a + 1; b < chains.length; b++) {
+        const na = chains[a].nodes[0];
+        const nb = chains[b].nodes[0];
+        const dx = nb.x - na.x;
+        const dy = nb.y - na.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const minDist = na.rad + nb.rad + 4;
+        if (dist < minDist && dist > 0.001) {
+          // Elastic reflect — swap velocity components along collision axis
+          const nx = dx / dist;
+          const ny = dy / dist;
+          const dvx = na.vx - nb.vx;
+          const dvy = na.vy - nb.vy;
+          const dot = dvx * nx + dvy * ny;
+          if (dot > 0) {
+            na.vx -= dot * nx;
+            na.vy -= dot * ny;
+            nb.vx += dot * nx;
+            nb.vy += dot * ny;
+          }
+          // Separate overlap
+          const overlap = (minDist - dist) / 2;
+          na.x -= nx * overlap;
+          na.y -= ny * overlap;
+          nb.x += nx * overlap;
+          nb.y += ny * overlap;
+          // Flash & sparks
+          flashAlpha = Math.min(1, flashAlpha + 0.12);
+          flashDir   = -1;
+          emitSparks((na.x + nb.x) / 2, (na.y + nb.y) / 2, chains[a].color);
+          // Occasionally merge two chains end-to-end
+          if (Math.random() < 0.18 && chains[a].nodes.length + chains[b].nodes.length <= 9) {
+            chains[a].nodes = chains[a].nodes.concat(chains[b].nodes.slice().reverse());
+            chains.splice(b, 1);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /* -- Assign wordmark target for each chain node ----------------------- */
+  function assignTargets() {
+    // flatten all nodes
+    const allNodes = [];
+    chains.forEach(ch => ch.nodes.forEach(n => allNodes.push(n)));
+    for (let i = 0; i < allNodes.length; i++) {
+      const t = wordmarkTargets[i % wordmarkTargets.length];
+      allNodes[i].tx = t.x;
+      allNodes[i].ty = t.y;
+    }
+  }
+
+  /* -- Draw a single protein chain -------------------------------------- */
+  function drawChain(chain, alpha) {
+    const ctx = introCtx;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    const nodes = chain.nodes;
+    if (nodes.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(nodes[0].x, nodes[0].y);
+      for (let i = 1; i < nodes.length; i++) {
+        ctx.lineTo(nodes[i].x, nodes[i].y);
+      }
+      ctx.strokeStyle = chain.color;
+      ctx.lineWidth   = 2;
+      ctx.shadowColor = chain.color;
+      ctx.shadowBlur  = 14;
+      ctx.stroke();
+      ctx.shadowBlur  = 0;
+    }
+
+    nodes.forEach((node, i) => {
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
+      ctx.fillStyle   = i === 0 ? '#ffffff' : chain.color;
+      ctx.shadowColor = chain.color;
+      ctx.shadowBlur  = 18;
+      ctx.fill();
+      ctx.shadowBlur  = 0;
+    });
+
+    ctx.restore();
+  }
+
+  /* -- Draw wordmark (lens + text) at centre ----------------------------- */
+  function drawWordmark(alpha) {
+    const ctx = introCtx;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    const cx = cw / 2;
+    const cy = ch / 2;
+    const R  = Math.min(cw, ch) * 0.12;
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth   = 3;
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur  = 24;
+    ctx.stroke();
+
+    // Inner ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 0.5, 0, Math.PI * 2);
+    ctx.strokeStyle = '#bf5fff';
+    ctx.lineWidth   = 2;
+    ctx.shadowColor = '#bf5fff';
+    ctx.shadowBlur  = 18;
+    ctx.stroke();
+
+    // Centre dot
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 0.12, 0, Math.PI * 2);
+    ctx.fillStyle   = '#ff2a8f';
+    ctx.shadowColor = '#ff2a8f';
+    ctx.shadowBlur  = 20;
+    ctx.fill();
+
+    // Cross-hairs
+    ctx.shadowBlur = 8;
+    [['#00f0ff', 0], ['#00f0ff', Math.PI / 2], ['#00f0ff', Math.PI], ['#00f0ff', Math.PI * 1.5]].forEach(([c, a]) => {
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * R * 0.5, cy + Math.sin(a) * R * 0.5);
+      ctx.lineTo(cx + Math.cos(a) * R * 1.2, cy + Math.sin(a) * R * 1.2);
+      ctx.strokeStyle = c;
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+    });
+    ctx.shadowBlur = 0;
+
+    // Text
+    const fs = clamp(Math.min(cw * 0.085, 64), 24, 64);
+    ctx.font         = `800 ${fs}px 'Orbitron', sans-serif`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'top';
+    ctx.shadowColor  = '#00f0ff';
+    ctx.shadowBlur   = 28;
+    ctx.fillStyle    = '#ffffff';
+    ctx.fillText('AllerLens', cx, cy + R + fs * 0.5);
+    ctx.shadowBlur = 0;
+
+    ctx.restore();
+  }
+
+  /* -- Main rAF loop ----------------------------------------------------- */
+  function introLoop(ts) {
+    if (!introStartT) introStartT = ts;
+    const elapsed = (ts - introStartT) / 1000; // seconds
+
+    /* Phase transitions */
+    if (elapsed < 2)          introPhase = 'drift';
+    else if (elapsed < 4.5)   introPhase = 'collide';
+    else if (elapsed < 6)     introPhase = 'attract';
+    else if (elapsed < 7)     introPhase = 'iris';
+    else { dismissIntroOverlay(); return; }
+
+    const ctx = introCtx;
+    /* Dark trail */
+    ctx.fillStyle = 'rgba(5,5,8,0.28)';
+    ctx.fillRect(0, 0, cw, ch);
+
+    /* ---- PHASE 1: DRIFT (0-2s) ---------------------------------------- */
+    if (introPhase === 'drift') {
+      // Spawn up to MAX_CHAINS
+      if (chains.length < MAX_CHAINS && Math.random() < 0.35) spawnChain();
+
+      chains.forEach(ch => {
+        ch.angle += ch.angularV;
+        ch.nodes.forEach((n, i) => {
+          if (i === 0) {
+            n.x += n.vx;
+            n.y += n.vy;
+          } else {
+            const prev = ch.nodes[i - 1];
+            const dx = prev.x - n.x, dy = prev.y - n.y;
+            const d  = Math.sqrt(dx * dx + dy * dy);
+            if (d > 15) { n.x += dx * 0.12; n.y += dy * 0.12; }
+          }
+        });
+        drawChain(ch, 0.92);
+      });
+    }
+
+    /* ---- PHASE 2: COLLIDE (2-4.5s) ------------------------------------ */
+    if (introPhase === 'collide') {
+      handleCollisions();
+      // Soft wall bounce
+      chains.forEach(ch => {
+        ch.angle += ch.angularV;
+        ch.nodes.forEach((n, i) => {
+          if (i === 0) {
+            n.x += n.vx; n.y += n.vy;
+            if (n.x < 10 || n.x > cw - 10) n.vx *= -1;
+            if (n.y < 10 || n.y > ch - 10) n.vy *= -1;
+          } else {
+            const prev = ch.nodes[i - 1];
+            const dx = prev.x - n.x, dy = prev.y - n.y;
+            const d  = Math.sqrt(dx * dx + dy * dy);
+            if (d > 15) { n.x += dx * 0.12; n.y += dy * 0.12; }
+          }
+        });
+        drawChain(ch, 0.92);
+      });
+    }
+
+    /* ---- PHASE 3: ATTRACT (4.5-6s) ------------------------------------ */
+    if (introPhase === 'attract') {
+      const phaseT = (elapsed - 4.5) / 1.5; // 0→1
+      if (phaseT < 0.05) assignTargets(); // one-time assignment
+
+      chains.forEach(ch => {
+        ch.nodes.forEach(n => {
+          n.x = lerp(n.x, n.tx, 0.055);
+          n.y = lerp(n.y, n.ty, 0.055);
+        });
+        drawChain(ch, 1 - phaseT * 0.7);
+      });
+
+      // Grow wordmark
+      drawWordmark(phaseT * 0.85);
+
+      // Build flash at end
+      if (phaseT > 0.8) {
+        flashAlpha = (phaseT - 0.8) / 0.2;
+      }
+    }
+
+    /* ---- PHASE 4: IRIS (6-7s) — aperture closes inward ------------------- */
+    if (introPhase === 'iris') {
+      irisT = clamp((elapsed - 6) / 1, 0, 1);
+      // Wordmark fades out
+      drawWordmark(1 - irisT);
+
+      // Shrink overlay clip-path from 120% down to 0% (iris closes)
+      const pct = 120 * (1 - irisT);
+      const ov = $('intro-overlay');
+      if (ov) ov.style.clipPath = `circle(${pct}% at 50% 50%)`;
+    }
+
+    /* Sparks */
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const sp = sparks[i];
+      sp.life--;
+      if (sp.life <= 0) { sparks.splice(i, 1); continue; }
+      sp.x += sp.vx; sp.y += sp.vy; sp.vy += 0.08;
+      const a = sp.life / sp.maxLife;
+      ctx.globalAlpha = a * 0.85;
+      ctx.beginPath();
+      ctx.arc(sp.x, sp.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle   = sp.color;
+      ctx.shadowColor = sp.color;
+      ctx.shadowBlur  = 8;
+      ctx.fill();
+      ctx.shadowBlur  = 0;
+      ctx.globalAlpha = 1;
+    }
+
+    /* Flash overlay */
+    if (flashAlpha > 0) {
+      ctx.globalAlpha = flashAlpha;
+      ctx.fillStyle   = '#ffffff';
+      ctx.fillRect(0, 0, cw, ch);
+      ctx.globalAlpha = 1;
+      flashAlpha = Math.max(0, flashAlpha - 0.04);
+    }
+
+    introRAF = requestAnimationFrame(introLoop);
+  }
+
+  /* -- Dismiss overlay -------------------------------------------------- */
+  function dismissIntroOverlay() {
+    sessionStorage.setItem('al_intro_seen', 'true');
+    const ov = $('intro-overlay');
+    if (ov) {
+      ov.addEventListener('animationend', () => ov.remove(), { once: true });
+      ov.classList.add('iris-wipe');
+      // Fallback removal
+      setTimeout(() => { if (ov.parentNode) ov.remove(); }, 1200);
+    }
+  }
+
+  /* -- Public API -------------------------------------------------------- */
+  window.skipIntro = function() {
+    if (introRAF) cancelAnimationFrame(introRAF);
+    dismissIntroOverlay();
+  };
+
+  window.runIntroAnimation = function() {
+    if (!setupCanvas()) return;
+    // Clear any previous state
+    chains.length = 0;
+    sparks.length = 0;
+    flashAlpha  = 0;
+    introStartT = null;
+    irisT       = 0;
+    introPhase  = 'drift';
+    introRAF = requestAnimationFrame(introLoop);
+  };
+
+}()); // end IIFE
+
+// ---------------------------------------------------------------------------
+// BOOT CANVAS (background particles in the Y2K boot window) — kept simple
+// ---------------------------------------------------------------------------
 let bootCanvasAnim = null;
 function initBootCanvas() {
   const canvas = $('boot-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  
   function resize() {
-    canvas.width = window.innerWidth;
+    canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
   }
   resize();
   window.addEventListener('resize', resize);
-
   const numChains = window.innerWidth < 700 ? 6 : 14;
   const chains = [];
-
   for (let c = 0; c < numChains; c++) {
-    const chainLen = 3 + Math.floor(Math.random() * 4); // 3-6 nodes
+    const len   = 3 + Math.floor(Math.random() * 4);
     const nodes = [];
     let x = Math.random() * canvas.width;
     let y = Math.random() * canvas.height;
     let vx = (Math.random() - 0.5) * 1.5;
     let vy = (Math.random() - 0.5) * 1.5;
-
-    for (let i = 0; i < chainLen; i++) {
-      nodes.push({
-        x: x + (i * 12),
-        y: y + (i * 12),
-        vx: vx,
-        vy: vy,
+    for (let i = 0; i < len; i++) {
+      nodes.push({ x: x + i * 12, y: y + i * 12, vx, vy,
         rad: 3.5 + Math.random() * 2,
-        color: Math.random() > 0.5 ? '#00ff66' : '#00f0ff'
-      });
+        color: Math.random() > 0.5 ? '#00ff66' : '#00f0ff' });
     }
     chains.push(nodes);
   }
-
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     chains.forEach(chain => {
-      // Move leader
       chain[0].x += chain[0].vx;
       chain[0].y += chain[0].vy;
-
-      if (chain[0].x < 20 || chain[0].x > canvas.width - 20) chain[0].vx *= -1;
+      if (chain[0].x < 20 || chain[0].x > canvas.width  - 20) chain[0].vx *= -1;
       if (chain[0].y < 20 || chain[0].y > canvas.height - 20) chain[0].vy *= -1;
-
-      // Follow nodes
       for (let i = 1; i < chain.length; i++) {
-        const dx = chain[i-1].x - chain[i].x;
-        const dy = chain[i-1].y - chain[i].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > 16) {
-          chain[i].x += (dx * 0.1);
-          chain[i].y += (dy * 0.1);
-        }
+        const dx = chain[i-1].x - chain[i].x, dy = chain[i-1].y - chain[i].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d > 16) { chain[i].x += dx * 0.1; chain[i].y += dy * 0.1; }
       }
-
-      // Draw bonds
       ctx.beginPath();
       ctx.moveTo(chain[0].x, chain[0].y);
-      for (let i = 1; i < chain.length; i++) {
-        ctx.lineTo(chain[i].x, chain[i].y);
-      }
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
-      ctx.lineWidth = 2;
+      for (let i = 1; i < chain.length; i++) ctx.lineTo(chain[i].x, chain[i].y);
+      ctx.strokeStyle = 'rgba(0,240,255,0.4)';
+      ctx.lineWidth   = 2;
       ctx.stroke();
-
-      // Draw atoms
       chain.forEach(node => {
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
-        ctx.fillStyle = node.color;
+        ctx.fillStyle   = node.color;
         ctx.shadowColor = node.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur  = 8;
         ctx.fill();
-        ctx.shadowBlur = 0;
+        ctx.shadowBlur  = 0;
       });
     });
-
     bootCanvasAnim = requestAnimationFrame(draw);
   }
-
   draw();
 }
-
 function stopBootCanvas() {
   if (bootCanvasAnim) cancelAnimationFrame(bootCanvasAnim);
 }
@@ -3106,8 +3588,22 @@ window.addEventListener('DOMContentLoaded', () => {
   if (hasBooted || reducedMotion) {
     const bs = $('boot-screen');
     if (bs) bs.style.display = 'none';
+    // Remove intro overlay immediately if already seen or reduced motion
+    const ov = $('intro-overlay');
+    if (ov) ov.remove();
   } else {
     runBootSequence();
+  }
+
+  // --- Protein intro overlay ---
+  const introSeen    = sessionStorage.getItem('al_intro_seen');
+  const reducedMotion2 = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (introSeen || reducedMotion2) {
+    const ov = $('intro-overlay');
+    if (ov) ov.remove();
+  } else {
+    // Run intro; boot screen is beneath and will initialise normally in parallel
+    window.runIntroAnimation();
   }
 });
 </script>
