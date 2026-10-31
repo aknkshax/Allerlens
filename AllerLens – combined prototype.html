@@ -6,7 +6,9 @@
 <title>AllerLens – Cybernetic Allergen &amp; Protein OS (v2.4)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Press+Start+2P&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
 <style>
 /* ==========================================================================
    1. CSS VARIABLES & CYBER-SKEUOMORPHIC THEME (WINDOWS 2000 / WINAMP / Y2K)
@@ -51,6 +53,7 @@
   
   --font-mono: 'Share Tech Mono', 'Courier New', monospace;
   --font-head: 'Orbitron', 'Share Tech Mono', sans-serif;
+  --font-minecraft: 'Minecraft', 'Minecraftia', 'Silkscreen', 'Press Start 2P', monospace;
   
   box-sizing: border-box;
 }
@@ -622,6 +625,7 @@ body::after {
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  scroll-margin-top: 66px;
 }
 
 .os-window.minimized {
@@ -758,11 +762,13 @@ body::after {
 }
 
 .scramble-tagline {
-  font-family: var(--font-head);
-  font-size: clamp(2.5rem, 7vw, 6rem);
-  font-weight: 900;
-  line-height: 1.08;
-  letter-spacing: 0.02em;
+  font-family: var(--font-minecraft);
+  font-size: clamp(2.1rem, 5.8vw, 4.9rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: 0.03em;
+  image-rendering: pixelated;
+  -webkit-font-smoothing: none;
   background: linear-gradient(
     90deg,
     #00f0ff 0%,
@@ -777,12 +783,12 @@ body::after {
   color: transparent;
   -webkit-text-fill-color: transparent;
   animation:
-    flowing-tagline 5.5s linear infinite,
-    tagline-glow-pulse 3.2s ease-in-out infinite alternate,
-    tagline-glitch-flicker 7s infinite;
+    flowing-tagline 7s linear infinite,
+    tagline-glow-pulse 4s ease-in-out infinite alternate,
+    tagline-glitch-flicker 18s infinite;
   display: inline-block;
   position: relative;
-  filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.5)) drop-shadow(0 0 32px rgba(255, 42, 143, 0.3));
+  filter: drop-shadow(3px 3px 0px #060911) drop-shadow(0 0 14px rgba(0, 240, 255, 0.45));
 }
 
 .scramble-tagline::before,
@@ -797,28 +803,28 @@ body::after {
 .scramble-tagline::before {
   color: #00f0ff;
   -webkit-text-fill-color: #00f0ff;
-  text-shadow: -2px 0 #ff2a8f;
+  text-shadow: -1px 0 #ff2a8f;
   clip-path: polygon(0 18%, 100% 18%, 100% 44%, 0 44%);
-  animation: tagline-chroma-top 7s infinite;
+  animation: tagline-chroma-top 18s infinite;
 }
 
 .scramble-tagline::after {
   color: #bf5fff;
   -webkit-text-fill-color: #bf5fff;
-  text-shadow: 2px 0 #39ff14;
+  text-shadow: 1px 0 #39ff14;
   clip-path: polygon(0 62%, 100% 62%, 100% 86%, 0 86%);
-  animation: tagline-chroma-bot 7s infinite;
+  animation: tagline-chroma-bot 18s infinite;
 }
 
 .scramble-tagline .tagline-cursor {
   display: inline-block;
-  width: 0.08em;
-  height: 0.88em;
-  vertical-align: -0.08em;
-  margin-left: 4px;
-  background: #00f0ff;
-  box-shadow: 0 0 12px #00f0ff, 0 0 24px #ff2a8f;
-  animation: cursor-blink 0.8s steps(2, start) infinite;
+  width: 0.35em;
+  height: 0.85em;
+  vertical-align: -0.06em;
+  margin-left: 6px;
+  background: #39ff14;
+  box-shadow: 0 0 10px #39ff14, 2px 2px 0 #060911;
+  animation: cursor-blink 0.9s steps(2, start) infinite;
 }
 
 @keyframes cursor-blink {
@@ -833,45 +839,39 @@ body::after {
 
 @keyframes tagline-glow-pulse {
   0% {
-    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.45)) drop-shadow(0 0 24px rgba(191, 95, 255, 0.25));
+    filter: drop-shadow(3px 3px 0px #060911) drop-shadow(0 0 12px rgba(0, 240, 255, 0.4));
   }
   50% {
-    filter: drop-shadow(0 0 22px rgba(255, 42, 143, 0.6)) drop-shadow(0 0 42px rgba(57, 255, 20, 0.35));
+    filter: drop-shadow(3px 3px 0px #060911) drop-shadow(0 0 20px rgba(255, 42, 143, 0.5));
   }
   100% {
-    filter: drop-shadow(0 0 26px rgba(0, 240, 255, 0.7)) drop-shadow(0 0 48px rgba(191, 95, 255, 0.5));
+    filter: drop-shadow(3px 3px 0px #060911) drop-shadow(0 0 22px rgba(57, 255, 20, 0.55));
   }
 }
 
 @keyframes tagline-glitch-flicker {
-  0%, 91%, 94%, 96.5%, 100% {
+  0%, 97.5%, 99%, 100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) skewX(0deg);
+    transform: translate3d(0, 0, 0);
   }
-  92% {
-    opacity: 0.86;
-    transform: translate3d(-2px, 1px, 0) skewX(-2deg);
+  98% {
+    opacity: 0.94;
+    transform: translate3d(-1px, 0, 0);
   }
-  93% {
-    opacity: 0.95;
-    transform: translate3d(2px, -1px, 0) skewX(1.5deg);
-  }
-  95.5% {
-    opacity: 0.78;
-    transform: translate3d(-1px, 0, 0) skewX(-0.8deg);
+  98.5% {
+    opacity: 0.97;
+    transform: translate3d(1px, 0, 0);
   }
 }
 
 @keyframes tagline-chroma-top {
-  0%, 91%, 94%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-  92% { opacity: 0.75; transform: translate3d(-3px, -1px, 0); }
-  93% { opacity: 0.5; transform: translate3d(3px, 1px, 0); }
+  0%, 97.5%, 99%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+  98% { opacity: 0.25; transform: translate3d(-1.5px, 0, 0); }
 }
 
 @keyframes tagline-chroma-bot {
-  0%, 94.5%, 97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
-  95.2% { opacity: 0.7; transform: translate3d(3px, 1px, 0); }
-  96% { opacity: 0.45; transform: translate3d(-2px, -1px, 0); }
+  0%, 98%, 99.5%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+  98.6% { opacity: 0.22; transform: translate3d(1.5px, 0, 0); }
 }
 
 .tagline-subtext {
@@ -1631,6 +1631,8 @@ table.retro-table tr:hover {
 .taskbar-windows {
   display: flex;
   gap: 4px;
+  overflow-x: auto;
+  max-width: calc(100vw - 140px);
 }
 
 .taskbar-tab {
@@ -1642,15 +1644,30 @@ table.retro-table tr:hover {
   border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
   color: var(--text-dim);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.taskbar-tab:hover {
+  background: #1f2836;
+  color: #ffffff;
+  border-color: var(--electric-blue) var(--bevel-dark) var(--bevel-dark) var(--electric-blue);
+  box-shadow: 0 0 10px var(--electric-blue-soft);
 }
 
 .taskbar-tab.active {
   background: #09131c;
-  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
-  color: var(--electric-blue);
+  border-color: var(--cyber-green) var(--bevel-bright) var(--bevel-bright) var(--cyber-green);
+  color: var(--cyber-green);
+  box-shadow: 0 0 10px var(--cyber-green-soft), inset 0 0 6px rgba(0, 255, 102, 0.2);
+}
+
+.os-window.nav-focus-pulse {
+  border-color: var(--cyber-green) !important;
+  box-shadow: 0 0 28px var(--cyber-green-glow), 0 8px 30px rgba(0,0,0,0.8) !important;
 }
 
 .taskbar-right {
@@ -1733,7 +1750,7 @@ table.retro-table tr:hover {
     grid-template-columns: 1fr;
   }
   
-  .taskbar-windows {
+  .taskbar-right {
     display: none;
   }
 }
@@ -2894,11 +2911,13 @@ table.retro-table tr:hover {
     <div class="taskbar-left">
       <button class="btn-start" onclick="toggleStartMenu()">⊞ START</button>
       
-      <div class="taskbar-windows" id="taskbar-windows">
-        <div class="taskbar-tab active" data-for="win-home" onclick="restoreWindow('win-home')">🔬 Home</div>
-        <div class="taskbar-tab" data-for="win-scan" onclick="restoreWindow('win-scan')">🔍 Scanner</div>
-        <div class="taskbar-tab" data-for="win-protein" onclick="restoreWindow('win-protein')">🧬 Protein Lab</div>
-        <div class="taskbar-tab" data-for="win-database" onclick="restoreWindow('win-database')">📊 Database</div>
+      <div class="taskbar-windows" id="taskbar-windows" role="navigation" aria-label="Bottom Section Tabs">
+        <button type="button" class="taskbar-tab active" data-tab="home" data-for="win-home" onclick="switchTab('home')">🔬 Home</button>
+        <button type="button" class="taskbar-tab" data-tab="scan" data-for="win-scan" onclick="switchTab('scan')">🔍 Scanner</button>
+        <button type="button" class="taskbar-tab" data-tab="protein" data-for="win-protein" onclick="switchTab('protein')">🧬 Protein Lab</button>
+        <button type="button" class="taskbar-tab" data-tab="database" data-for="win-database" onclick="switchTab('database')">📊 Database</button>
+        <button type="button" class="taskbar-tab" data-tab="archives" data-for="win-archives" onclick="switchTab('archives')">💾 Archives</button>
+        <button type="button" class="taskbar-tab" data-tab="about" data-for="win-about" onclick="switchTab('about')">ℹ About</button>
       </div>
     </div>
 
@@ -3777,7 +3796,7 @@ function stopBootCanvas() {
 const PART_1 = 'Decode the label.';
 const PART_2 = 'Meet the protein.';
 const FULL_TAGLINE = 'Decode the label. Meet the protein.';
-const SCRAMBLE_GLYPHS = '01!<>-_\\/[]{}—=+*^?#ΔΩΣΨ◊⌁';
+const SCRAMBLE_GLYPHS = '█▓▒░';
 const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
 
 let taglineLoopTimer = null;
@@ -3811,12 +3830,11 @@ function startTaglineLoop() {
     }
 
     const t0 = performance.now();
-    // Timeline (ms):
-    // 0..1350:     "Decode the label." resolves left-to-right with active scramble tail
-    // 1350..1600:  Short beat after "Decode the label."
-    // 1600..3000:  "Meet the protein." scrambles in and settles into letters
-    // 3000..5600:  Readable final pause ("Decode the label. Meet the protein.")
-    // 5600..6200:  Re-scramble dissolve before repeating
+    // Low-glitch, high-readability timeline (ms):
+    // 0..850:       "Decode the label." types in cleanly with 1 leading pixel block
+    // 850..1050:    Short beat after "Decode the label."
+    // 1050..1900:   "Meet the protein." types in cleanly with 1 leading pixel block
+    // 1900..16000:  14+ seconds of steady, glitch-free "Decode the label. Meet the protein."
 
     function tick(now) {
       if (reducedMotionQuery.matches) {
@@ -3825,58 +3843,38 @@ function startTaglineLoop() {
       }
       const elapsed = now - t0;
 
-      if (elapsed < 1350) {
-        const p = clamp(elapsed / 1350, 0, 1);
+      if (elapsed < 850) {
+        const p = clamp(elapsed / 850, 0, 1);
         const resolved = Math.floor(p * PART_1.length);
-        const activeTail = Math.min(PART_1.length - resolved, 4);
         let s = PART_1.slice(0, resolved);
-        for (let i = 0; i < activeTail; i++) {
-          const ch = PART_1[resolved + i];
+        if (resolved < PART_1.length) {
+          const ch = PART_1[resolved];
           s += ch === ' ' ? ' ' : SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
         }
         span.textContent = s;
         host.setAttribute('data-text', s);
         taglineRAF = requestAnimationFrame(tick);
-      } else if (elapsed < 1600) {
+      } else if (elapsed < 1050) {
         span.textContent = PART_1;
         host.setAttribute('data-text', PART_1);
         taglineRAF = requestAnimationFrame(tick);
-      } else if (elapsed < 3000) {
-        const p = clamp((elapsed - 1600) / 1400, 0, 1);
+      } else if (elapsed < 1900) {
+        const p = clamp((elapsed - 1050) / 850, 0, 1);
         const resolved = Math.floor(p * PART_2.length);
-        let s2 = '';
-        for (let i = 0; i < PART_2.length; i++) {
-          if (i < resolved) {
-            s2 += PART_2[i];
-          } else if (PART_2[i] === ' ') {
-            s2 += ' ';
-          } else {
-            s2 += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
-          }
+        let s2 = PART_2.slice(0, resolved);
+        if (resolved < PART_2.length) {
+          const ch = PART_2[resolved];
+          s2 += ch === ' ' ? ' ' : SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
         }
         const combined = PART_1 + ' ' + s2;
         span.textContent = combined;
         host.setAttribute('data-text', combined);
         taglineRAF = requestAnimationFrame(tick);
-      } else if (elapsed < 5600) {
-        span.textContent = FULL_TAGLINE;
-        host.setAttribute('data-text', FULL_TAGLINE);
-        taglineRAF = requestAnimationFrame(tick);
-      } else if (elapsed < 6150) {
-        // Brief re-scramble before next cycle
-        const p = clamp((elapsed - 5600) / 550, 0, 1);
-        let rescramble = '';
-        for (let i = 0; i < FULL_TAGLINE.length; i++) {
-          if (FULL_TAGLINE[i] === ' ') {
-            rescramble += ' ';
-          } else if (Math.random() < p * 0.85) {
-            rescramble += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
-          } else {
-            rescramble += FULL_TAGLINE[i];
-          }
+      } else if (elapsed < 16000) {
+        if (span.textContent !== FULL_TAGLINE) {
+          span.textContent = FULL_TAGLINE;
+          host.setAttribute('data-text', FULL_TAGLINE);
         }
-        span.textContent = rescramble;
-        host.setAttribute('data-text', rescramble);
         taglineRAF = requestAnimationFrame(tick);
       } else {
         runCycle();
@@ -3892,8 +3890,21 @@ function startTaglineLoop() {
 /* ==========================================================================
    D. WINDOW MANAGER (DESKTOP DRAG, MINIMIZE, MAXIMIZE, CLOSE, RESTORE)
    ========================================================================== */
+let currentActiveTab = 'home';
+const WIN_TO_TAB = {
+  'win-home': 'home',
+  'win-scan': 'scan',
+  'win-protein': 'protein',
+  'win-database': 'database',
+  'win-archives': 'archives',
+  'win-about': 'about'
+};
+
 function switchTab(tabId) {
+  currentActiveTab = tabId;
+  playUiBlip();
   $$('.retro-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  $$('.taskbar-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
   
   const winMap = {
     home: 'win-home',
@@ -3906,9 +3917,15 @@ function switchTab(tabId) {
   
   const winId = winMap[tabId];
   if (winId) {
-    restoreWindow(winId);
     const el = $(winId);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) {
+      el.classList.remove('minimized');
+      el.classList.remove('sr-hidden');
+      el.classList.add('sr-visible');
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('nav-focus-pulse');
+      setTimeout(() => el.classList.remove('nav-focus-pulse'), 900);
+    }
   }
   
   if (window.innerWidth < 900) {
@@ -3937,9 +3954,15 @@ function closeWindow(winId) {
 }
 
 function restoreWindow(winId) {
+  const tabId = WIN_TO_TAB[winId];
+  if (tabId) {
+    switchTab(tabId);
+    return;
+  }
   const el = $(winId);
   if (!el) return;
   el.classList.remove('minimized');
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   updateTaskbar();
 }
 
@@ -3947,9 +3970,8 @@ function updateTaskbar() {
   $$('.taskbar-tab').forEach(tab => {
     const winId = tab.dataset.for;
     const win = $(winId);
-    if (win) {
-      tab.classList.toggle('active', !win.classList.contains('minimized'));
-    }
+    const isMin = win && win.classList.contains('minimized');
+    tab.classList.toggle('active', !isMin && tab.dataset.tab === currentActiveTab);
   });
 }
 
