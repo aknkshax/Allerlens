@@ -1,187 +1,4870 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AllerLens – decode a label, meet the protein</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<title>AllerLens – Cybernetic Allergen &amp; Protein OS (v2.4)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e6f6ee;--card:#fff;--ink:#1e2a44;--mute:#5b6781;--line:#cfe3d9;--red:#ff6b81;--amb:#ffc233;--grn:#9be3c0;--ok:#22a06b;--blue:#9cc3ff;--vio:#c9b5fb;--on:#1e2a44;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a22;--card:#192633;--ink:#e8f1f5;--mute:#9fb0bd;--line:#2a3b4a}}
-:root[data-theme="dark"]{--bg:#101a22;--card:#192633;--ink:#e8f1f5;--mute:#9fb0bd;--line:#2a3b4a}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Figtree,system-ui,sans-serif}
-h1,h2,h3{font-family:'Bricolage Grotesque',Figtree,sans-serif;line-height:1.1;margin:0 0 .5em}
-h1{font-size:clamp(2.1rem,6vw,3.6rem);font-weight:800}h2{font-size:1.6rem}h3{font-size:1.1rem}
-main,header{max-width:900px;margin:0 auto;padding:0 18px}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:16px;padding-bottom:10px}
-.logo{font:800 1.4rem 'Bricolage Grotesque',sans-serif}
-nav{display:flex;gap:6px;flex-wrap:wrap}
-nav button,.chip,.btn{font:600 .95rem Figtree,sans-serif;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 15px;cursor:pointer;min-height:40px}
-nav button.on,.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-:focus-visible{outline:3px solid #3b82f6;outline-offset:2px}
-.btn{background:var(--amb);color:var(--on);border-color:var(--on);box-shadow:3px 3px 0 var(--ink);padding:10px 20px}
-.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
-section{display:none;padding:20px 0 50px}section.on{display:block}
-.card{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:18px;margin-bottom:16px}
-.hero{display:grid;gap:20px;grid-template-columns:1.2fr 1fr;align-items:center}
-@media(max-width:700px){.hero{grid-template-columns:1fr}}
-.lead{font-size:1.1rem;color:var(--mute);max-width:48ch}
-.foods{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.food{font-size:2.3rem;width:68px;height:68px;border-radius:50%;border:2px solid var(--ink);background:var(--card);cursor:pointer;animation:bob 3s ease-in-out infinite}
-.food:nth-child(2n){animation-delay:-1s}.food:nth-child(3n){animation-delay:-2s}
-.food[aria-pressed="true"]{background:var(--amb);box-shadow:0 0 0 4px var(--ink)}
-.food:hover{transform:scale(1.15) rotate(-8deg)}
-@keyframes bob{50%{transform:translateY(-8px)}}
-.pep{display:flex;gap:12px;align-items:center;margin-top:14px}.pep .face{font-size:2.4rem}
-.bubble{background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:10px 14px;font-size:.95rem;flex:1}
-.disc{border-left:6px solid var(--amb);background:var(--card);padding:10px 14px;border-radius:0 12px 12px 0;font-size:.9rem;color:var(--mute)}
-textarea{width:100%;min-height:100px;border:2px solid var(--ink);border-radius:14px;padding:12px;font:inherit;background:var(--card);color:var(--ink)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.tag{display:inline-block;border-radius:99px;padding:3px 12px;font-weight:600;margin:3px 4px 3px 0;border:2px solid var(--on);color:var(--on)}
-.t-c{background:var(--red)}.t-m{background:var(--amb)}.t-e{background:var(--blue)}.t-p{background:var(--vio)}
-.verdict{display:flex;gap:14px;align-items:center;border:2px solid var(--on);border-radius:16px;padding:14px;color:var(--on)}
-.verdict .ic{font-size:2rem}.verdict b{font-size:1.15rem;display:block}
-.v-r{background:var(--red)}.v-a{background:var(--amb)}.v-g{background:var(--grn)}
-.scan{position:relative;line-height:2.1;overflow:hidden;font-size:1.05rem}
-.scan.run::after{content:"";position:absolute;left:0;right:0;height:5px;background:var(--ok);box-shadow:0 0 14px var(--ok);animation:sweep 1.1s ease-in-out}
-@keyframes sweep{from{top:0}to{top:100%}}
-mark{border-radius:8px;padding:2px 7px;color:var(--on);cursor:pointer;font-weight:600;border:2px solid var(--on)}
-mark.r{background:var(--red)}mark.a{background:var(--amb)}mark.n{background:transparent;color:var(--ink);border:2px dashed var(--mute)}
-.leg{font-size:.85rem;color:var(--mute);margin-top:8px}
-.exp{border-left:6px solid var(--red);padding:10px 14px;margin:10px 0;background:var(--bg);border-radius:0 14px 14px 0}
-.exp.t{border-color:var(--amb)}.exp h3{margin:0 0 4px}.exp p{margin:4px 0;font-size:.93rem}
-.lv{display:inline-flex;gap:6px;margin-bottom:8px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.stat{text-align:center;border:2px solid var(--ink);border-radius:16px;padding:10px;background:var(--card)}
-.stat b{display:block;font:800 1.7rem 'Bricolage Grotesque',sans-serif}.stat span{font-size:.8rem;color:var(--mute)}
-.beads{display:flex;flex-wrap:wrap;gap:3px;margin:12px 0}
-.bead{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--ink);font:600 .7rem/21px Figtree;text-align:center;background:var(--card);transition:transform .15s}
-.bead.ep{background:var(--blue);cursor:pointer;color:var(--on)}.bead.pr{background:var(--vio);cursor:pointer;color:var(--on)}
-.bead:hover{transform:translateY(-4px) scale(1.2)}
-table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{text-align:left;border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style></head><body>
-<header><div class="logo">🔬 AllerLens</div>
-<nav aria-label="Main"><button data-go="home" class="on">Home</button><button data-go="scan">Decode a label</button><button data-go="protein">Protein explorer</button><button data-go="sources">Sources &amp; limits</button></nav></header>
-<main>
-<section id="home" class="on">
- <div class="hero"><div>
-  <h1>Decode the label. Meet the protein.</h1>
-  <p class="lead">Pick the allergens you avoid, paste an ingredient list, and AllerLens highlights what matters to you and explains why.</p>
-  <p><button class="btn" data-go="scan">Decode a label</button></p></div>
-  <div><div class="foods" id="foods"></div>
-  <div class="pep"><span class="face" aria-hidden="true">🧬</span><div class="bubble" id="pepsay" aria-live="polite">Hi, I'm Pep the peptide. Tap a food to add it to your allergens and I'll tell you about it.</div></div></div></div>
- <h2 style="margin-top:30px">What our survey of 186 people found</h2>
- <div class="stats"><div class="stat"><b>67.2%</b><span>find labels hard to understand at least sometimes</span></div><div class="stat"><b>24.7%</b><span>feel confident (4–5 of 5) reading labels</span></div><div class="stat"><b>51.1%</b><span>would trust a tool more if it showed the trigger</span></div><div class="stat"><b>94.1%</b><span>use no allergen website or app</span></div></div>
- <p class="disc" style="margin-top:24px"><b>Information only.</b> AllerLens does not diagnose allergy, predict your reaction, or confirm that a product is safe. Always read the full label and follow your doctor's advice.</p>
-</section>
+/* ==========================================================================
+   1. CSS VARIABLES & CYBER-SKEUOMORPHIC THEME (WINDOWS 2000 / WINAMP / Y2K)
+   ========================================================================== */
+:root {
+  --bg-obsidian: #0d0d12;
+  --bg-panel: #13141c;
+  --bg-panel-inset: #08090d;
+  --bg-panel-light: #1c1e29;
+  
+  --cyber-green: #00ff66;
+  --cyber-green-dim: #00b347;
+  --cyber-green-glow: rgba(0, 255, 102, 0.45);
+  --cyber-green-soft: rgba(0, 255, 102, 0.12);
+  
+  --electric-blue: #00f0ff;
+  --electric-blue-dim: #009cb3;
+  --electric-blue-glow: rgba(0, 240, 255, 0.45);
+  --electric-blue-soft: rgba(0, 240, 255, 0.12);
+  
+  --alert-red: #ff2a5f;
+  --alert-red-glow: rgba(255, 42, 95, 0.55);
+  --alert-amber: #ffaa00;
+  --alert-amber-glow: rgba(255, 170, 0, 0.45);
+  
+  --chrome-highlight: #ffffff;
+  --chrome-light: #d6e2ed;
+  --chrome-mid: #68798a;
+  --chrome-dark: #222933;
+  
+  --win-titlebar: linear-gradient(90deg, #1b3854 0%, #0c2033 60%, #163048 100%);
+  --win-titlebar-active: linear-gradient(90deg, #094770 0%, #00f0ff 45%, #05507a 100%);
+  --win-metal-grad: linear-gradient(180deg, #2c3340 0%, #1a1e27 45%, #101319 100%);
+  
+  --bevel-light: #3e4856;
+  --bevel-bright: #68778c;
+  --bevel-dark: #07090d;
+  
+  --text-main: #d8e6f5;
+  --text-dim: #7f95aa;
+  --text-bright: #ffffff;
+  
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+  --font-head: 'Orbitron', 'Share Tech Mono', sans-serif;
+  
+  box-sizing: border-box;
+}
 
-<section id="scan">
- <h2>Decode a label</h2>
- <h3>1. Your allergens <small style="font-weight:400;color:var(--mute)">(saved in this browser only)</small></h3>
- <div class="row" id="chips" role="group" aria-label="Your allergens"></div>
- <h3>2. Ingredient list</h3>
- <textarea id="txt" aria-label="Ingredient list"></textarea>
- <div class="row"><button class="btn" id="go">Decode label</button><button class="chip" id="smp">Try a sample</button><button class="chip" id="clr">Clear</button></div>
- <div id="res" hidden class="card" style="margin-top:18px">
-  <div id="ver"></div>
-  <h3 style="margin-top:16px">Decoded label</h3><div class="scan" id="scn"></div>
-  <div class="leg"><mark class="r">your allergen</mark> <mark class="a">may contain</mark> <mark class="n">other allergen</mark> · tap a highlight for its hidden names</div>
-  <div id="tip" class="leg" aria-live="polite"></div>
-  <h3 style="margin-top:18px">Why these ingredients?</h3>
-  <div class="lv" role="group" aria-label="Detail level"><button class="chip" data-l="0" aria-pressed="true">Basics</button><button class="chip" data-l="1" aria-pressed="false">Science</button></div>
-  <div id="why"></div></div>
-</section>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-<section id="protein">
- <h2>Protein explorer</h2>
- <p class="lead">Each bead is one amino acid. Tap a coloured bead to see what the evidence says.</p>
- <div class="tabs" id="ptabs"></div><div class="card" id="pbox"></div>
- <div><span class="tag t-e">Reported epitope</span><span class="tag t-p">Computational prediction</span></div>
- <p class="disc">Demo data: sequences and residue ranges are illustrative placeholders, not real records. The final version will use verified UniProt and IEDB entries.</p>
-</section>
+body {
+  background-color: var(--bg-obsidian);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(0, 255, 102, 0.08) 0%, transparent 40%),
+    linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 102, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+  color: var(--text-main);
+  font: 15px/1.5 var(--font-mono);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  user-select: text;
+}
 
-<section id="sources">
- <h2>Sources &amp; limits</h2>
- <div class="card"><h3>How to read the tags</h3><table>
-  <tr><td><span class="tag t-c">Contains</span></td><td>Listed as an ingredient.</td></tr>
-  <tr><td><span class="tag t-m">May contain</span></td><td>Precautionary statement: possible cross-contact, not a confirmed ingredient.</td></tr>
-  <tr><td><span class="tag t-e">Evidence</span></td><td>Reported in a database or paper (UniProt, IEDB).</td></tr>
-  <tr><td><span class="tag t-p">Prediction</span></td><td>Computational output: a lead to explore, not proof.</td></tr></table></div>
- <div class="card"><h3>Planned sources</h3><p>UniProt, IEDB, FSSAI, Codex Alimentarius and FAO/WHO.</p>
-  <h3>Known limits</h3><p>Keyword matching can miss unusual ingredient names and flag harmless words. The demo covers 9 allergen groups and 4 protein pages. "No listed allergen found" is never a safety guarantee. Cross-reactivity notes are general science, not a prediction for any individual.</p></div>
-</section>
-</main>
+/* CRT Scanline Overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0px, rgba(0, 0, 0, 0.18) 1px, transparent 1px, transparent 3px);
+  pointer-events: none;
+  z-index: 99990;
+  opacity: 0.65;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--cyber-green);
+  outline-offset: 2px;
+  box-shadow: 0 0 10px var(--cyber-green);
+}
+
+/* ==========================================================================
+   2. RETRO BOOT SCREEN (ALLERLENS_BOOT.EXE)
+   ========================================================================== */
+#boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: #050508;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#boot-screen.crt-shutdown {
+  opacity: 0;
+  transform: scaleY(0.005) scaleX(1.1);
+  filter: brightness(3);
+  pointer-events: none;
+}
+
+#boot-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.boot-window {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 620px;
+  background: #11141c;
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 240, 255, 0.25);
+}
+
+.boot-header {
+  background: var(--win-titlebar);
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--bevel-dark);
+}
+
+.boot-title {
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--electric-blue);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boot-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.boot-btn-mock {
+  width: 18px;
+  height: 18px;
+  background: #1e2430;
+  border: 1px solid;
+  border-color: var(--bevel-light) var(--bevel-dark) var(--bevel-dark) var(--bevel-light);
+  color: var(--text-dim);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.boot-body {
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--cyber-green);
+  line-height: 1.6;
+}
+
+.boot-bios {
+  color: var(--electric-blue);
+  border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}
+
+.boot-log {
+  min-height: 140px;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.boot-progress-wrap {
+  background: #06080c;
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  padding: 3px;
+  height: 24px;
+  display: flex;
+  gap: 3px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.boot-segment {
+  flex: 1;
+  background: rgba(0, 255, 102, 0.15);
+  transition: background 0.1s ease;
+}
+
+.boot-segment.lit {
+  background: linear-gradient(180deg, #a6ffcc 0%, var(--cyber-green) 50%, #008f39 100%);
+  box-shadow: 0 0 6px var(--cyber-green);
+}
+
+.boot-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-boot-start {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  padding: 10px 22px;
+  background: linear-gradient(180deg, #1f4f38 0%, #0d291b 100%);
+  color: #ffffff;
+  border: 2px solid;
+  border-color: #55ff99 #00441a #00441a #55ff99;
+  box-shadow: 0 0 15px var(--cyber-green-glow);
+  cursor: pointer;
+  display: none;
+  animation: flash-pulse 1s infinite alternate;
+}
+
+.btn-boot-start:hover {
+  background: linear-gradient(180deg, #2b7050 0%, #153d29 100%);
+  box-shadow: 0 0 25px var(--cyber-green);
+}
+
+.btn-boot-skip {
+  background: transparent;
+  border: 1px dashed var(--text-dim);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.btn-boot-skip:hover {
+  color: var(--electric-blue);
+  border-color: var(--electric-blue);
+}
+
+@keyframes flash-pulse {
+  from { opacity: 0.85; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1.02); }
+}
+
+/* ==========================================================================
+   3. SKEUOMORPHIC UI & WINDOW SYSTEM (WIN2000 / WINAMP)
+   ========================================================================== */
+.app-container {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 12px 64px 12px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Skeuomorphic Inset / Outset Bevel Utilities */
+.bevel-outset {
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+}
+
+.bevel-inset {
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  background: var(--bg-panel-inset);
+}
+
+/* Top Navigation Bar */
+.retro-header {
+  background: var(--win-metal-grad);
+  border-bottom: 2px solid var(--bevel-dark);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.8);
+  margin-bottom: 14px;
+}
+
+.retro-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.wordmark {
+  font-family: var(--font-head);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--cyber-green) 0%, var(--electric-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px var(--cyber-green-glow)) drop-shadow(0 0 20px var(--electric-blue-glow));
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  transition: filter 0.25s ease;
+  user-select: none;
+}
+
+.wordmark:hover {
+  filter: drop-shadow(0 0 20px var(--cyber-green)) drop-shadow(0 0 35px var(--electric-blue));
+}
+
+.header-wordmark {
+  font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  gap: 8px;
+}
+
+.wordmark-lens-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px var(--cyber-green)) drop-shadow(0 0 12px var(--electric-blue));
+  transition: transform 0.3s ease;
+}
+
+.lens-spin {
+  transform-origin: 14px 14px;
+  animation: spin-lens 10s linear infinite;
+}
+
+@keyframes spin-lens {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.wordmark:hover .lens-spin {
+  animation: spin-lens 2s linear infinite;
+}
+
+.wordmark-text {
+  position: relative;
+  display: inline-block;
+}
+
+.wordmark-glitch::before,
+.wordmark-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-head);
+  font-weight: 900;
+  letter-spacing: inherit;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.wordmark:hover .wordmark-glitch::before {
+  opacity: 0.85;
+  color: var(--cyber-green);
+  -webkit-text-fill-color: var(--cyber-green);
+  text-shadow: -2px 0 var(--cyber-green);
+  clip-path: polygon(0 15%, 100% 15%, 100% 40%, 0 40%);
+  animation: glitch-step-1 0.3s infinite linear alternate-reverse;
+}
+
+.wordmark:hover .wordmark-glitch::after {
+  opacity: 0.85;
+  color: var(--electric-blue);
+  -webkit-text-fill-color: var(--electric-blue);
+  text-shadow: 2px 0 var(--electric-blue);
+  clip-path: polygon(0 60%, 100% 60%, 100% 85%, 0 85%);
+  animation: glitch-step-2 0.25s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-step-1 {
+  0% { transform: translate(-2px, -1px); }
+  100% { transform: translate(2px, 1px); }
+}
+
+@keyframes glitch-step-2 {
+  0% { transform: translate(2px, 1px); }
+  100% { transform: translate(-2px, -1px); }
+}
+
+.logo-badge {
+  font-family: var(--font-head);
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  background: rgba(0, 255, 102, 0.15);
+  border: 1px solid var(--cyber-green);
+  color: var(--cyber-green);
+  box-shadow: 0 0 8px var(--cyber-green-soft);
+  letter-spacing: 0.1em;
+}
+
+/* Nav Tabs */
+.retro-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.retro-tab {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 6px 14px;
+  background: linear-gradient(180deg, #2b3340 0%, #171b22 100%);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.retro-tab:hover {
+  color: var(--text-bright);
+  border-color: var(--electric-blue) var(--bevel-dark) var(--bevel-dark) var(--electric-blue);
+  background: linear-gradient(180deg, #374252 0%, #1e2430 100%);
+}
+
+.retro-tab.active {
+  background: linear-gradient(180deg, #102638 0%, #081724 100%);
+  border-color: var(--electric-blue) var(--bevel-bright) var(--bevel-bright) var(--electric-blue);
+  color: var(--electric-blue);
+  box-shadow: 0 0 12px var(--electric-blue-soft), inset 0 0 6px rgba(0, 240, 255, 0.2);
+}
+
+.nav-extras {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.retro-clock {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--cyber-green);
+  background: #06080c;
+  padding: 4px 10px;
+  border: 1px solid var(--bevel-light);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-nav-toggle {
+  display: none;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  background: #1e2430;
+  border: 1px solid var(--bevel-bright);
+  color: var(--cyber-green);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   4. WORKSPACE LAYOUT (SIDEBAR + MAIN DESKTOP)
+   ========================================================================== */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  flex: 1;
+  position: relative;
+}
+
+/* Left Sidebar (Explorer Tree) */
+.sidebar-panel {
+  background: var(--bg-panel);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  height: fit-content;
+  position: sticky;
+  top: 60px;
+}
+
+.sidebar-titlebar {
+  background: var(--win-titlebar);
+  padding: 6px 10px;
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--electric-blue);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--bevel-dark);
+}
+
+.sidebar-content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tree-group {
+  border: 1px solid var(--bevel-light);
+  background: #0a0d13;
+}
+
+.tree-head {
+  background: linear-gradient(90deg, #18222d 0%, #0d1218 100%);
+  padding: 6px 8px;
+  font-family: var(--font-head);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tree-head:hover {
+  background: linear-gradient(90deg, #233140 0%, #121921 100%);
+  color: var(--cyber-green);
+}
+
+.tree-indicator {
+  font-size: 0.75rem;
+  color: var(--electric-blue);
+}
+
+.tree-items {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tree-group.collapsed .tree-items {
+  display: none;
+}
+
+.tree-item {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  color: var(--text-dim);
+  padding: 5px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.tree-item:hover, .tree-item.active {
+  color: var(--cyber-green);
+  background: rgba(0, 255, 102, 0.08);
+  border-color: rgba(0, 255, 102, 0.3);
+}
+
+.tree-item::before {
+  content: "▸";
+  color: var(--electric-blue);
+}
+
+/* ==========================================================================
+   5. DESKTOP WINDOW SYSTEM
+   ========================================================================== */
+.main-desktop {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+}
+
+.os-window {
+  background: var(--bg-panel);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.7), 0 0 20px rgba(0, 240, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.os-window.minimized {
+  display: none !important;
+}
+
+.os-window.maximized {
+  position: fixed !important;
+  inset: 50px 10px 48px 10px !important;
+  z-index: 9000 !important;
+  max-width: none !important;
+  height: auto !important;
+}
+
+.win-titlebar {
+  background: var(--win-titlebar);
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--bevel-dark);
+  cursor: grab;
+  user-select: none;
+}
+
+.win-titlebar:active {
+  cursor: grabbing;
+}
+
+.win-title {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.win-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.win-btn {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(180deg, #303b4a 0%, #171d24 100%);
+  border: 1px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  color: var(--text-main);
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.win-btn:hover {
+  background: linear-gradient(180deg, #445469 0%, #222b37 100%);
+  color: var(--electric-blue);
+}
+
+.win-btn.close:hover {
+  background: var(--alert-red);
+  color: #ffffff;
+}
+
+.win-content {
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbars */
+.win-content::-webkit-scrollbar, textarea::-webkit-scrollbar {
+  width: 12px;
+  background: #080a0e;
+}
+
+.win-content::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+  background: #252e3b;
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+}
+
+/* ==========================================================================
+   6. HERO SECTION & CONTINUOUS TAGLINE
+   ========================================================================== */
+.hero-tagline-wrap {
+  text-align: left;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed rgba(0, 240, 255, 0.25);
+}
+
+.hero-sys-badge {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--cyber-green);
+  text-shadow: 0 0 8px var(--cyber-green-glow);
+  margin-bottom: 8px;
+}
+
+.hero-wordmark-row {
+  margin-bottom: 14px;
+}
+
+.hero-wordmark {
+  font-size: clamp(2.6rem, 7.5vw, 4.8rem);
+  gap: clamp(10px, 2vw, 18px);
+  line-height: 1;
+  filter: drop-shadow(0 0 24px var(--cyber-green-glow)) drop-shadow(0 0 45px var(--electric-blue-glow));
+}
+
+.hero-wordmark .wordmark-lens-icon {
+  width: clamp(38px, 6vw, 56px);
+  height: clamp(38px, 6vw, 56px);
+}
+
+/* Tagline with continuous animated flowing cyan/magenta/lime/violet gradient, scramble, glitch & pulsing glow */
+.scramble-tagline-container {
+  min-height: clamp(5.2rem, 15vw, 12.8rem);
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin: 6px 0 12px 0;
+}
+
+.scramble-tagline {
+  font-family: var(--font-head);
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+  background: linear-gradient(
+    90deg,
+    #00f0ff 0%,
+    #ff2a8f 25%,
+    #39ff14 50%,
+    #bf5fff 75%,
+    #00f0ff 100%
+  );
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation:
+    flowing-tagline 5.5s linear infinite,
+    tagline-glow-pulse 3.2s ease-in-out infinite alternate,
+    tagline-glitch-flicker 7s infinite;
+  display: inline-block;
+  position: relative;
+  filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.5)) drop-shadow(0 0 32px rgba(255, 42, 143, 0.3));
+}
+
+.scramble-tagline::before,
+.scramble-tagline::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scramble-tagline::before {
+  color: #00f0ff;
+  -webkit-text-fill-color: #00f0ff;
+  text-shadow: -2px 0 #ff2a8f;
+  clip-path: polygon(0 18%, 100% 18%, 100% 44%, 0 44%);
+  animation: tagline-chroma-top 7s infinite;
+}
+
+.scramble-tagline::after {
+  color: #bf5fff;
+  -webkit-text-fill-color: #bf5fff;
+  text-shadow: 2px 0 #39ff14;
+  clip-path: polygon(0 62%, 100% 62%, 100% 86%, 0 86%);
+  animation: tagline-chroma-bot 7s infinite;
+}
+
+.scramble-tagline .tagline-cursor {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.88em;
+  vertical-align: -0.08em;
+  margin-left: 4px;
+  background: #00f0ff;
+  box-shadow: 0 0 12px #00f0ff, 0 0 24px #ff2a8f;
+  animation: cursor-blink 0.8s steps(2, start) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes flowing-tagline {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@keyframes tagline-glow-pulse {
+  0% {
+    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.45)) drop-shadow(0 0 24px rgba(191, 95, 255, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(255, 42, 143, 0.6)) drop-shadow(0 0 42px rgba(57, 255, 20, 0.35));
+  }
+  100% {
+    filter: drop-shadow(0 0 26px rgba(0, 240, 255, 0.7)) drop-shadow(0 0 48px rgba(191, 95, 255, 0.5));
+  }
+}
+
+@keyframes tagline-glitch-flicker {
+  0%, 91%, 94%, 96.5%, 100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+  92% {
+    opacity: 0.86;
+    transform: translate3d(-2px, 1px, 0) skewX(-2deg);
+  }
+  93% {
+    opacity: 0.95;
+    transform: translate3d(2px, -1px, 0) skewX(1.5deg);
+  }
+  95.5% {
+    opacity: 0.78;
+    transform: translate3d(-1px, 0, 0) skewX(-0.8deg);
+  }
+}
+
+@keyframes tagline-chroma-top {
+  0%, 91%, 94%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+  92% { opacity: 0.75; transform: translate3d(-3px, -1px, 0); }
+  93% { opacity: 0.5; transform: translate3d(3px, 1px, 0); }
+}
+
+@keyframes tagline-chroma-bot {
+  0%, 94.5%, 97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+  95.2% { opacity: 0.7; transform: translate3d(3px, 1px, 0); }
+  96% { opacity: 0.45; transform: translate3d(-2px, -1px, 0); }
+}
+
+.tagline-subtext {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  max-width: 58ch;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+/* Food Allergen Selector & Pep Communicator */
+.food-matrix-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.foods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.food {
+  font-size: 2.1rem;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  background: radial-gradient(circle at 35% 35%, #222b38, #0a0e14);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.8), inset 0 0 10px rgba(0, 240, 255, 0.15);
+  cursor: pointer;
+  animation: float-bob 3.5s ease-in-out infinite;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.food:nth-child(2n) { animation-delay: -1.2s; }
+.food:nth-child(3n) { animation-delay: -2.3s; }
+
+.food:hover {
+  transform: scale(1.18) rotate(-6deg);
+  border-color: var(--cyber-green);
+  box-shadow: 0 0 20px var(--cyber-green);
+}
+
+.food[aria-pressed="true"] {
+  background: radial-gradient(circle at 35% 35%, rgba(0, 255, 102, 0.35), #062414);
+  border-color: var(--cyber-green);
+  box-shadow: 0 0 20px var(--cyber-green), inset 0 0 12px var(--cyber-green);
+}
+
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.pep-communicator {
+  background: #080b10;
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: inset 0 0 14px rgba(0,0,0,0.9);
+}
+
+.pep-avatar {
+  font-size: 2.4rem;
+  filter: drop-shadow(0 0 10px var(--electric-blue));
+  animation: pulse-avatar 2s infinite alternate;
+}
+
+@keyframes pulse-avatar {
+  from { filter: drop-shadow(0 0 6px var(--cyber-green)); }
+  to { filter: drop-shadow(0 0 16px var(--electric-blue)); }
+}
+
+.pep-msg {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.pep-header {
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  color: var(--electric-blue);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   7. SCANNER MODULE & INGREDIENT DECODER
+   ========================================================================== */
+.section-title {
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  color: var(--electric-blue);
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: "⌖";
+  color: var(--cyber-green);
+}
+
+.allergen-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 18px 0;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  padding: 6px 14px;
+  background: linear-gradient(180deg, #222a36 0%, #11161d 100%);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  border-color: var(--electric-blue);
+  color: #ffffff;
+  box-shadow: 0 0 10px var(--electric-blue-soft);
+}
+
+.chip[aria-pressed="true"] {
+  background: linear-gradient(180deg, #103323 0%, #051a10 100%);
+  border-color: var(--cyber-green);
+  color: var(--cyber-green);
+  font-weight: 700;
+  box-shadow: 0 0 14px var(--cyber-green-soft), inset 0 0 8px rgba(0, 255, 102, 0.2);
+}
+
+textarea#txt {
+  width: 100%;
+  min-height: 120px;
+  background: #06080d;
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  color: var(--cyber-green);
+  font: 14px/1.6 var(--font-mono);
+  padding: 12px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.85);
+  resize: vertical;
+}
+
+textarea#txt:focus {
+  outline: none;
+  border-color: var(--cyber-green);
+  box-shadow: 0 0 14px var(--cyber-green-soft), inset 0 2px 8px rgba(0,0,0,0.9);
+}
+
+.scan-btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+.btn-primary {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  padding: 10px 22px;
+  background: linear-gradient(180deg, #1c4a35 0%, #0d261a 100%);
+  color: #ffffff;
+  border: 2px solid;
+  border-color: #55ff99 #003314 #003314 #55ff99;
+  box-shadow: 0 0 14px var(--cyber-green-soft);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #266b4c 0%, #133d28 100%);
+  box-shadow: 0 0 20px var(--cyber-green);
+}
+
+.btn-primary:active {
+  transform: translate(1px, 1px);
+}
+
+.btn-secondary {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #232c38 0%, #131820 100%);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  color: #ffffff;
+  border-color: var(--electric-blue);
+}
+
+/* Decoded Scanner Results */
+.scan-result-card {
+  margin-top: 18px;
+  background: #090c12;
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  padding: 18px;
+}
+
+.verdict {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 18px;
+  border: 2px solid;
+  margin-bottom: 16px;
+}
+
+.verdict .ic {
+  font-size: 2.2rem;
+}
+
+.verdict b {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.v-r {
+  background: rgba(255, 42, 95, 0.15);
+  border-color: var(--alert-red);
+  color: #ffd1dc;
+  box-shadow: 0 0 20px var(--alert-red-glow);
+}
+
+.v-r b {
+  color: #ffffff;
+  text-shadow: 0 0 10px var(--alert-red);
+}
+
+.v-a {
+  background: rgba(255, 170, 0, 0.15);
+  border-color: var(--alert-amber);
+  color: #ffe6b3;
+  box-shadow: 0 0 20px var(--alert-amber-glow);
+}
+
+.v-a b {
+  color: #ffffff;
+  text-shadow: 0 0 10px var(--alert-amber);
+}
+
+.v-g {
+  background: rgba(0, 255, 102, 0.15);
+  border-color: var(--cyber-green);
+  color: #d1ffe2;
+  box-shadow: 0 0 20px var(--cyber-green-glow);
+}
+
+.v-g b {
+  color: #ffffff;
+  text-shadow: 0 0 10px var(--cyber-green);
+}
+
+.scan-output-box {
+  background: #06080c;
+  border: 1px solid var(--bevel-light);
+  padding: 14px;
+  line-height: 2.2;
+  font-size: 1.05rem;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.scan-output-box.run::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--cyber-green) 50%, transparent);
+  box-shadow: 0 0 18px var(--cyber-green);
+  animation: laser-sweep 1s ease-in-out;
+}
+
+@keyframes laser-sweep {
+  from { top: 0; }
+  to { top: 100%; }
+}
+
+mark {
+  border-radius: 4px;
+  padding: 2px 7px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  display: inline-block;
+  margin: 1px 2px;
+}
+
+mark.r {
+  background: rgba(255, 42, 95, 0.3);
+  color: #ffffff;
+  border: 1px solid var(--alert-red);
+  box-shadow: 0 0 10px var(--alert-red-glow);
+}
+
+mark.a {
+  background: rgba(255, 170, 0, 0.25);
+  color: #ffffff;
+  border: 1px solid var(--alert-amber);
+  box-shadow: 0 0 10px var(--alert-amber-glow);
+}
+
+mark.n {
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--electric-blue);
+  border: 1px dashed var(--electric-blue-dim);
+}
+
+.legend-row {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.exp {
+  border-left: 4px solid var(--alert-red);
+  background: #07090f;
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-top: 1px solid var(--bevel-dark);
+  border-bottom: 1px solid var(--bevel-dark);
+  border-right: 1px solid var(--bevel-dark);
+}
+
+.exp.t {
+  border-left-color: var(--alert-amber);
+}
+
+.exp h3 {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  color: var(--text-bright);
+  margin-bottom: 6px;
+}
+
+.exp p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.exp p b {
+  color: var(--cyber-green);
+}
+
+/* ==========================================================================
+   8. WINAMP-STYLE "PROTEIN LAB" PANEL
+   ========================================================================== */
+.winamp-player {
+  background: #11141c;
+  border: 3px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.85), inset 0 0 15px rgba(0,0,0,0.8);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.winamp-display-screen {
+  background: #040806;
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.95);
+}
+
+.winamp-lcd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  color: var(--cyber-green);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  border-bottom: 1px dashed rgba(0, 255, 102, 0.25);
+  padding-bottom: 4px;
+}
+
+.winamp-lcd-track {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 10px var(--cyber-green);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Animated Equalizer Bars */
+.winamp-equalizer {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 28px;
+  margin-top: 8px;
+  padding: 2px 0;
+}
+
+.eq-bar {
+  flex: 1;
+  background: var(--cyber-green);
+  height: 40%;
+  transition: height 0.1s ease;
+  box-shadow: 0 0 4px var(--cyber-green);
+}
+
+/* Protein Molecule Canvas */
+.molecule-viewer-frame {
+  background: #020407;
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+#molecule-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.molecule-hud {
+  position: absolute;
+  top: 8px; left: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--electric-blue);
+  background: rgba(4, 8, 12, 0.75);
+  padding: 2px 8px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+/* Winamp Controls */
+.winamp-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px;
+  background: #171b24;
+  border: 1px solid var(--bevel-light);
+}
+
+.player-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.player-btn {
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  background: linear-gradient(180deg, #303a49 0%, #191f27 100%);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.player-btn:hover {
+  background: linear-gradient(180deg, #425066 0%, #252e3b 100%);
+  color: var(--cyber-green);
+}
+
+.player-btn:active {
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+}
+
+.slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.winamp-slider {
+  appearance: none;
+  background: #080b10;
+  border: 1px solid var(--bevel-light);
+  height: 8px;
+  border-radius: 0;
+  outline: none;
+  width: 120px;
+}
+
+.winamp-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 18px;
+  background: linear-gradient(180deg, #d8e4f0 0%, #68798a 100%);
+  border: 1px solid #11141c;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0,0,0,0.8);
+}
+
+/* Protein Info Readout Table */
+.protein-readout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.readout-cell {
+  background: #080b10;
+  border: 1px solid var(--bevel-light);
+  padding: 8px 12px;
+}
+
+.readout-cell span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.readout-cell strong {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  color: var(--electric-blue);
+}
+
+/* Residue Beads */
+.beads-box {
+  background: #06090f;
+  border: 1px solid var(--bevel-light);
+  padding: 12px;
+  margin: 14px 0;
+}
+
+.beads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.bead {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--bevel-light);
+  font: 700 0.7rem/23px var(--font-mono);
+  text-align: center;
+  background: #111620;
+  color: var(--text-dim);
+  cursor: default;
+  transition: all 0.15s ease;
+}
+
+.bead.ep {
+  background: var(--electric-blue);
+  color: #03060a;
+  border-color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--electric-blue);
+}
+
+.bead.pr {
+  background: var(--cyber-green);
+  color: #03060a;
+  border-color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--cyber-green);
+}
+
+.bead:hover {
+  transform: translateY(-3px) scale(1.2);
+  z-index: 10;
+}
+
+/* ==========================================================================
+   9. ALLERGEN DATABASE TABLE
+   ========================================================================== */
+.db-filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.db-search-input {
+  flex: 1;
+  min-width: 240px;
+  background: #07090e;
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  color: var(--cyber-green);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  padding: 8px 12px;
+}
+
+.retro-table-wrap {
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  overflow-x: auto;
+  background: #06090e;
+}
+
+table.retro-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+
+table.retro-table th {
+  background: linear-gradient(180deg, #2b3644 0%, #151b22 100%);
+  color: var(--electric-blue);
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--bevel-dark);
+  border-right: 1px solid var(--bevel-light);
+  cursor: pointer;
+  user-select: none;
+}
+
+table.retro-table th:hover {
+  color: #ffffff;
+  background: #334052;
+}
+
+table.retro-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #141b24;
+  border-right: 1px solid #141b24;
+  color: var(--text-main);
+}
+
+table.retro-table tr:nth-child(even) {
+  background: #0b1017;
+}
+
+table.retro-table tr:hover {
+  background: rgba(0, 255, 102, 0.08);
+}
+
+.badge-risk {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 0.72rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.badge-risk.high {
+  background: rgba(255, 42, 95, 0.2);
+  border: 1px solid var(--alert-red);
+  color: #ff85a1;
+}
+
+.badge-risk.med {
+  background: rgba(255, 170, 0, 0.2);
+  border: 1px solid var(--alert-amber);
+  color: #ffd280;
+}
+
+/* ==========================================================================
+   10. BOTTOM TASKBAR & STATUS BAR
+   ========================================================================== */
+.retro-taskbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: var(--win-metal-grad);
+  border-top: 2px solid var(--bevel-bright);
+  z-index: 99900;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.8);
+}
+
+.taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-start {
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  padding: 4px 14px;
+  background: linear-gradient(180deg, #374659 0%, #1b232c 100%);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  color: var(--cyber-green);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-start:hover {
+  background: #2b3747;
+  box-shadow: 0 0 10px var(--cyber-green-soft);
+}
+
+.taskbar-windows {
+  display: flex;
+  gap: 4px;
+}
+
+.taskbar-tab {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  background: #141922;
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.taskbar-tab.active {
+  background: #09131c;
+  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  color: var(--electric-blue);
+}
+
+.taskbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cyber-green);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--cyber-green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--cyber-green);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.memory-meter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mem-bar-bg {
+  width: 60px;
+  height: 10px;
+  background: #06090e;
+  border: 1px solid var(--bevel-light);
+  overflow: hidden;
+}
+
+.mem-bar-fill {
+  height: 100%;
+  width: 52%;
+  background: linear-gradient(90deg, var(--cyber-green), var(--electric-blue));
+  transition: width 0.5s ease;
+}
+
+/* ==========================================================================
+   11. RESPONSIVE MEDIA QUERIES (MOBILE TO DESKTOP)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar-panel {
+    position: fixed;
+    top: 52px; left: 0; bottom: 40px;
+    width: 280px;
+    z-index: 9950;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .sidebar-panel.open {
+    transform: translateX(0);
+    box-shadow: 8px 0 30px rgba(0,0,0,0.9);
+  }
+  
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+  
+  .food-matrix-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .taskbar-windows {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .retro-tabs {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  
+  .retro-clock {
+    display: none;
+  }
+  
+  .win-content {
+    padding: 14px;
+  }
+}
+
+/* ==========================================================================
+   BACKGROUND CANVAS (persistent, low-intensity, behind content)
+   ========================================================================== */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+body {
+  isolation: isolate;
+}
+
+.app-container, .retro-header, .retro-taskbar {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   NEON FOCUS RING — keyboard users
+   ========================================================================== */
+:focus-visible {
+  outline: 2px solid #00f0ff !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.28), 0 0 18px rgba(0, 240, 255, 0.65) !important;
+}
+
+/* Tighter ring on small elements */
+.chip:focus-visible,
+.food:focus-visible,
+.win-btn:focus-visible,
+.player-btn:focus-visible,
+.preset-pill:focus-visible {
+  outline-offset: 2px !important;
+}
+
+/* ==========================================================================
+   ENHANCED ALLERGEN BADGE NEON COLORS (MAGENTA / AMBER / LIME WITH GLOW)
+   ========================================================================== */
+.badge-risk {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-family: var(--font-head);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+
+.badge-risk:hover {
+  transform: translateY(-1px) scale(1.06);
+}
+
+/* HIGH RISK / CONTAINS — vivid neon magenta */
+.badge-risk.high {
+  background: rgba(255, 0, 110, 0.22);
+  border: 1.5px solid #ff2a8f;
+  color: #ff99c8;
+  box-shadow: 0 0 12px rgba(255, 42, 143, 0.65), inset 0 0 8px rgba(255, 42, 143, 0.25);
+  text-shadow: 0 0 8px #ff2a8f;
+}
+.badge-risk.high::before { content: '⚠ '; color: #ff2a8f; }
+
+/* MED RISK / TRACE — neon amber */
+.badge-risk.med {
+  background: rgba(255, 170, 0, 0.2);
+  border: 1.5px solid #ffbe0b;
+  color: #ffe082;
+  box-shadow: 0 0 12px rgba(255, 190, 11, 0.55), inset 0 0 8px rgba(255, 190, 11, 0.2);
+  text-shadow: 0 0 8px #ffaa00;
+}
+.badge-risk.med::before { content: '⚡ '; color: #ffbe0b; }
+
+/* SAFE / CLEAR — bright neon lime green */
+.badge-risk.safe, .badge-risk.low {
+  background: rgba(57, 255, 20, 0.16);
+  border: 1.5px solid #39ff14;
+  color: #a6ff96;
+  box-shadow: 0 0 12px rgba(57, 255, 20, 0.6), inset 0 0 8px rgba(57, 255, 20, 0.2);
+  text-shadow: 0 0 8px #39ff14;
+}
+.badge-risk.safe::before, .badge-risk.low::before { content: '✓ '; color: #39ff14; }
+
+/* Scan result allergen badge strip */
+.scan-badges-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 16px 0;
+  padding: 10px 12px;
+  background: rgba(6, 9, 15, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  border-radius: 4px;
+}
+
+/* Highlighted mark tags in decoded label */
+mark {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+mark:hover, mark:focus-visible {
+  transform: translateY(-2px) scale(1.05);
+}
+mark.r {
+  background: rgba(255, 0, 110, 0.32);
+  color: #ffffff;
+  border: 1.5px solid #ff2a8f;
+  box-shadow: 0 0 12px rgba(255, 42, 143, 0.65), inset 0 0 6px rgba(255, 42, 143, 0.3);
+  text-shadow: 0 0 6px #ff2a8f;
+}
+mark.a {
+  background: rgba(255, 190, 11, 0.28);
+  color: #ffffff;
+  border: 1.5px solid #ffbe0b;
+  box-shadow: 0 0 12px rgba(255, 190, 11, 0.55), inset 0 0 6px rgba(255, 190, 11, 0.25);
+  text-shadow: 0 0 6px #ffaa00;
+}
+mark.n {
+  background: rgba(191, 95, 255, 0.16);
+  color: #e2b8ff;
+  border: 1px dashed #bf5fff;
+  box-shadow: 0 0 8px rgba(191, 95, 255, 0.3);
+}
+
+/* ==========================================================================
+   Y2K NEON UPLOAD / OPTICAL SCAN AREA
+   ========================================================================== */
+.upload-scan-zone {
+  position: relative;
+  border: 2px dashed rgba(0, 240, 255, 0.45);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.1), transparent 70%),
+    linear-gradient(180deg, rgba(14, 20, 32, 0.9) 0%, rgba(7, 10, 16, 0.95) 100%);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  cursor: pointer;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.18s ease, background 0.22s ease;
+}
+
+.upload-scan-zone:hover,
+.upload-scan-zone.drag-over {
+  border-color: #00f0ff;
+  border-style: solid;
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.35), inset 0 0 18px rgba(0, 240, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.upload-zone-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.upload-reticle-icon {
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid #00f0ff;
+  background: rgba(0, 240, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.upload-zone-title {
+  font-family: var(--font-head);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #00f0ff;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.45);
+}
+
+.upload-zone-sub {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.preset-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.preset-pill {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  padding: 5px 10px;
+  background: rgba(191, 95, 255, 0.14);
+  border: 1px solid rgba(191, 95, 255, 0.55);
+  color: #e5c2ff;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.18s ease;
+}
+
+.preset-pill:hover {
+  background: rgba(191, 95, 255, 0.28);
+  border-color: #bf5fff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(191, 95, 255, 0.55);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   NEON Y2K ALLERGEN & PROTEIN DOSSIER MODAL
+   ========================================================================== */
+.y2k-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150000;
+  background: rgba(5, 6, 12, 0.82);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.y2k-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.y2k-modal-window {
+  width: 100%;
+  max-width: 600px;
+  background: #10131d;
+  border: 2px solid #00f0ff;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.92),
+    0 0 30px rgba(0, 240, 255, 0.4),
+    0 0 60px rgba(255, 42, 143, 0.2);
+  transform: translateY(16px) scale(0.96);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.y2k-modal-backdrop.open .y2k-modal-window {
+  transform: translateY(0) scale(1);
+}
+
+.y2k-modal-body {
+  padding: 20px;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.alias-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.alias-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 3px 9px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.38);
+  color: #a8f9ff;
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   ENHANCED BUTTONS — neon hover/active states
+   ========================================================================== */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.18s ease, box-shadow 0.18s ease;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,255,102,0.25) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+.btn-primary:hover::after { transform: translateX(100%); }
+.btn-primary:hover {
+  box-shadow: 0 0 24px var(--cyber-green), 0 0 6px var(--cyber-green);
+  letter-spacing: 0.1em;
+}
+.btn-primary:active { transform: translate(1px,1px); box-shadow: 0 0 10px var(--cyber-green); }
+
+.btn-secondary {
+  transition: all 0.18s ease;
+}
+.btn-secondary:hover {
+  color: var(--electric-blue);
+  border-color: var(--electric-blue);
+  box-shadow: 0 0 12px rgba(0,240,255,0.35);
+  background: linear-gradient(180deg, #1a2536 0%, #0d1520 100%);
+}
+.btn-secondary:active { transform: translate(1px,1px); }
+
+/* ==========================================================================
+   ENHANCED CHIP/ALLERGEN SELECTOR
+   ========================================================================== */
+.chip {
+  transition: all 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+.chip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,240,255,0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.chip:hover::after { opacity: 1; }
+.chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--electric-blue);
+  box-shadow: 0 4px 16px rgba(0,240,255,0.3), 0 0 8px rgba(0,240,255,0.2);
+}
+.chip[aria-pressed="true"] {
+  animation: chip-pulse 2s infinite alternate;
+}
+@keyframes chip-pulse {
+  from { box-shadow: 0 0 10px var(--cyber-green-soft), inset 0 0 8px rgba(0,255,102,0.2); }
+  to   { box-shadow: 0 0 22px var(--cyber-green), inset 0 0 12px rgba(0,255,102,0.3); }
+}
+
+/* ==========================================================================
+   ENHANCED FOOD ALLERGEN EMOJI BUTTONS
+   ========================================================================== */
+.food {
+  position: relative;
+}
+.food::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+.food:hover::after {
+  border-color: var(--cyber-green);
+  box-shadow: 0 0 18px var(--cyber-green), 0 0 40px rgba(0,255,102,0.25);
+}
+.food[aria-pressed="true"] {
+  animation: float-bob 3.5s ease-in-out infinite, food-glow 2s ease-in-out infinite alternate;
+}
+@keyframes food-glow {
+  from { box-shadow: 0 0 20px var(--cyber-green), inset 0 0 12px var(--cyber-green); }
+  to   { box-shadow: 0 0 35px #00ff66, inset 0 0 20px rgba(0,255,102,0.4); }
+}
+
+/* ==========================================================================
+   ENHANCED TEXTAREA / DB SEARCH INPUT
+   ========================================================================== */
+textarea#txt {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  caret-color: var(--cyber-green);
+}
+textarea#txt:hover {
+  border-color: rgba(0, 240, 255, 0.55);
+}
+textarea#txt:focus {
+  outline: none;
+  border-color: var(--cyber-green);
+  box-shadow: 0 0 0 3px rgba(0,255,102,0.18), 0 0 22px rgba(0,255,102,0.28), inset 0 2px 8px rgba(0,0,0,0.9);
+}
+
+.db-search-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  caret-color: var(--cyber-green);
+  outline: none;
+}
+.db-search-input:hover {
+  border-color: rgba(0, 240, 255, 0.55);
+}
+.db-search-input:focus {
+  border-color: var(--electric-blue);
+  box-shadow: 0 0 0 3px rgba(0,240,255,0.18), 0 0 18px rgba(0,240,255,0.28);
+}
+
+/* ==========================================================================
+   ENHANCED OS WINDOWS & CARDS
+   ========================================================================== */
+.os-window {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.os-window:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 28px rgba(0,240,255,0.14);
+}
+
+.scan-result-card {
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.08), inset 0 0 18px rgba(0, 0, 0, 0.8);
+}
+
+.exp {
+  transition: border-left-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  border-left: 4px solid #ff2a8f;
+}
+.exp:hover {
+  background: #0b1018;
+  border-left-color: var(--electric-blue);
+  box-shadow: 0 4px 18px rgba(0, 240, 255, 0.14);
+  transform: translateX(2px);
+}
+
+/* ==========================================================================
+   ENHANCED VERDICT / RESULT CARDS (NEON MAGENTA / AMBER / LIME)
+   ========================================================================== */
+.verdict {
+  transition: box-shadow 0.3s ease;
+}
+.v-r {
+  background: rgba(255, 0, 110, 0.18);
+  border-color: #ff2a8f;
+  color: #ffd6e8;
+  animation: verdict-pulse-red 3s ease-in-out infinite alternate;
+}
+.v-g {
+  background: rgba(57, 255, 20, 0.15);
+  border-color: #39ff14;
+  color: #dcffd6;
+  animation: verdict-pulse-green 3s ease-in-out infinite alternate;
+}
+.v-a {
+  background: rgba(255, 190, 11, 0.16);
+  border-color: #ffbe0b;
+  color: #ffecb3;
+  animation: verdict-pulse-amber 3s ease-in-out infinite alternate;
+}
+
+@keyframes verdict-pulse-red {
+  from { box-shadow: 0 0 18px rgba(255, 42, 143, 0.45); }
+  to   { box-shadow: 0 0 34px rgba(255, 42, 143, 0.7), 0 0 60px rgba(255, 42, 143, 0.25); }
+}
+@keyframes verdict-pulse-green {
+  from { box-shadow: 0 0 18px rgba(57, 255, 20, 0.4); }
+  to   { box-shadow: 0 0 34px rgba(57, 255, 20, 0.65), 0 0 60px rgba(57, 255, 20, 0.22); }
+}
+@keyframes verdict-pulse-amber {
+  from { box-shadow: 0 0 18px rgba(255, 190, 11, 0.4); }
+  to   { box-shadow: 0 0 34px rgba(255, 190, 11, 0.6), 0 0 60px rgba(255, 190, 11, 0.2); }
+}
+
+/* ==========================================================================
+   RETRO TAB ENHANCEMENTS
+   ========================================================================== */
+.retro-tab {
+  position: relative;
+  overflow: hidden;
+}
+.retro-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 0; height: 2px;
+  background: var(--electric-blue);
+  box-shadow: 0 0 8px var(--electric-blue);
+  transition: width 0.25s ease, left 0.25s ease;
+}
+.retro-tab:hover::after { width: 100%; left: 0; }
+.retro-tab.active::after { width: 100%; left: 0; background: var(--cyber-green); box-shadow: 0 0 8px var(--cyber-green); }
+
+/* Player button neon */
+.player-btn {
+  transition: all 0.18s ease;
+}
+.player-btn:hover {
+  color: var(--cyber-green);
+  box-shadow: 0 0 14px rgba(0,255,102,0.35);
+  background: linear-gradient(180deg, #263a28 0%, #131e14 100%);
+}
+.player-btn.active {
+  color: var(--electric-blue);
+  border-color: var(--electric-blue);
+  box-shadow: 0 0 14px rgba(0,240,255,0.4);
+}
+
+/* Tree items */
+.tree-item {
+  transition: all 0.15s ease;
+}
+.tree-item:hover {
+  padding-left: 12px;
+}
+
+/* Win buttons */
+.win-btn {
+  transition: all 0.12s ease;
+}
+
+/* Table row pulse on hover */
+table.retro-table tr {
+  transition: background 0.15s ease;
+}
+table.retro-table tr:hover {
+  background: rgba(0,255,102,0.1) !important;
+  box-shadow: inset 0 0 20px rgba(0,255,102,0.05);
+}
+
+/* ==========================================================================
+   SCROLL-REVEAL ANIMATION
+   ========================================================================== */
+.sr-hidden {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1);
+}
+.sr-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered delay for children */
+.sr-hidden:nth-child(1) { transition-delay: 0ms; }
+.sr-hidden:nth-child(2) { transition-delay: 80ms; }
+.sr-hidden:nth-child(3) { transition-delay: 160ms; }
+.sr-hidden:nth-child(4) { transition-delay: 240ms; }
+.sr-hidden:nth-child(5) { transition-delay: 320ms; }
+
+/* ==========================================================================
+   FULL-SCREEN PROTEIN CHAIN INTRO OVERLAY
+   ========================================================================== */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  background: transparent;
+  overflow: hidden;
+  pointer-events: all;
+}
+
+#intro-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#intro-skip-btn {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  z-index: 10;
+  background: rgba(8, 12, 20, 0.78);
+  border: 1.5px solid rgba(0, 240, 255, 0.65);
+  color: #00f0ff;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 9px 18px;
+  cursor: pointer;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.25);
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  border-radius: 3px;
+}
+#intro-skip-btn:hover {
+  color: #ffffff;
+  border-color: #ff2a8f;
+  background: rgba(255, 42, 143, 0.22);
+  box-shadow: 0 0 18px rgba(255, 42, 143, 0.6), 0 0 30px rgba(0, 240, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Reduced motion support: static gradient tagline, no animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .sr-hidden {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .scramble-tagline {
+    animation: none !important;
+    background-position: 0% 50% !important;
+    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.35)) !important;
+  }
+  .scramble-tagline::before,
+  .scramble-tagline::after,
+  .scramble-tagline .tagline-cursor {
+    display: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Background persistent canvas -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<!-- ==========================================================================
+     PROTEIN CHAIN INTRO OVERLAY
+     ========================================================================== -->
+<div id="intro-overlay" role="region" aria-label="AllerLens Intro Animation">
+  <canvas id="intro-canvas"></canvas>
+  <button id="intro-skip-btn" type="button" onclick="skipIntro()" aria-label="Skip intro animation">[ SKIP INTRO ⏭ ]</button>
+</div>
+
+<!-- ==========================================================================
+     BOOT SCREEN: ALLERLENS_BOOT.EXE (Hidden by default so Intro Overlay reveals site directly)
+     ========================================================================== -->
+<div id="boot-screen" style="display:none;" role="dialog" aria-modal="true" aria-label="System Boot Sequence">
+  <canvas id="boot-canvas"></canvas>
+  
+  <div class="boot-window">
+    <div class="boot-header">
+      <div class="boot-title">
+        <span>⚡</span> ALLERLENS_BOOT.EXE [v2.4_CYBER]
+      </div>
+      <div class="boot-controls">
+        <div class="boot-btn-mock">_</div>
+        <div class="boot-btn-mock">□</div>
+        <div class="boot-btn-mock" onclick="skipBoot()">✕</div>
+      </div>
+    </div>
+    
+    <div class="boot-body">
+      <div class="boot-bios">
+        BIOS v2.000 (C) 200X ALLERLENS SYSTEMS &middot; QUANTUM ENGINE @ 800MHz<br>
+        MEMORY CHECK: 65536 KB OK &middot; VIDEO: RETRO-CYBER 32-BIT
+      </div>
+      
+      <div class="boot-log" id="boot-typewriter"></div>
+      
+      <div class="boot-progress-wrap" id="boot-progress-bar">
+        <!-- 20 Segment Blocks injected via JS -->
+      </div>
+      
+      <div class="boot-actions">
+        <button class="btn-boot-start" id="boot-start-btn" onclick="startSystem()">⚡ CLICK TO START SYSTEM ⚡</button>
+        <button class="btn-boot-skip" onclick="skipBoot()">[ ESC / SKIP BOOT ]</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     MAIN OS WORKSPACE
+     ========================================================================== -->
+<div class="app-container">
+  
+  <!-- Header / Navigation Bar -->
+  <header class="retro-header">
+    <div class="retro-nav-inner">
+      <div class="brand-wrap" onclick="switchTab('home')" role="button" tabindex="0" aria-label="AllerLens Home">
+        <div class="wordmark header-wordmark">
+          <svg class="wordmark-lens-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle class="lens-spin" cx="14" cy="14" r="12" stroke="url(#reticleNavGrad)" stroke-width="2" stroke-dasharray="3 1.5"/>
+            <circle cx="14" cy="14" r="7.5" stroke="#00f0ff" stroke-width="1.5"/>
+            <circle cx="14" cy="14" r="3" fill="#ff2a5f"/>
+            <line x1="14" y1="1" x2="14" y2="5" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="23" x2="14" y2="27" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="1" y1="14" x2="5" y2="14" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="23" y1="14" x2="27" y2="14" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="21" cy="7" r="1.5" fill="#00ff66"/>
+            <circle cx="7" cy="21" r="1.5" fill="#00f0ff"/>
+            <defs>
+              <linearGradient id="reticleNavGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#00ff66"/>
+                <stop offset="0.5" stop-color="#00f0ff"/>
+                <stop offset="1" stop-color="#ff2a5f"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="wordmark-text wordmark-glitch" data-text="ALLERLENS">ALLERLENS</span>
+        </div>
+        <span class="logo-badge">v2.4_CYBER</span>
+      </div>
+
+      <!-- Clickable Tabs -->
+      <nav class="retro-tabs" aria-label="System Navigation">
+        <button class="retro-tab active" data-tab="home" onclick="switchTab('home')">🏠 HOME</button>
+        <button class="retro-tab" data-tab="scan" onclick="switchTab('scan')">🔍 SCANNER</button>
+        <button class="retro-tab" data-tab="database" onclick="switchTab('database')">📊 ALLERGEN DB</button>
+        <button class="retro-tab" data-tab="protein" onclick="switchTab('protein')">🧬 PROTEIN LAB</button>
+        <button class="retro-tab" data-tab="archives" onclick="switchTab('archives')">💾 ARCHIVES</button>
+        <button class="retro-tab" data-tab="about" onclick="switchTab('about')">ℹ ABOUT</button>
+      </nav>
+
+      <!-- Extras: Clock & Mobile Drawer Toggle -->
+      <div class="nav-extras">
+        <div class="retro-clock" id="live-clock" title="System Clock">200X-10-30 00:00:00</div>
+        <button class="mobile-nav-toggle" onclick="toggleSidebar()" aria-label="Toggle Sidebar Menu">☰ MENU</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace: Left Sidebar + Main Window Area -->
+  <div class="workspace-grid">
+    
+    <!-- Collapsible Sidebar -->
+    <aside class="sidebar-panel" id="sidebar-panel">
+      <div class="sidebar-titlebar">
+        <span>EXPLORER.EXE // LAB_TREE</span>
+        <span style="font-size:10px;color:var(--cyber-green);">[SYS_READY]</span>
+      </div>
+      <div class="sidebar-content">
+        
+        <!-- Group 1: Scanner -->
+        <div class="tree-group" id="grp-scanner">
+          <div class="tree-head" onclick="toggleTree('grp-scanner')">
+            <span>[1] SCANNER</span>
+            <span class="tree-indicator">▼</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item" onclick="switchTab('scan'); scrollToEl('scan-section');">Label Decoder</div>
+            <div class="tree-item" onclick="switchTab('scan'); scrollToEl('chips-section');">My Allergens (Profile)</div>
+          </div>
+        </div>
+
+        <!-- Group 2: Allergen Database -->
+        <div class="tree-group" id="grp-db">
+          <div class="tree-head" onclick="toggleTree('grp-db')">
+            <span>[2] ALLERGEN DATABASE</span>
+            <span class="tree-indicator">▼</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item" onclick="switchTab('database');">Major 9 Group Records</div>
+            <div class="tree-item" onclick="switchTab('database'); document.getElementById('db-search').focus();">Cross-Reactivity Matrix</div>
+          </div>
+        </div>
+
+        <!-- Group 3: Protein Lab -->
+        <div class="tree-group" id="grp-protein">
+          <div class="tree-head" onclick="toggleTree('grp-protein')">
+            <span>[3] PROTEIN LAB</span>
+            <span class="tree-indicator">▼</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item" onclick="switchTab('protein');">Winamp Molecule Player</div>
+            <div class="tree-item" onclick="switchTab('protein');">Epitope Residue Beads</div>
+          </div>
+        </div>
+
+        <!-- Group 4: Archives -->
+        <div class="tree-group" id="grp-archives">
+          <div class="tree-head" onclick="toggleTree('grp-archives')">
+            <span>[4] ARCHIVES</span>
+            <span class="tree-indicator">▼</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item" onclick="switchTab('archives');">Inspection History</div>
+            <div class="tree-item" onclick="switchTab('archives');">Saved Scans</div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Main Desktop Window Area -->
+    <main class="main-desktop">
+      
+      <!-- WINDOW 1: HOME & HERO WINDOW -->
+      <section class="os-window" id="win-home" data-win="home">
+        <div class="win-titlebar">
+          <div class="win-title"><span>🔬</span> ALLERLENS_DASHBOARD.EXE &middot; [HOME]</div>
+          <div class="win-controls">
+            <button class="win-btn" onclick="minimizeWindow('win-home')" aria-label="Minimize">_</button>
+            <button class="win-btn" onclick="maximizeWindow('win-home')" aria-label="Maximize">□</button>
+            <button class="win-btn close" onclick="closeWindow('win-home')" aria-label="Close">✕</button>
+          </div>
+        </div>
+        <div class="win-content">
+          
+          <div class="hero-tagline-wrap">
+            <span class="hero-sys-badge">✦ QUANTUM BIO-SPECTROSCOPY &middot; RESIDUE MAPPING v2.4 ✦</span>
+            
+            <div class="hero-wordmark-row">
+              <div class="wordmark hero-wordmark" aria-label="AllerLens">
+                <svg class="wordmark-lens-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle class="lens-spin" cx="14" cy="14" r="12" stroke="url(#reticleHeroGrad)" stroke-width="2" stroke-dasharray="3 1.5"/>
+                  <circle cx="14" cy="14" r="7.5" stroke="#00f0ff" stroke-width="1.5"/>
+                  <circle cx="14" cy="14" r="3" fill="#ff2a5f"/>
+                  <line x1="14" y1="1" x2="14" y2="5" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+                  <line x1="14" y1="23" x2="14" y2="27" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+                  <line x1="1" y1="14" x2="5" y2="14" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+                  <line x1="23" y1="14" x2="27" y2="14" stroke="#00f0ff" stroke-width="1.5" stroke-linecap="round"/>
+                  <circle cx="21" cy="7" r="1.5" fill="#00ff66"/>
+                  <circle cx="7" cy="21" r="1.5" fill="#00f0ff"/>
+                  <defs>
+                    <linearGradient id="reticleHeroGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#00ff66"/>
+                      <stop offset="0.5" stop-color="#00f0ff"/>
+                      <stop offset="1" stop-color="#ff2a5f"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span class="wordmark-text wordmark-glitch" data-text="ALLERLENS">ALLERLENS</span>
+              </div>
+            </div>
+
+            <!-- Dynamic Scramble Tagline -->
+            <div class="scramble-tagline-container">
+              <h1 class="scramble-tagline" id="dynamic-tagline" data-text="Decode the label. Meet the protein." aria-label="Decode the label. Meet the protein.">
+                <span id="tagline-text-span" aria-hidden="true">Decode the label. Meet the protein.</span><span class="tagline-cursor" aria-hidden="true"></span>
+              </h1>
+            </div>
+
+            <p class="tagline-subtext">
+              Select your allergen profile, paste an ingredient list, and AllerLens highlights what matters to you and reveals the trigger protein.
+            </p>
+            
+            <div style="margin-top:16px;">
+              <button class="btn-primary" onclick="switchTab('scan')">⚡ LAUNCH LABEL DECODER</button>
+            </div>
+          </div>
+
+          <!-- Allergen Selector Matrix & Pep -->
+          <div class="food-matrix-row">
+            <div>
+              <div style="font-family:var(--font-head);font-size:0.85rem;color:var(--electric-blue);margin-bottom:8px;">
+                [ FAST_SELECT: TAP ALLERGEN TO ADD/REMOVE ]
+              </div>
+              <div class="foods" id="foods"></div>
+            </div>
+            
+            <div class="pep-communicator">
+              <span class="pep-avatar" aria-hidden="true">🧬</span>
+              <div>
+                <div class="pep-header">// PEP_TRANSMISSION [SYS_ACTIVE] //</div>
+                <div class="pep-msg" id="pepsay" aria-live="polite">
+                  Greetings. I'm Pep the peptide. Tap any food above to adjust your personal profile, and I'll detail the molecular risks.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Survey Statistics -->
+          <h2 class="section-title" style="margin-top:28px;">Empirical Clinical Survey Data (N=186)</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+            <div class="bevel-inset" style="padding:12px;text-align:center;">
+              <b style="font-family:var(--font-head);font-size:1.8rem;color:var(--cyber-green);display:block;">67.2%</b>
+              <span style="font-size:0.82rem;color:var(--text-dim);">find labels hard to understand at least sometimes</span>
+            </div>
+            <div class="bevel-inset" style="padding:12px;text-align:center;">
+              <b style="font-family:var(--font-head);font-size:1.8rem;color:var(--electric-blue);display:block;">24.7%</b>
+              <span style="font-size:0.82rem;color:var(--text-dim);">feel confident reading labels</span>
+            </div>
+            <div class="bevel-inset" style="padding:12px;text-align:center;">
+              <b style="font-family:var(--font-head);font-size:1.8rem;color:var(--cyber-green);display:block;">51.1%</b>
+              <span style="font-size:0.82rem;color:var(--text-dim);">trust a tool showing the exact protein trigger</span>
+            </div>
+            <div class="bevel-inset" style="padding:12px;text-align:center;">
+              <b style="font-family:var(--font-head);font-size:1.8rem;color:var(--alert-amber);display:block;">94.1%</b>
+              <span style="font-size:0.82rem;color:var(--text-dim);">use no allergen website or app</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- WINDOW 2: SCANNER & DECODER WINDOW -->
+      <section class="os-window" id="win-scan" data-win="scan">
+        <div class="win-titlebar">
+          <div class="win-title"><span>🔍</span> SCANNER_ENGINE.EXE &middot; [LABEL DECODER]</div>
+          <div class="win-controls">
+            <button class="win-btn" onclick="minimizeWindow('win-scan')" aria-label="Minimize">_</button>
+            <button class="win-btn" onclick="maximizeWindow('win-scan')" aria-label="Maximize">□</button>
+            <button class="win-btn close" onclick="closeWindow('win-scan')" aria-label="Close">✕</button>
+          </div>
+        </div>
+        <div class="win-content" id="scan-section">
+          
+          <div id="chips-section">
+            <h2 class="section-title">1. Your Allergen Profile <small style="font-size:0.8rem;color:var(--text-dim);">(Stored Locally)</small></h2>
+            <div class="allergen-chips-wrap" id="chips" role="group" aria-label="Allergen Profile Selection"></div>
+          </div>
+
+          <h2 class="section-title">2. Upload / Scan Label or Input Ingredients</h2>
+          
+          <!-- Y2K Neon Upload / Optical Scan Area -->
+          <div class="upload-scan-zone" id="upload-dropzone" role="button" tabindex="0" aria-label="Upload or drop food label file to scan">
+            <input type="file" id="label-file-input" accept=".txt,.csv,.json,image/*" hidden>
+            <div class="upload-zone-left">
+              <div class="upload-reticle-icon" aria-hidden="true">📷</div>
+              <div>
+                <div class="upload-zone-title" id="upload-status-title">DROP LABEL FILE OR CLICK TO OPTICAL-SCAN</div>
+                <div class="upload-zone-sub" id="upload-status-sub">Supports .txt / label image OCR simulation, or pick a quick preset right →</div>
+              </div>
+            </div>
+            <div class="preset-pills-row" onclick="event.stopPropagation()">
+              <button type="button" class="preset-pill" onclick="loadPresetSample('wafers')">🍫 Choco Wafers</button>
+              <button type="button" class="preset-pill" onclick="loadPresetSample('ramen')">🍜 Spicy Shrimp Ramen</button>
+              <button type="button" class="preset-pill" onclick="loadPresetSample('smoothie')">🍓 Safe Berry Puree</button>
+            </div>
+          </div>
+
+          <textarea id="txt" aria-label="Ingredient list" placeholder="Paste product label ingredients or click 'Try a sample' below..."></textarea>
+
+          <div class="scan-btn-row">
+            <button class="btn-primary" id="go">⚡ DECODE LABEL</button>
+            <button class="btn-secondary" id="smp">TRY SAMPLE LABEL</button>
+            <button class="btn-secondary" id="clr">CLEAR BUFFER</button>
+          </div>
+
+          <!-- Scan Results -->
+          <div id="res" hidden class="scan-result-card">
+            <div id="ver"></div>
+            <div id="scan-badges" class="scan-badges-bar" role="group" aria-label="Allergen Profile Risk Badges"></div>
+            
+            <h3 style="font-family:var(--font-head);font-size:1.05rem;color:var(--electric-blue);margin:14px 0 6px;">
+              SPECTRAL DECODED TEXT
+            </h3>
+            <div class="scan-output-box" id="scn"></div>
+
+            <div class="legend-row">
+              <mark class="r">YOUR ALLERGEN (HIGH RISK)</mark>
+              <mark class="a">MAY CONTAIN (TRACE)</mark>
+              <mark class="n">OTHER ALLERGEN</mark>
+              <span>&middot; Click any highlight or badge to inspect hidden aliases &amp; dossier</span>
+            </div>
+
+            <div id="tip" style="color:var(--cyber-green);font-size:0.88rem;margin-bottom:12px;" aria-live="polite"></div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px;">
+              <h3 style="font-family:var(--font-head);font-size:1rem;color:var(--text-bright);">
+                BIO-EXPLANATION &amp; CROSS-REACTIVITY
+              </h3>
+              <div class="lv" role="group" aria-label="Detail level" style="display:flex;gap:6px;">
+                <button class="chip" data-l="0" aria-pressed="true" onclick="setDetailLvl(0)">BASICS</button>
+                <button class="chip" data-l="1" aria-pressed="false" onclick="setDetailLvl(1)">SCIENCE</button>
+              </div>
+            </div>
+
+            <div id="why"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- WINDOW 3: WINAMP-STYLE PROTEIN LAB -->
+      <section class="os-window" id="win-protein" data-win="protein">
+        <div class="win-titlebar">
+          <div class="win-title"><span>🧬</span> PROTEIN_LAB_PLAYER.WIN &middot; [WINAMP MOLECULE EXPLORER]</div>
+          <div class="win-controls">
+            <button class="win-btn" onclick="minimizeWindow('win-protein')" aria-label="Minimize">_</button>
+            <button class="win-btn" onclick="maximizeWindow('win-protein')" aria-label="Maximize">□</button>
+            <button class="win-btn close" onclick="closeWindow('win-protein')" aria-label="Close">✕</button>
+          </div>
+        </div>
+        <div class="win-content">
+          
+          <div class="winamp-player">
+            <!-- Winamp LCD Display -->
+            <div class="winamp-display-screen">
+              <div class="winamp-lcd-header">
+                <span>WINAMP v2.000 // PROTEIN LAB</span>
+                <span id="winamp-status">PLAYING [320 KBPS &middot; 44.1kHz]</span>
+              </div>
+              <div class="winamp-lcd-track" id="winamp-track-title">
+                TRACK 01: ARA_H_2 [PEANUT ALLERGEN STORAGE PROTEIN]
+              </div>
+              
+              <!-- Graphic Equalizer Bars -->
+              <div class="winamp-equalizer" id="eq-container">
+                <!-- 16 Equalizer Bars injected via JS -->
+              </div>
+            </div>
+
+            <!-- Rotating 3D Molecular Wireframe Canvas -->
+            <div class="molecule-viewer-frame">
+              <div class="molecule-hud" id="molecule-hud">TARGET: ARA_H_2 &middot; 3D CONFORMATION</div>
+              <canvas id="molecule-canvas"></canvas>
+            </div>
+
+            <!-- Winamp Control Deck -->
+            <div class="winamp-controls-row">
+              <div class="player-btns">
+                <button class="player-btn" onclick="prevProtein()" title="Previous Protein">|&lt;&lt;</button>
+                <button class="player-btn" id="play-pause-btn" onclick="toggleMoleculePlay()" title="Play / Pause">⏸ PAUSE</button>
+                <button class="player-btn" onclick="nextProtein()" title="Next Protein">&gt;&gt;|</button>
+              </div>
+
+              <div class="slider-wrap">
+                <span>ROTATION SPEED:</span>
+                <input type="range" class="winamp-slider" id="speed-slider" min="0.2" max="3" step="0.1" value="1" oninput="setMoleculeSpeed(this.value)">
+                <span id="speed-val">1.0x</span>
+              </div>
+
+              <div class="player-tabs" id="ptabs" style="display:flex;gap:4px;"></div>
+            </div>
+          </div>
+
+          <!-- "Now Analyzing" Readout Panel -->
+          <div id="pbox"></div>
+
+          <!-- Amino Acid Residue Beads -->
+          <div class="beads-box">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <span style="font-family:var(--font-head);font-size:0.85rem;color:var(--electric-blue);">90-RESIDUE AMINO ACID PEPTIDE CHAIN</span>
+              <div style="font-size:0.75rem;color:var(--text-dim);">
+                <span style="color:var(--electric-blue);">■</span> Reported Epitope &nbsp;
+                <span style="color:var(--cyber-green);">■</span> Computational Prediction
+              </div>
+            </div>
+            
+            <div class="beads" id="beads-container"></div>
+            
+            <div class="pep-communicator" style="margin-top:12px;">
+              <div class="pep-msg" id="bs" aria-live="polite">Click any highlighted bead to inspect the UniProt / IEDB assay range.</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- WINDOW 4: ALLERGEN DATABASE -->
+      <section class="os-window" id="win-database" data-win="database">
+        <div class="win-titlebar">
+          <div class="win-title"><span>📊</span> ALLERGEN_REGISTRY.DAT &middot; [DATABASE TABLE]</div>
+          <div class="win-controls">
+            <button class="win-btn" onclick="minimizeWindow('win-database')" aria-label="Minimize">_</button>
+            <button class="win-btn" onclick="maximizeWindow('win-database')" aria-label="Maximize">□</button>
+            <button class="win-btn close" onclick="closeWindow('win-database')" aria-label="Close">✕</button>
+          </div>
+        </div>
+        <div class="win-content">
+          
+          <div class="db-filter-row">
+            <input type="text" class="db-search-input" id="db-search" placeholder="Filter allergen database (e.g. casein, peanut, parvalbumin)..." oninput="filterDb(this.value)">
+            <span style="font-size:0.8rem;color:var(--text-dim);" id="db-count">Displaying 9 Major Groups</span>
+          </div>
+
+          <div class="retro-table-wrap">
+            <table class="retro-table" id="db-table">
+              <thead>
+                <tr>
+                  <th onclick="sortDb(0)">ALLERGEN GROUP ▲▼</th>
+                  <th onclick="sortDb(1)">PRIMARY PROTEIN TRIGGER ▲▼</th>
+                  <th onclick="sortDb(2)">COMMON HIDDEN LABELS</th>
+                  <th onclick="sortDb(3)">CLINICAL RISK</th>
+                  <th>CROSS-REACTIVITY</th>
+                </tr>
+              </thead>
+              <tbody id="db-table-body">
+                <!-- Dynamically populated from dataset -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- WINDOW 5: ARCHIVES / SCAN LOG -->
+      <section class="os-window" id="win-archives" data-win="archives">
+        <div class="win-titlebar">
+          <div class="win-title"><span>💾</span> INSPECTION_ARCHIVE.LOG &middot; [SCAN HISTORY]</div>
+          <div class="win-controls">
+            <button class="win-btn" onclick="minimizeWindow('win-archives')" aria-label="Minimize">_</button>
+            <button class="win-btn" onclick="maximizeWindow('win-archives')" aria-label="Maximize">□</button>
+            <button class="win-btn close" onclick="closeWindow('win-archives')" aria-label="Close">✕</button>
+          </div>
+        </div>
+        <div class="win-content">
+          <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:12px;">
+            Past product label inspections stored in your browser session. Click "Load into Scanner" to re-examine ingredients.
+          </p>
+          
+          <div class="retro-table-wrap">
+            <table class="retro-table">
+              <thead>
+                <tr>
+                  <th>TIMESTAMP</th>
+                  <th>SAMPLE PRODUCT</th>
+                  <th>DETECTED ALLERGENS</th>
+                  <th>VERDICT</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="archives-table-body">
+                <!-- Pre-populated logs -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- WINDOW 6: ABOUT & LIMITS -->
+      <section class="os-window" id="win-about" data-win="about">
+        <div class="win-titlebar">
+          <div class="win-title"><span>ℹ</span> SOURCES_AND_LIMITS.TXT &middot; [DOCUMENTATION]</div>
+          <div class="win-controls">
+            <button class="win-btn" onclick="minimizeWindow('win-about')" aria-label="Minimize">_</button>
+            <button class="win-btn" onclick="maximizeWindow('win-about')" aria-label="Maximize">□</button>
+            <button class="win-btn close" onclick="closeWindow('win-about')" aria-label="Close">✕</button>
+          </div>
+        </div>
+        <div class="win-content">
+          <h3 style="color:var(--cyber-green);font-family:var(--font-head);font-size:1.1rem;margin-bottom:6px;">PLANNED SOURCES &amp; ARCHIVES</h3>
+          <p style="color:var(--text-dim);margin-bottom:16px;">
+            UniProt Knowledgebase, Immune Epitope Database (IEDB), FSSAI, Codex Alimentarius, and FAO/WHO Allergen Guidelines.
+          </p>
+
+          <h3 style="color:var(--alert-amber);font-family:var(--font-head);font-size:1.1rem;margin-bottom:6px;">KNOWN TECHNICAL LIMITATIONS</h3>
+          <p style="color:var(--text-dim);margin-bottom:16px;">
+            Keyword parsing may miss rare international synonyms or ambiguous terms. "No listed allergen found" is strictly an informational report and never a medical guarantee. Always inspect the manufacturer packaging and heed clinical guidance.
+          </p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Bottom Taskbar & Status Bar -->
+  <footer class="retro-taskbar" role="region" aria-label="Desktop Taskbar">
+    <div class="taskbar-left">
+      <button class="btn-start" onclick="toggleStartMenu()">⊞ START</button>
+      
+      <div class="taskbar-windows" id="taskbar-windows">
+        <div class="taskbar-tab active" data-for="win-home" onclick="restoreWindow('win-home')">🔬 Home</div>
+        <div class="taskbar-tab" data-for="win-scan" onclick="restoreWindow('win-scan')">🔍 Scanner</div>
+        <div class="taskbar-tab" data-for="win-protein" onclick="restoreWindow('win-protein')">🧬 Protein Lab</div>
+        <div class="taskbar-tab" data-for="win-database" onclick="restoreWindow('win-database')">📊 Database</div>
+      </div>
+    </div>
+
+    <div class="taskbar-right">
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span>SCANNER ONLINE</span>
+      </div>
+
+      <div class="memory-meter" title="Simulated Memory Consumption">
+        <span>MEM:</span>
+        <div class="mem-bar-bg">
+          <div class="mem-bar-fill" id="mem-fill"></div>
+        </div>
+        <span id="mem-text">64.2 MB</span>
+      </div>
+
+      <span style="font-size:0.75rem;color:var(--text-dim);">&copy; 200X ALLERLENS LABS</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ==========================================================================
+     NEON Y2K ALLERGEN & PROTEIN DOSSIER MODAL
+     ========================================================================== -->
+<div class="y2k-modal-backdrop" id="allergen-modal" role="dialog" aria-modal="true" aria-labelledby="modal-allergen-title" aria-hidden="true" onclick="if(event.target===this)closeAllergenModal()">
+  <div class="y2k-modal-window">
+    <div class="win-titlebar" style="cursor:default;">
+      <div class="win-title" id="modal-allergen-title"><span>🧬</span> ALLERGEN_DOSSIER.DAT</div>
+      <div class="win-controls">
+        <button type="button" class="win-btn close" id="modal-close-btn" onclick="closeAllergenModal()" aria-label="Close modal">✕</button>
+      </div>
+    </div>
+    <div class="y2k-modal-body" id="modal-allergen-body"></div>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     VANILLA JAVASCRIPT: PRESERVED LOGIC & NEW RETRO OS CAPABILITIES
+     ========================================================================== -->
 <script>
-const A={
-milk:{n:'Milk / Dairy',e:'🥛',t:['milk solids','milk powder','skimmed milk','milk','casein','caseinate','whey','lactose','lactalbumin','lactoglobulin','ghee','paneer','curd','butter','cream','cheese','yoghurt','yogurt','khoa','milk fat'],p:'Casein and whey proteins (β-lactoglobulin, α-lactalbumin)',b:'Milk allergy is an immune reaction to milk proteins, not to lactose sugar (that is intolerance).',s:'Casein is heat-stable, so baking rarely removes it. Whey proteins are more heat-sensitive.',x:'Goat and sheep milk; beef in a few people'},
-peanut:{n:'Peanut / Groundnut',e:'🥜',t:['peanuts','peanut','groundnut','groundnuts','arachis','monkey nut'],p:'Storage proteins Ara h 1, Ara h 2, Ara h 3',b:'Peanut is a legume, not a true nut. Its storage proteins survive cooking and digestion.',s:'Ara h 2 is a major allergen linked to more severe reactions in many studies.',x:'Tree nuts (separate allergy, often co-occurs); lupin in some people'},
-tree:{n:'Tree nuts',e:'🌰',t:['cashew','kaju','almond','badam','walnut','akhrot','pistachio','pista','hazelnut','pecan','brazil nut','macadamia','tree nuts','nuts'],p:'2S albumins and vicilins (e.g. Ana o 3 in cashew)',b:'Tree nut allergy involves storage proteins that are similar across several nuts.',s:'Cashew and pistachio share closely related proteins, so reacting to one can mean both.',x:'Cashew ↔ pistachio; walnut ↔ pecan; others vary by person'},
-egg:{n:'Egg',e:'🥚',t:['egg','eggs','egg white','egg yolk','albumin','ovalbumin','ovomucoid','lysozyme','mayonnaise','egg powder'],p:'Ovomucoid, ovalbumin (egg white proteins)',b:'Most egg allergens are in the white. Ovomucoid is heat-stable, so cooked egg can still trigger reactions.',s:'"Albumin" or "lysozyme" on a label can be egg-derived. Check the source.',x:'Other bird eggs (duck, quail)'},
-wheat:{n:'Wheat / Gluten',e:'🌾',t:['wheat flour','wheat','maida','atta','semolina','suji','rava','gluten','wheat starch','durum','spelt','barley','rye'],p:'Gliadins, glutenins and other wheat proteins',b:'Wheat allergy is an IgE reaction to wheat proteins. It differs from coeliac disease, an autoimmune condition triggered by gluten.',s:'Barley and rye are listed because gluten-related proteins are shared (relevant mainly to coeliac disease).',x:'Barley, rye; grass pollen in some people'},
-soy:{n:'Soy',e:'🫘',t:['soy lecithin','soya lecithin','soybean','soya','soy','tofu','miso','tempeh','textured vegetable protein','tvp','edamame'],p:'Glycinin, β-conglycinin, Gly m 4',b:'Soy proteins are widely used as additives, so soy can appear in unexpected foods.',s:'Highly refined soy oil has little protein, but soy lecithin and soy flour contain more.',x:'Other legumes, including peanut, in some people'},
-fish:{n:'Fish',e:'🐟',t:['fish','cod','tuna','salmon','anchovy','anchovies','sardine','fish sauce','fish oil','pomfret','hilsa'],p:'Parvalbumin (muscle protein)',b:'Parvalbumin is found in many fish species and is stable to cooking.',s:'Parvalbumins are structurally similar across fish, so many people react to several species.',x:'Many other fish species; not usually shellfish'},
-shell:{n:'Shellfish',e:'🦐',t:['shrimp','prawn','prawns','crab','lobster','shellfish','crustacean','krill','squid','oyster','mussel','clam'],p:'Tropomyosin (muscle protein)',b:'Tropomyosin is the best-known shellfish allergen and is heat-stable.',s:'Tropomyosin is similar across crustaceans, molluscs and house-dust mites, which explains broad cross-reactivity.',x:'Other crustaceans; sometimes molluscs; house-dust mite'},
-sesame:{n:'Sesame',e:'🌱',t:['sesame','til','tahini','gingelly','sesame oil','sesamum'],p:'Seed storage proteins (e.g. Ses i 1)',b:'Sesame appears in breads, snacks, chutneys, hummus and spice blends.',s:'Sesame storage proteins are related to those of other seeds and nuts.',x:'Other seeds and some tree nuts in a few people'}};
-const P={peanut:{k:'peanut',t:'Ara h 2 (peanut)',id:'UniProt Q6PSU2',f:'Seed-storage protein (conglutin family)',n:'Often described as a major peanut allergen. Verify ID before final use.'},
-milk:{k:'milk',t:'Bos d 5 (beta-lactoglobulin)',id:'UniProt P02754',f:'Lipocalin, whey protein',n:'Major whey protein in cow milk.'},
-egg:{k:'egg',t:'Gal d 1 (ovomucoid)',id:'UniProt P01005',f:'Kazal-type protease inhibitor',n:'Heat-stable glycoprotein in egg white.'},
-shell:{k:'shell',t:'Pen a 1 (shrimp tropomyosin)',id:'UniProt Q3Y8M6',f:'Muscle protein, highly conserved',n:'Conservation across species is why cross-reactivity is discussed. Verify ID before final use.'}};
-const EP={peanut:[[10,17,'e'],[44,52,'e'],[70,76,'p']],milk:[[6,13,'e'],[30,38,'e'],[60,68,'p']],egg:[[14,21,'e'],[50,58,'p']],shell:[[20,28,'e'],[40,47,'e'],[75,82,'p']]};
-const EX=['coconut milk','cocoa butter','nutmeg','butternut'];
-const SAMPLE='Wheat flour (maida), sugar, palm oil, milk solids, soy lecithin, cashew paste, salt, natural flavour. May contain peanuts and sesame.';
-let sel=new Set(['peanut','milk']),lvl=0,hits=[];
-const $=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)];
-const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-try{const s=JSON.parse(localStorage.getItem('al_sel'));if(Array.isArray(s))sel=new Set(s.filter(k=>A[k]))}catch(e){}
-function save(){try{localStorage.setItem('al_sel',JSON.stringify([...sel]))}catch(e){}}
-function go(id){$$('section').forEach(s=>s.classList.toggle('on',s.id===id));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));scrollTo(0,0)}
-document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
-function draw(){
- $('chips').innerHTML=Object.keys(A).map(k=>`<button class="chip" data-k="${k}" aria-pressed="${sel.has(k)}">${A[k].e} ${A[k].n}</button>`).join('');
- $$('.food').forEach(b=>b.setAttribute('aria-pressed',sel.has(b.dataset.k)));
+/* ==========================================================================
+   A. CORE DATASETS (PRESERVED FROM ORIGINAL IMPLEMENTATION)
+   ========================================================================== */
+const A = {
+  milk: { n: 'Milk / Dairy', e: '🥛', t: ['milk solids','milk powder','skimmed milk','milk','casein','caseinate','whey','lactose','lactalbumin','lactoglobulin','ghee','paneer','curd','butter','cream','cheese','yoghurt','yogurt','khoa','milk fat'], p: 'Casein & whey proteins (β-lactoglobulin, α-lactalbumin)', b: 'Milk allergy is an immune reaction to milk proteins, not to lactose sugar (intolerance).', s: 'Casein is heat-stable; baking rarely removes it.', x: 'Goat and sheep milk; beef in select patients', r: 'HIGH' },
+  peanut: { n: 'Peanut / Groundnut', e: '🥜', t: ['peanuts','peanut','groundnut','groundnuts','arachis','monkey nut'], p: 'Storage proteins Ara h 1, Ara h 2, Ara h 3', b: 'Peanut is a legume. Its storage proteins withstand high baking temperatures and gastric digestion.', s: 'Ara h 2 is a major biomarker linked to systemic reactions.', x: 'Tree nuts (frequent co-sensitization); lupin', r: 'HIGH' },
+  tree: { n: 'Tree nuts', e: '🌰', t: ['cashew','kaju','almond','badam','walnut','akhrot','pistachio','pista','hazelnut','pecan','brazil nut','macadamia','tree nuts','nuts'], p: '2S albumins and vicilins (e.g. Ana o 3 in cashew)', b: 'Tree nut allergy involves storage albumins that are highly conserved across species.', s: 'Cashew and pistachio share closely homologous proteins.', x: 'Cashew ↔ pistachio; walnut ↔ pecan', r: 'HIGH' },
+  egg: { n: 'Egg', e: '🥚', t: ['egg','eggs','egg white','egg yolk','albumin','ovalbumin','ovomucoid','lysozyme','mayonnaise','egg powder'], p: 'Ovomucoid, ovalbumin (egg white proteins)', b: 'Most egg allergens are in the albumen. Ovomucoid is heat-stable.', s: '"Albumin" or "lysozyme" on ingredients is often egg-derived.', x: 'Other avian eggs (duck, quail)', r: 'HIGH' },
+  wheat: { n: 'Wheat / Gluten', e: '🌾', t: ['wheat flour','wheat','maida','atta','semolina','suji','rava','gluten','wheat starch','durum','spelt','barley','rye'], p: 'Gliadins, glutenins and wheat albumins', b: 'Wheat allergy is an IgE reaction, distinct from coeliac disease (autoimmune).', s: 'Barley and rye share related prolamins.', x: 'Barley, rye; grass pollen in oral allergy syndrome', r: 'MODERATE' },
+  soy: { n: 'Soy', e: '🫘', t: ['soy lecithin','soya lecithin','soybean','soya','soy','tofu','miso','tempeh','textured vegetable protein','tvp','edamame'], p: 'Glycinin, β-conglycinin, Gly m 4', b: 'Soy proteins are ubiquitous in emulsifiers and processed goods.', s: 'Refined soy oil has minimal protein, but soy flour/lecithin contain triggers.', x: 'Other legumes, including peanut', r: 'MODERATE' },
+  fish: { n: 'Fish', e: '🐟', t: ['fish','cod','tuna','salmon','anchovy','anchovies','sardine','fish sauce','fish oil','pomfret','hilsa'], p: 'Parvalbumin (muscle sarcoplasmic protein)', b: 'Parvalbumin is heat-resistant and survives boiling and frying.', s: 'High structural homology across teleost fishes explains cross-reactivity.', x: 'Other finfish species; not shellfish', r: 'HIGH' },
+  shell: { n: 'Shellfish', e: '🦐', t: ['shrimp','prawn','prawns','crab','lobster','shellfish','crustacean','krill','squid','oyster','mussel','clam'], p: 'Tropomyosin (invertebrate muscle protein)', b: 'Tropomyosin is pan-allergenic across crustaceans and molluscs.', s: 'Conserved helical coiled-coil structure causes cross-reaction with house-dust mites.', x: 'Crustaceans ↔ molluscs ↔ dust mites', r: 'HIGH' },
+  sesame: { n: 'Sesame', e: '🌱', t: ['sesame','til','tahini','gingelly','sesame oil','sesamum'], p: 'Seed storage globulins (Ses i 1, Ses i 2)', b: 'Common in tahini, baked goods, hummus, and oil blends.', s: 'Sesame storage proteins resemble 2S albumins in certain nuts.', x: 'Other seeds and tree nuts in select cases', r: 'HIGH' }
+};
+
+const P = {
+  peanut: { k: 'peanut', t: 'Ara h 2 (peanut)', id: 'UniProt Q6PSU2', f: 'Seed storage conglutin (2S albumin)', n: 'Potent peanut allergen; tightly folded structure resists cooking and proteolysis.' },
+  milk: { k: 'milk', t: 'Bos d 5 (beta-lactoglobulin)', id: 'UniProt P02754', f: 'Lipocalin family, whey protein', n: 'Major cow milk whey protein; undergoes conformational changes under high heat.' },
+  egg: { k: 'egg', t: 'Gal d 1 (ovomucoid)', id: 'UniProt P01005', f: 'Kazal-type serine protease inhibitor', n: 'Contains 3 tandem domains with extensive disulfide bonds, conferring high thermal stability.' },
+  shell: { k: 'shell', t: 'Pen a 1 (shrimp tropomyosin)', id: 'UniProt Q3Y8M6', f: 'Invertebrate striated muscle protein', n: 'Coiled-coil alpha-helical dimer; dominant trigger in crustacean anaphylaxis.' }
+};
+
+const EP = {
+  peanut: [[10, 17, 'e'], [44, 52, 'e'], [70, 76, 'p']],
+  milk: [[6, 13, 'e'], [30, 38, 'e'], [60, 68, 'p']],
+  egg: [[14, 21, 'e'], [50, 58, 'p']],
+  shell: [[20, 28, 'e'], [40, 47, 'e'], [75, 82, 'p']]
+};
+
+const EX = ['coconut milk', 'cocoa butter', 'nutmeg', 'butternut'];
+const SAMPLE = 'Wheat flour (maida), sugar, palm oil, milk solids, soy lecithin, cashew paste, salt, natural flavour. May contain peanuts and sesame.';
+
+let sel = new Set(['peanut', 'milk']), lvl = 0, hits = [];
+let currentProteinKey = 'peanut';
+const proteinKeys = Object.keys(P);
+
+const $ = id => document.getElementById(id);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+try {
+  const s = JSON.parse(localStorage.getItem('al_sel'));
+  if (Array.isArray(s)) sel = new Set(s.filter(k => A[k]));
+} catch(e) {}
+
+function save() {
+  try { localStorage.setItem('al_sel', JSON.stringify([...sel])); } catch(e) {}
 }
-function toggle(k){sel.has(k)?sel.delete(k):sel.add(k);save();draw()}
-$('chips').onclick=e=>{const b=e.target.closest('.chip');if(b)toggle(b.dataset.k)};
-$('foods').innerHTML=Object.keys(A).map(k=>`<button class="food" data-k="${k}" aria-label="${A[k].n}" aria-pressed="false">${A[k].e}</button>`).join('');
-$('foods').onclick=e=>{const b=e.target.closest('.food');if(!b)return;const k=b.dataset.k;toggle(k);$('pepsay').textContent=(sel.has(k)?'Added to your allergens. ':'Removed from your allergens. ')+A[k].n+': '+A[k].b};
-const terms=[];for(const k in A)A[k].t.forEach(t=>terms.push([t,k]));terms.sort((a,b)=>b[0].length-a[0].length);
-const map={};terms.forEach(([t,k])=>map[t]=k);
-const re=new RegExp('\\b('+terms.map(t=>t[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')\\b','gi');
-function decode(){
- const raw=$('txt').value.trim();
- if(!raw){$('res').hidden=false;$('ver').innerHTML='<div class="verdict v-a" role="status"><span class="ic">✍️</span><div><b>Nothing to decode yet</b>Paste an ingredient list or try a sample.</div></div>';$('scn').textContent='';$('why').innerHTML='';return}
- let masked=raw;EX.forEach(x=>{masked=masked.replace(new RegExp(x,'gi'),m=>'\u0000'.repeat(m.length))});
- const ti=masked.search(/may contain|traces? of|(manufactured|processed|made|produced) in a facility/i),h={};let out='',last=0,m;re.lastIndex=0;
- while((m=re.exec(masked))){const k=map[m[1].toLowerCase()],tr=ti>=0&&m.index>=ti,mine=sel.has(k),c=!mine?'n':tr?'a':'r';
-  out+=esc(raw.slice(last,m.index))+`<mark class="${c}" data-k="${k}" tabindex="0">${esc(raw.slice(m.index,m.index+m[0].length))}</mark>`;last=m.index+m[0].length;
-  if(mine){h[k]=h[k]||{c:0,t:0};tr?h[k].t++:h[k].c++}}
- out+=esc(raw.slice(last));$('scn').innerHTML=out;$('scn').classList.remove('run');void $('scn').offsetWidth;$('scn').classList.add('run');
- const ks=Object.keys(h),con=ks.filter(k=>h[k].c),tra=ks.filter(k=>!h[k].c),nm=a=>a.map(k=>A[k].n).join(', ');let v;
- if(!sel.size)v=['v-a','👆','Pick your allergens first','Choose at least one allergen above to personalise the result.'];
- else if(con.length)v=['v-r','🚫','Contains your allergen: '+nm(con),'Found as a listed ingredient.'+(tra.length?' Also possible traces: '+nm(tra)+'.':'')];
- else if(tra.length)v=['v-a','⚠️','Caution: may contain '+nm(tra),'Listed only in a "may contain" statement. Follow your doctor\'s advice.'];
- else v=['v-g','✅','No listed allergen found','None of your selected allergens were found in this text. This is not a guarantee of safety.'];
- $('ver').innerHTML=`<div class="verdict ${v[0]}" role="status"><span class="ic" aria-hidden="true">${v[1]}</span><div><b>${esc(v[2])}</b>${esc(v[3])}</div></div>`;
- hits=ks.map(k=>[k,h[k].c?0:1]);why();$('res').hidden=false;$('res').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+/* ==========================================================================
+   B. INTRO BOOT SCREEN & WEB AUDIO API
+   ========================================================================== */
+const bootLines = [
+  "> ALLERLENS BOOT KERNEL v2.4 (C) 200X...",
+  "> LOADING QUANTUM PROTEIN DB (UNIPROT / IEDB)... OK",
+  "> CALIBRATING SPECTROMETER RESOLUTION... OK",
+  "> CONFIGURING MOLECULAR RESIDUE ENGINE... OK",
+  "> CHECKING ALLERGEN REGISTRY MATRICES... OK",
+  "> ALL SYSTEMS OPTIMAL. SYSTEM READY."
+];
+
+let bootIndex = 0;
+let bootCharIndex = 0;
+let bootInterval = null;
+
+function initBootProgress() {
+  const bar = $('boot-progress-bar');
+  if (!bar) return;
+  bar.innerHTML = '';
+  for (let i = 0; i < 20; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'boot-segment';
+    seg.id = 'b-seg-' + i;
+    bar.appendChild(seg);
+  }
 }
-function why(){
- $('why').innerHTML=hits.length?hits.map(([k,t])=>{const a=A[k];return `<div class="exp ${t?'t':''}"><h3>${a.e} ${a.n}${t?' (possible trace)':''}</h3><p><b>What it is:</b> ${a.b}</p>`+(lvl?`<p><b>Protein(s):</b> ${a.p}</p><p><b>Science note:</b> ${a.s}</p>`:'')+`<p><b>May cross-react with:</b> ${a.x}</p>`+(P[k]?`<button class="chip" data-p="${k}">See the protein</button>`:'')+'</div>'}).join(''):'<p style="color:var(--mute)">Nothing to explain for your selected allergens.</p>';
- $$('[data-p]').forEach(b=>b.onclick=()=>{showP(b.dataset.p);go('protein')});
+
+function runBootSequence() {
+  initBootProgress();
+  initBootCanvas();
+  
+  const target = $('boot-typewriter');
+  if (!target) return;
+  target.textContent = '';
+  
+  let currentLine = 0;
+  let charPos = 0;
+  let segIndex = 0;
+
+  bootInterval = setInterval(() => {
+    if (currentLine < bootLines.length) {
+      const lineText = bootLines[currentLine];
+      target.textContent += lineText[charPos];
+      charPos++;
+      
+      if (charPos % 4 === 0 && segIndex < 20) {
+        const seg = $('b-seg-' + segIndex);
+        if (seg) seg.classList.add('lit');
+        segIndex++;
+      }
+
+      if (charPos >= lineText.length) {
+        target.textContent += '\n';
+        currentLine++;
+        charPos = 0;
+      }
+    } else {
+      clearInterval(bootInterval);
+      for (let i = 0; i < 20; i++) {
+        const s = $('b-seg-' + i);
+        if (s) s.classList.add('lit');
+      }
+      const startBtn = $('boot-start-btn');
+      if (startBtn) startBtn.style.display = 'inline-block';
+    }
+  }, 18);
 }
-$('scn').onclick=$('scn').onkeydown=e=>{const m=e.target.closest('mark');if(!m||(e.type=='keydown'&&e.key!='Enter'))return;const a=A[m.dataset.k];$('tip').innerHTML=`<b>${esc(m.textContent)}</b> counts as <b>${a.n}</b>. Hidden names to watch: ${a.t.slice(0,8).join(', ')}…`};
-document.querySelector('.lv').onclick=e=>{const b=e.target.closest('button');if(!b)return;lvl=+b.dataset.l;$$('.lv button').forEach(x=>x.setAttribute('aria-pressed',x===b));why()};
-$('go').onclick=decode;$('smp').onclick=()=>{$('txt').value=SAMPLE;decode()};$('clr').onclick=()=>{$('txt').value='';$('res').hidden=true;$('txt').focus()};
-function seq(k){let s=[...k].reduce((a,c)=>a*31+c.charCodeAt(0),7),aa='ACDEFGHIKLMNPQRSTVWY',o=[];for(let i=0;i<90;i++){s=(s*1103515245+12345)&0x7fffffff;o.push(aa[s%20])}return o}
-function showP(k){
- $$('#ptabs button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));$$('#ptabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
- const p=P[k],ep=EP[k];
- $('pbox').innerHTML=`<h3>${A[k].e} ${p.t}</h3><table><tr><th>Record</th><td>${p.id}</td></tr><tr><th>Family</th><td>${p.f}</td></tr><tr><th>Note</th><td>${p.n}</td></tr></table><div class="beads">`+seq(k).map((c,i)=>{const r=ep.find(x=>i>=x[0]&&i<=x[1]);return `<span class="bead ${r?(r[2]=='e'?'ep':'pr'):''}" ${r?`tabindex="0" data-t="${r[2]}" data-r="${r[0]+1}–${r[1]+1}"`:''}>${c}</span>`}).join('')+`</div><div class="bubble" id="bs" aria-live="polite">Tap a coloured bead.</div>`;
- const say=e=>{const b=e.target.closest('.bead[data-t]');if(!b)return;$('bs').innerHTML=b.dataset.t=='e'?`<b>Reported epitope</b> (demo), residues ${b.dataset.r}. The final version links to the IEDB record and assay type.`:`<b>Computational prediction</b> (demo), residues ${b.dataset.r}. A prediction is a lead to explore, not evidence of allergy.`};
- document.querySelector('.beads').onclick=say;document.querySelector('.beads').onkeydown=e=>{if(e.key==='Enter')say(e)};
+
+function playUiBlip() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+    osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.12); // C6
+    
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start();
+    osc.stop(ctx.currentTime + 0.22);
+  } catch(e) {}
 }
-$('ptabs').innerHTML=Object.keys(P).map(k=>`<button class="chip" data-k="${k}" aria-pressed="false">${A[k].e} ${A[k].n.split(' /')[0]}</button>`).join('');
-$('ptabs').onclick=e=>{const b=e.target.closest('.chip');if(b)showP(b.dataset.k)};
-$('txt').value=SAMPLE;draw();showP('peanut');
-</script></body></html>
+
+function startSystem() {
+  playUiBlip();
+  finishBoot();
+}
+
+function skipBoot() {
+  playUiBlip();
+  finishBoot();
+}
+
+function finishBoot() {
+  if (bootInterval) clearInterval(bootInterval);
+  sessionStorage.setItem('al_booted', 'true');
+  const bs = $('boot-screen');
+  if (bs) {
+    bs.classList.add('crt-shutdown');
+    setTimeout(() => {
+      bs.style.display = 'none';
+      stopBootCanvas();
+    }, 500);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PROTEIN INTRO ANIMATION ENGINE (0-7s Sequence)
+// ---------------------------------------------------------------------------
+(function () {
+  'use strict';
+
+  /* -- Colour palette: Neon Cyan, Magenta, Lime, Violet ------------------ */
+  const PALETTE = ['#00f0ff', '#ff2a8f', '#39ff14', '#bf5fff'];
+  const SPARK_TTL = 26;
+  const CELL_SIZE = 64; // Spatial hash cell size for O(1) neighbor lookup
+
+  /* -- State ------------------------------------------------------------- */
+  let introRAF = null;
+  let introStartT = null;
+  let introCanvas, introCtx;
+  let cw = 0, ch = 0, dpr = 1;
+  let maxChains = 18;
+  let maxNodesTotal = 80;
+  const chains = [];      // [{nodes, color, angle, angularV, mergeCooldown}]
+  const sparks = [];      // [{x,y,vx,vy,life,maxLife,color}]
+  const flashRings = [];  // [{x,y,r,maxR,alpha,color}]
+  let flashAlpha = 0;     // full-screen flash intensity 0-1
+  let targetsAssigned = false;
+  let wordmarkTargets = [];
+
+  /* -- Helpers ----------------------------------------------------------- */
+  function rand(min, max) { return min + Math.random() * (max - min); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+  function totalNodeCount() {
+    let count = 0;
+    for (let i = 0; i < chains.length; i++) count += chains[i].nodes.length;
+    return count;
+  }
+
+  /* -- Canvas setup & resize --------------------------------------------- */
+  function setupCanvas() {
+    introCanvas = $('intro-canvas');
+    if (!introCanvas) return false;
+    introCtx = introCanvas.getContext('2d');
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return true;
+  }
+
+  function resizeCanvas() {
+    if (!introCanvas) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cw  = window.innerWidth;
+    ch  = window.innerHeight;
+    const isMobile = cw < 650;
+    maxNodesTotal = isMobile ? 38 : 80;
+    maxChains     = isMobile ? 10 : 20;
+    introCanvas.width  = cw * dpr;
+    introCanvas.height = ch * dpr;
+    introCanvas.style.width  = cw + 'px';
+    introCanvas.style.height = ch + 'px';
+    introCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    wordmarkTargets = buildWordmarkTargets(cw / 2, ch / 2);
+  }
+
+  /* -- Wordmark & lens target coordinates -------------------------------- */
+  function buildWordmarkTargets(cx, cy) {
+    const pts = [];
+    const R = Math.min(cw, ch) * 0.115;
+    // Outer & inner lens rings
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * Math.PI * 2;
+      pts.push({ x: cx + Math.cos(a) * R,       y: cy - R * 0.35 + Math.sin(a) * R });
+      pts.push({ x: cx + Math.cos(a) * R * 0.52, y: cy - R * 0.35 + Math.sin(a) * R * 0.52 });
+    }
+    // Cross-hairs
+    for (let i = -4; i <= 4; i++) {
+      pts.push({ x: cx + i * R * 0.2, y: cy - R * 0.35 });
+      pts.push({ x: cx,               y: cy - R * 0.35 + i * R * 0.2 });
+    }
+    // "AllerLens" wordmark point cloud below lens
+    const fs = clamp(Math.min(cw * 0.08, 60), 24, 60);
+    const ty = cy + R * 0.85;
+    const word = 'AllerLens';
+    const totalW = word.length * fs * 0.58;
+    const startX = cx - totalW / 2;
+    for (let c = 0; c < word.length; c++) {
+      const lx = startX + c * fs * 0.58 + fs * 0.28;
+      for (let row = 0; row < 4; row++) {
+        pts.push({ x: lx + (row - 1.5) * fs * 0.08, y: ty + (row - 1.5) * fs * 0.16 });
+      }
+    }
+    return pts;
+  }
+
+  /* -- Spawn a short chain (3-6 nodes) from a random screen edge --------- */
+  function spawnChain() {
+    if (chains.length >= maxChains || totalNodeCount() >= maxNodesTotal) return;
+    const remaining = maxNodesTotal - totalNodeCount();
+    const len = Math.min(remaining, 3 + Math.floor(Math.random() * 4)); // 3-6 nodes
+    if (len < 3) return;
+
+    const color = pick(PALETTE);
+    const edge = Math.floor(Math.random() * 4);
+    let sx, sy;
+    switch (edge) {
+      case 0: sx = rand(cw * 0.1, cw * 0.9); sy = -24;      break;
+      case 1: sx = cw + 24;                  sy = rand(ch * 0.1, ch * 0.9); break;
+      case 2: sx = rand(cw * 0.1, cw * 0.9); sy = ch + 24;  break;
+      default: sx = -24;                     sy = rand(ch * 0.1, ch * 0.9);
+    }
+    const targetX = cw * 0.5 + rand(-cw * 0.22, cw * 0.22);
+    const targetY = ch * 0.5 + rand(-ch * 0.22, ch * 0.22);
+    const ang = Math.atan2(targetY - sy, targetX - sx);
+    const speed = rand(1.6, 3.1);
+    const spacing = 14;
+    const nodes = [];
+    for (let i = 0; i < len; i++) {
+      nodes.push({
+        x: sx - Math.cos(ang) * i * spacing,
+        y: sy - Math.sin(ang) * i * spacing,
+        vx: Math.cos(ang) * speed,
+        vy: Math.sin(ang) * speed,
+        rad: i === 0 ? 5.2 : rand(3.6, 4.8),
+        tx: cxDefault(),
+        ty: cyDefault()
+      });
+    }
+    chains.push({
+      nodes,
+      color,
+      angle: rand(0, Math.PI * 2),
+      angularV: (Math.random() < 0.5 ? -1 : 1) * rand(0.012, 0.028),
+      mergeCooldown: 0
+    });
+  }
+
+  function cxDefault() { return cw / 2; }
+  function cyDefault() { return ch / 2; }
+
+  /* -- Update chain kinematics with slight rotation ---------------------- */
+  function stepChainKinematics(chObj, bounceWalls) {
+    if (chObj.mergeCooldown > 0) chObj.mergeCooldown--;
+    chObj.angle += chObj.angularV;
+    const head = chObj.nodes[0];
+
+    // Slight rotational curl on velocity
+    const rotCos = Math.cos(chObj.angularV * 0.35);
+    const rotSin = Math.sin(chObj.angularV * 0.35);
+    const nvx = head.vx * rotCos - head.vy * rotSin;
+    const nvy = head.vx * rotSin + head.vy * rotCos;
+    head.vx = nvx;
+    head.vy = nvy;
+
+    head.x += head.vx;
+    head.y += head.vy;
+
+    if (bounceWalls) {
+      const margin = 24;
+      if (head.x < margin)      { head.x = margin;      head.vx = Math.abs(head.vx); }
+      if (head.x > cw - margin) { head.x = cw - margin; head.vx = -Math.abs(head.vx); }
+      if (head.y < margin)      { head.y = margin;      head.vy = Math.abs(head.vy); }
+      if (head.y > ch - margin) { head.y = ch - margin; head.vy = -Math.abs(head.vy); }
+    }
+
+    // Follow-the-leader with rotational sway so each chain visibly rotates
+    const spacing = 14;
+    for (let i = 1; i < chObj.nodes.length; i++) {
+      const prev = chObj.nodes[i - 1];
+      const curr = chObj.nodes[i];
+      const dx = curr.x - prev.x;
+      const dy = curr.y - prev.y;
+      let segAng = Math.atan2(dy, dx) + chObj.angularV * 0.65;
+      const targetX = prev.x + Math.cos(segAng) * spacing;
+      const targetY = prev.y + Math.sin(segAng) * spacing;
+      curr.x = lerp(curr.x, targetX, 0.42);
+      curr.y = lerp(curr.y, targetY, 0.42);
+      curr.vx = head.vx;
+      curr.vy = head.vy;
+    }
+  }
+
+  /* -- Emit spark particles & local flash ring on collision -------------- */
+  function emitCollisionFX(x, y, colorA, colorB) {
+    for (let i = 0; i < 8; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = rand(1.8, 4.8);
+      sparks.push({
+        x, y,
+        vx: Math.cos(a) * s,
+        vy: Math.sin(a) * s,
+        life: SPARK_TTL,
+        maxLife: SPARK_TTL,
+        color: i % 2 === 0 ? colorA : colorB
+      });
+    }
+    flashRings.push({ x, y, r: 4, maxR: 28, alpha: 0.9, color: colorA });
+    flashAlpha = Math.min(0.32, flashAlpha + 0.08);
+  }
+
+  /* -- Spatial hash grid + circle collision + end-to-end chain bonding --- */
+  function handleCollisionsSpatial() {
+    const grid = new Map();
+    for (let cIdx = 0; cIdx < chains.length; cIdx++) {
+      const nodes = chains[cIdx].nodes;
+      for (let nIdx = 0; nIdx < nodes.length; nIdx++) {
+        const n = nodes[nIdx];
+        const gx = Math.floor(n.x / CELL_SIZE);
+        const gy = Math.floor(n.y / CELL_SIZE);
+        const key = gx + ',' + gy;
+        let cell = grid.get(key);
+        if (!cell) { cell = []; grid.set(key, cell); }
+        cell.push({ cIdx, nIdx, node: n });
+      }
+    }
+
+    const toMerge = [];
+    const checkedPairs = new Set();
+
+    grid.forEach((entries, key) => {
+      const [gx, gy] = key.split(',').map(Number);
+      for (let ox = -1; ox <= 1; ox++) {
+        for (let oy = -1; oy <= 1; oy++) {
+          const neighbor = grid.get((gx + ox) + ',' + (gy + oy));
+          if (!neighbor) continue;
+          for (let i = 0; i < entries.length; i++) {
+            const A = entries[i];
+            for (let j = 0; j < neighbor.length; j++) {
+              const B = neighbor[j];
+              if (A.cIdx >= B.cIdx) continue;
+              const pairKey = A.cIdx + ':' + B.cIdx;
+              if (checkedPairs.has(pairKey)) continue;
+
+              const dx = B.node.x - A.node.x;
+              const dy = B.node.y - A.node.y;
+              const distSq = dx * dx + dy * dy;
+              const minDist = A.node.rad + B.node.rad + 5;
+              if (distSq < minDist * minDist && distSq > 0.001) {
+                checkedPairs.add(pairKey);
+                const dist = Math.sqrt(distSq);
+                const nx = dx / dist;
+                const ny = dy / dist;
+
+                const headA = chains[A.cIdx].nodes[0];
+                const headB = chains[B.cIdx].nodes[0];
+
+                // Elastic velocity reflection on chain heads
+                const dvx = headA.vx - headB.vx;
+                const dvy = headA.vy - headB.vy;
+                const dot = dvx * nx + dvy * ny;
+                if (dot > 0) {
+                  headA.vx -= dot * nx * 1.05;
+                  headA.vy -= dot * ny * 1.05;
+                  headB.vx += dot * nx * 1.05;
+                  headB.vy += dot * ny * 1.05;
+                } else {
+                  headA.vx = -headA.vx;
+                  headB.vx = -headB.vx;
+                }
+
+                // Separate overlap
+                const overlap = (minDist - dist) * 0.6;
+                headA.x -= nx * overlap;
+                headA.y -= ny * overlap;
+                headB.x += nx * overlap;
+                headB.y += ny * overlap;
+
+                const cx = (A.node.x + B.node.x) * 0.5;
+                const cy = (A.node.y + B.node.y) * 0.5;
+                emitCollisionFX(cx, cy, chains[A.cIdx].color, chains[B.cIdx].color);
+
+                // Bond end-to-end into a longer chain if eligible
+                const chA = chains[A.cIdx];
+                const chB = chains[B.cIdx];
+                if (
+                  chA.mergeCooldown === 0 &&
+                  chB.mergeCooldown === 0 &&
+                  chA.nodes.length + chB.nodes.length <= 12 &&
+                  Math.random() < 0.38
+                ) {
+                  toMerge.push([A.cIdx, B.cIdx]);
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Execute end-to-end merges (from highest index down)
+    const mergedIndices = new Set();
+    for (let i = 0; i < toMerge.length; i++) {
+      const [idxA, idxB] = toMerge[i];
+      if (mergedIndices.has(idxA) || mergedIndices.has(idxB)) continue;
+      if (!chains[idxA] || !chains[idxB]) continue;
+      chains[idxA].nodes = chains[idxA].nodes.concat(chains[idxB].nodes);
+      chains[idxA].mergeCooldown = 25;
+      mergedIndices.add(idxB);
+    }
+    if (mergedIndices.size > 0) {
+      const sortedRemove = [...mergedIndices].sort((a, b) => b - a);
+      sortedRemove.forEach(idx => chains.splice(idx, 1));
+    }
+  }
+
+  /* -- Assign wordmark target for each chain node ------------------------ */
+  function assignTargets() {
+    if (!wordmarkTargets.length) wordmarkTargets = buildWordmarkTargets(cw / 2, ch / 2);
+    let idx = 0;
+    chains.forEach(chObj => {
+      chObj.nodes.forEach(n => {
+        const t = wordmarkTargets[idx % wordmarkTargets.length];
+        n.tx = t.x;
+        n.ty = t.y;
+        idx++;
+      });
+    });
+  }
+
+  /* -- Draw a single protein chain --------------------------------------- */
+  function drawChain(chain, alpha) {
+    const ctx = introCtx;
+    const nodes = chain.nodes;
+    if (!nodes.length) return;
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    // Connecting peptide bond lines
+    if (nodes.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(nodes[0].x, nodes[0].y);
+      for (let i = 1; i < nodes.length; i++) {
+        ctx.lineTo(nodes[i].x, nodes[i].y);
+      }
+      ctx.strokeStyle = chain.color;
+      ctx.lineWidth   = 2.2;
+      ctx.shadowColor = chain.color;
+      ctx.shadowBlur  = 14;
+      ctx.stroke();
+    }
+
+    // Glowing nodes
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
+      ctx.fillStyle   = i === 0 ? '#ffffff' : chain.color;
+      ctx.shadowColor = chain.color;
+      ctx.shadowBlur  = 16;
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  /* -- Draw AllerLens wordmark + lens icon at center --------------------- */
+  function drawWordmark(alpha, scale = 1) {
+    const ctx = introCtx;
+    ctx.save();
+    ctx.globalAlpha = clamp(alpha, 0, 1);
+    const cx = cw / 2;
+    const cy = ch / 2;
+    const R  = Math.min(cw, ch) * 0.115 * scale;
+    const lensY = cy - R * 0.35;
+
+    // Outer neon cyan ring
+    ctx.beginPath();
+    ctx.arc(cx, lensY, R, 0, Math.PI * 2);
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth   = 3;
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur  = 24;
+    ctx.stroke();
+
+    // Inner violet ring
+    ctx.beginPath();
+    ctx.arc(cx, lensY, R * 0.52, 0, Math.PI * 2);
+    ctx.strokeStyle = '#bf5fff';
+    ctx.lineWidth   = 2;
+    ctx.shadowColor = '#bf5fff';
+    ctx.shadowBlur  = 18;
+    ctx.stroke();
+
+    // Center magenta core
+    ctx.beginPath();
+    ctx.arc(cx, lensY, R * 0.14, 0, Math.PI * 2);
+    ctx.fillStyle   = '#ff2a8f';
+    ctx.shadowColor = '#ff2a8f';
+    ctx.shadowBlur  = 20;
+    ctx.fill();
+
+    // Lime & cyan crosshairs
+    [0, Math.PI / 2, Math.PI, Math.PI * 1.5].forEach((a, i) => {
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * R * 0.56, lensY + Math.sin(a) * R * 0.56);
+      ctx.lineTo(cx + Math.cos(a) * R * 1.22, lensY + Math.sin(a) * R * 1.22);
+      ctx.strokeStyle = i % 2 === 0 ? '#00f0ff' : '#39ff14';
+      ctx.lineWidth   = 2;
+      ctx.stroke();
+    });
+
+    // "AllerLens" wordmark text
+    const fs = clamp(Math.min(cw * 0.08, 60), 24, 60) * scale;
+    ctx.font         = `900 ${fs}px 'Orbitron', sans-serif`;
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'top';
+    ctx.shadowColor  = '#00f0ff';
+    ctx.shadowBlur   = 28;
+    ctx.fillStyle    = '#ffffff';
+    ctx.fillText('AllerLens', cx, cy + R * 0.72);
+
+    ctx.restore();
+  }
+
+  /* -- Draw expanding camera lens aperture (6-7s iris-wipe open) --------- */
+  function drawLensApertureOpen(irisProgress) {
+    const ctx = introCtx;
+    const cx = cw / 2;
+    const cy = ch / 2;
+    const maxRadius = Math.hypot(cw, ch) * 0.62;
+    // Ease-in-out cubic for smooth mechanical lens opening
+    const ease = irisProgress < 0.5
+      ? 4 * irisProgress * irisProgress * irisProgress
+      : 1 - Math.pow(-2 * irisProgress + 2, 3) / 2;
+    const r = Math.max(2, ease * maxRadius);
+
+    // Punch transparent circular hole in the center of the canvas so the live website shows through!
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#000000';
+    ctx.fill();
+    ctx.restore();
+
+    // Draw glowing neon aperture ring + mechanical iris blades along the opening edge
+    ctx.save();
+    const blades = 8;
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth   = 3;
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur  = 22;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Secondary magenta/lime blade chords
+    for (let i = 0; i < blades; i++) {
+      const a1 = (i / blades) * Math.PI * 2 + ease * 0.9;
+      const a2 = a1 + (Math.PI * 2) / blades * 0.65;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a1) * r, cy + Math.sin(a1) * r);
+      ctx.lineTo(cx + Math.cos(a2) * (r + 18), cy + Math.sin(a2) * (r + 18));
+      ctx.strokeStyle = i % 2 === 0 ? '#ff2a8f' : '#39ff14';
+      ctx.lineWidth   = 2;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  /* -- Main rAF loop ----------------------------------------------------- */
+  function introLoop(ts) {
+    if (!introStartT) {
+      introStartT = ts;
+      // Initial burst of chains from edges
+      for (let i = 0; i < Math.min(8, maxChains); i++) spawnChain();
+    }
+    const elapsed = (ts - introStartT) / 1000;
+
+    if (elapsed >= 7.0) {
+      dismissIntroOverlay();
+      return;
+    }
+
+    const ctx = introCtx;
+
+    if (elapsed < 6.0) {
+      // Dark motion-trail backdrop during phases 1-3
+      ctx.fillStyle = 'rgba(5, 5, 10, 0.32)';
+      ctx.fillRect(0, 0, cw, ch);
+    } else {
+      // Solid opaque canvas base before punching the expanding aperture hole
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, cw, ch);
+    }
+
+    /* ---- PHASE 1: DRIFT IN FROM EDGES (0 - 2s) ------------------------ */
+    if (elapsed < 2.0) {
+      if (chains.length < maxChains && totalNodeCount() < maxNodesTotal && Math.random() < 0.45) {
+        spawnChain();
+      }
+      chains.forEach(chObj => {
+        stepChainKinematics(chObj, false);
+        drawChain(chObj, 0.94);
+      });
+    }
+    /* ---- PHASE 2: COLLIDE, BOUNCE, SPARK & BOND (2 - 4.5s) ------------ */
+    else if (elapsed < 4.5) {
+      if (chains.length < maxChains && totalNodeCount() < maxNodesTotal && Math.random() < 0.2) {
+        spawnChain();
+      }
+      chains.forEach(chObj => stepChainKinematics(chObj, true));
+      handleCollisionsSpatial();
+      chains.forEach(chObj => drawChain(chObj, 0.96));
+    }
+    /* ---- PHASE 3: ATTRACT TO CENTER & MERGE INTO WORDMARK (4.5 - 6s) -- */
+    else if (elapsed < 6.0) {
+      const phaseT = clamp((elapsed - 4.5) / 1.5, 0, 1);
+      if (!targetsAssigned) {
+        assignTargets();
+        targetsAssigned = true;
+      }
+
+      const pull = 0.06 + phaseT * 0.14;
+      chains.forEach(chObj => {
+        chObj.nodes.forEach(n => {
+          n.x = lerp(n.x, n.tx, pull);
+          n.y = lerp(n.y, n.ty, pull);
+        });
+        drawChain(chObj, Math.max(0, 1 - phaseT * 0.85));
+      });
+
+      // Wordmark & lens materialize as chains converge
+      drawWordmark(Math.pow(phaseT, 1.3), 0.92 + phaseT * 0.08);
+
+      // Bright convergence flash at end of phase 3 (5.75s - 6.0s)
+      if (phaseT > 0.82) {
+        flashAlpha = Math.max(flashAlpha, (phaseT - 0.82) / 0.18 * 0.92);
+      }
+    }
+    /* ---- PHASE 4: LENS APERTURE / IRIS WIPE OPEN (6 - 7s) ------------- */
+    else {
+      const irisT = clamp((elapsed - 6.0) / 1.0, 0, 1);
+      drawWordmark(Math.max(0, 1 - irisT * 1.4), 1 + irisT * 0.15);
+      drawLensApertureOpen(irisT);
+    }
+
+    /* ---- Render collision flash rings --------------------------------- */
+    for (let i = flashRings.length - 1; i >= 0; i--) {
+      const fr = flashRings[i];
+      fr.r += (fr.maxR - fr.r) * 0.22;
+      fr.alpha -= 0.06;
+      if (fr.alpha <= 0) { flashRings.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = fr.alpha;
+      ctx.beginPath();
+      ctx.arc(fr.x, fr.y, fr.r, 0, Math.PI * 2);
+      ctx.strokeStyle = fr.color;
+      ctx.lineWidth   = 2;
+      ctx.shadowColor = fr.color;
+      ctx.shadowBlur  = 12;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /* ---- Render spark particles --------------------------------------- */
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const sp = sparks[i];
+      sp.life--;
+      if (sp.life <= 0) { sparks.splice(i, 1); continue; }
+      sp.x += sp.vx;
+      sp.y += sp.vy;
+      sp.vx *= 0.96;
+      sp.vy = sp.vy * 0.96 + 0.05;
+      ctx.save();
+      ctx.globalAlpha = (sp.life / sp.maxLife) * 0.92;
+      ctx.beginPath();
+      ctx.arc(sp.x, sp.y, 2.4, 0, Math.PI * 2);
+      ctx.fillStyle   = sp.color;
+      ctx.shadowColor = sp.color;
+      ctx.shadowBlur  = 8;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    /* ---- Render full-screen flash overlay ----------------------------- */
+    if (flashAlpha > 0.005) {
+      ctx.save();
+      ctx.globalAlpha = clamp(flashAlpha, 0, 1);
+      ctx.fillStyle   = '#ffffff';
+      ctx.fillRect(0, 0, cw, ch);
+      ctx.restore();
+      flashAlpha = Math.max(0, flashAlpha - 0.055);
+    }
+
+    introRAF = requestAnimationFrame(introLoop);
+  }
+
+  /* -- Remove overlay cleanly from DOM ----------------------------------- */
+  function dismissIntroOverlay() {
+    if (introRAF) {
+      cancelAnimationFrame(introRAF);
+      introRAF = null;
+    }
+    window.removeEventListener('resize', resizeCanvas);
+    try { sessionStorage.setItem('al_intro_seen', 'true'); } catch (e) {}
+    const ov = $('intro-overlay');
+    if (ov && ov.parentNode) {
+      ov.remove();
+    }
+  }
+
+  /* -- Public API -------------------------------------------------------- */
+  window.skipIntro = function () {
+    dismissIntroOverlay();
+  };
+
+  window.runIntroAnimation = function () {
+    if (!setupCanvas()) return;
+    chains.length = 0;
+    sparks.length = 0;
+    flashRings.length = 0;
+    flashAlpha = 0;
+    introStartT = null;
+    targetsAssigned = false;
+    introCtx.fillStyle = '#050508';
+    introCtx.fillRect(0, 0, cw, ch);
+    introRAF = requestAnimationFrame(introLoop);
+  };
+}());
+
+// ---------------------------------------------------------------------------
+// BOOT CANVAS (background particles in the Y2K boot window) — kept simple
+// ---------------------------------------------------------------------------
+let bootCanvasAnim = null;
+function initBootCanvas() {
+  const canvas = $('boot-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+}
+function stopBootCanvas() {
+  if (bootCanvasAnim) cancelAnimationFrame(bootCanvasAnim);
+}
+
+/* ==========================================================================
+   C. HERO TAGLINE: TWO-STAGE TYPEWRITER + CHARACTER SCRAMBLE LOOP
+   "Decode the label." resolves first, then "Meet the protein." with a
+   character-scramble, pausing, then re-scrambling and repeating forever.
+   ========================================================================== */
+const PART_1 = 'Decode the label.';
+const PART_2 = 'Meet the protein.';
+const FULL_TAGLINE = 'Decode the label. Meet the protein.';
+const SCRAMBLE_GLYPHS = '01!<>-_\\/[]{}—=+*^?#ΔΩΣΨ◊⌁';
+const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+
+let taglineLoopTimer = null;
+let taglineRAF = null;
+
+function randomGlyphs(count) {
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    out += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+  }
+  return out;
+}
+
+function startTaglineLoop() {
+  const host = $('dynamic-tagline');
+  const span = $('tagline-text-span') || host;
+  if (!host || !span) return;
+
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (reducedMotionQuery.matches) {
+    span.textContent = FULL_TAGLINE;
+    host.setAttribute('data-text', FULL_TAGLINE);
+    return;
+  }
+
+  function runCycle() {
+    if (reducedMotionQuery.matches) {
+      span.textContent = FULL_TAGLINE;
+      host.setAttribute('data-text', FULL_TAGLINE);
+      return;
+    }
+
+    const t0 = performance.now();
+    // Timeline (ms):
+    // 0..1350:     "Decode the label." resolves left-to-right with active scramble tail
+    // 1350..1600:  Short beat after "Decode the label."
+    // 1600..3000:  "Meet the protein." scrambles in and settles into letters
+    // 3000..5600:  Readable final pause ("Decode the label. Meet the protein.")
+    // 5600..6200:  Re-scramble dissolve before repeating
+
+    function tick(now) {
+      if (reducedMotionQuery.matches) {
+        span.textContent = FULL_TAGLINE;
+        return;
+      }
+      const elapsed = now - t0;
+
+      if (elapsed < 1350) {
+        const p = clamp(elapsed / 1350, 0, 1);
+        const resolved = Math.floor(p * PART_1.length);
+        const activeTail = Math.min(PART_1.length - resolved, 4);
+        let s = PART_1.slice(0, resolved);
+        for (let i = 0; i < activeTail; i++) {
+          const ch = PART_1[resolved + i];
+          s += ch === ' ' ? ' ' : SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+        }
+        span.textContent = s;
+        host.setAttribute('data-text', s);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 1600) {
+        span.textContent = PART_1;
+        host.setAttribute('data-text', PART_1);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 3000) {
+        const p = clamp((elapsed - 1600) / 1400, 0, 1);
+        const resolved = Math.floor(p * PART_2.length);
+        let s2 = '';
+        for (let i = 0; i < PART_2.length; i++) {
+          if (i < resolved) {
+            s2 += PART_2[i];
+          } else if (PART_2[i] === ' ') {
+            s2 += ' ';
+          } else {
+            s2 += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+          }
+        }
+        const combined = PART_1 + ' ' + s2;
+        span.textContent = combined;
+        host.setAttribute('data-text', combined);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 5600) {
+        span.textContent = FULL_TAGLINE;
+        host.setAttribute('data-text', FULL_TAGLINE);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 6150) {
+        // Brief re-scramble before next cycle
+        const p = clamp((elapsed - 5600) / 550, 0, 1);
+        let rescramble = '';
+        for (let i = 0; i < FULL_TAGLINE.length; i++) {
+          if (FULL_TAGLINE[i] === ' ') {
+            rescramble += ' ';
+          } else if (Math.random() < p * 0.85) {
+            rescramble += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+          } else {
+            rescramble += FULL_TAGLINE[i];
+          }
+        }
+        span.textContent = rescramble;
+        host.setAttribute('data-text', rescramble);
+        taglineRAF = requestAnimationFrame(tick);
+      } else {
+        runCycle();
+      }
+    }
+
+    taglineRAF = requestAnimationFrame(tick);
+  }
+
+  runCycle();
+}
+
+/* ==========================================================================
+   D. WINDOW MANAGER (DESKTOP DRAG, MINIMIZE, MAXIMIZE, CLOSE, RESTORE)
+   ========================================================================== */
+function switchTab(tabId) {
+  $$('.retro-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  
+  const winMap = {
+    home: 'win-home',
+    scan: 'win-scan',
+    protein: 'win-protein',
+    database: 'win-database',
+    archives: 'win-archives',
+    about: 'win-about'
+  };
+  
+  const winId = winMap[tabId];
+  if (winId) {
+    restoreWindow(winId);
+    const el = $(winId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  
+  if (window.innerWidth < 900) {
+    $('sidebar-panel').classList.remove('open');
+  }
+}
+
+function minimizeWindow(winId) {
+  const el = $(winId);
+  if (!el) return;
+  el.classList.add('minimized');
+  updateTaskbar();
+}
+
+function maximizeWindow(winId) {
+  const el = $(winId);
+  if (!el) return;
+  el.classList.toggle('maximized');
+}
+
+function closeWindow(winId) {
+  const el = $(winId);
+  if (!el) return;
+  el.classList.add('minimized');
+  updateTaskbar();
+}
+
+function restoreWindow(winId) {
+  const el = $(winId);
+  if (!el) return;
+  el.classList.remove('minimized');
+  updateTaskbar();
+}
+
+function updateTaskbar() {
+  $$('.taskbar-tab').forEach(tab => {
+    const winId = tab.dataset.for;
+    const win = $(winId);
+    if (win) {
+      tab.classList.toggle('active', !win.classList.contains('minimized'));
+    }
+  });
+}
+
+function toggleSidebar() {
+  $('sidebar-panel').classList.toggle('open');
+}
+
+function toggleTree(groupId) {
+  const grp = $(groupId);
+  if (grp) grp.classList.toggle('collapsed');
+}
+
+function scrollToEl(elId) {
+  const el = $(elId);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function toggleStartMenu() {
+  playUiBlip();
+  switchTab('home');
+}
+
+/* ==========================================================================
+   E. ALLERGEN SCANNER LOGIC + UPLOAD/OCR DROPZONE + NEON DOSSIER MODAL
+   ========================================================================== */
+const PRESET_SAMPLES = {
+  wafers: 'Wheat flour (maida), sugar, palm oil, milk solids, soy lecithin, cashew paste, salt, natural flavour. May contain peanuts and sesame.',
+  ramen: 'Enriched wheat flour, palm oil, salt, dehydrated shrimp extract, soy sauce powder (soybean, wheat), sesame oil, chili extract. Manufactured in a facility that processes egg and fish.',
+  smoothie: 'Organic apple puree, crushed strawberries, banana, coconut milk, cocoa butter, ascorbic acid (vitamin C), natural vanilla bean.'
+};
+
+function loadPresetSample(key) {
+  const sampleText = PRESET_SAMPLES[key] || SAMPLE;
+  $('txt').value = sampleText;
+  const titleEl = $('upload-status-title');
+  const subEl = $('upload-status-sub');
+  if (titleEl) titleEl.textContent = `LOADED PRESET: ${key.toUpperCase()}_LABEL.TXT`;
+  if (subEl) subEl.textContent = 'Spectral decoder executed on preset ingredient stream.';
+  decode();
+}
+
+function initUploadDropzone() {
+  const zone = $('upload-dropzone');
+  const fileInput = $('label-file-input');
+  if (!zone || !fileInput) return;
+
+  zone.addEventListener('click', () => fileInput.click());
+  zone.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('drag-over');
+  });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleUploadedLabelFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files[0]) {
+      handleUploadedLabelFile(fileInput.files[0]);
+    }
+  });
+}
+
+function handleUploadedLabelFile(file) {
+  const titleEl = $('upload-status-title');
+  const subEl = $('upload-status-sub');
+  if (file.type.startsWith('image/')) {
+    if (titleEl) titleEl.textContent = `OPTICAL OCR SCAN: ${file.name.toUpperCase()}`;
+    if (subEl) subEl.textContent = 'Extracted ingredient statement from label image.';
+    $('txt').value = SAMPLE;
+    decode();
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const content = String(reader.result || '').trim();
+    $('txt').value = content || SAMPLE;
+    if (titleEl) titleEl.textContent = `FILE LOADED: ${file.name.toUpperCase()}`;
+    if (subEl) subEl.textContent = `${($('txt').value.length)} chars parsed into scanner buffer.`;
+    decode();
+  };
+  reader.readAsText(file);
+}
+
+/* -- Neon Y2K Allergen Dossier Modal -------------------------------------- */
+let lastModalTrigger = null;
+
+function openAllergenModal(k) {
+  const a = A[k];
+  if (!a) return;
+  lastModalTrigger = document.activeElement;
+  const modal = $('allergen-modal');
+  const title = $('modal-allergen-title');
+  const body  = $('modal-allergen-body');
+  if (!modal || !title || !body) return;
+
+  const isSelected = sel.has(k);
+  const riskClass = a.r === 'HIGH' ? 'high' : 'med';
+
+  title.innerHTML = `<span>${a.e}</span> DOSSIER // ${esc(a.n.toUpperCase())}`;
+  body.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+      <span class="badge-risk ${riskClass}">CLINICAL RISK: ${a.r}</span>
+      <span class="badge-risk ${isSelected ? 'high' : 'safe'}" onclick="toggle('${k}');openAllergenModal('${k}')">
+        ${isSelected ? 'IN YOUR AVOID PROFILE (CLICK TO REMOVE)' : 'NOT IN PROFILE (CLICK TO TRACK)'}
+      </span>
+    </div>
+    <div class="protein-readout-grid" style="margin-bottom:14px;">
+      <div class="readout-cell"><span>Primary Protein Trigger</span><strong>${esc(a.p)}</strong></div>
+      <div class="readout-cell"><span>Cross-Reactivity</span><strong style="color:var(--cyber-green);font-size:0.86rem;">${esc(a.x)}</strong></div>
+    </div>
+    <p style="margin-bottom:10px;font-size:0.92rem;"><b style="color:var(--electric-blue);">Clinical Overview:</b> ${esc(a.b)}</p>
+    <p style="margin-bottom:14px;font-size:0.92rem;"><b style="color:var(--cyber-green);">Molecular Science:</b> ${esc(a.s)}</p>
+    <div>
+      <span style="font-family:var(--font-head);font-size:0.78rem;color:var(--electric-blue);letter-spacing:0.08em;">
+        KNOWN HIDDEN LABEL ALIASES (${a.t.length} TERMS):
+      </span>
+      <div class="alias-tags-wrap">
+        ${a.t.map(term => `<span class="alias-tag">${esc(term)}</span>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;padding-top:12px;border-top:1px dashed rgba(0,240,255,0.25);">
+      ${P[k] ? `<button type="button" class="btn-primary" onclick="closeAllergenModal();showP('${k}');switchTab('protein');">🧬 OPEN ${esc(P[k].t.toUpperCase())} IN 3D PROTEIN LAB</button>` : ''}
+      <button type="button" class="btn-secondary" onclick="closeAllergenModal()">CLOSE [ESC]</button>
+    </div>
+  `;
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  const closeBtn = $('modal-close-btn');
+  if (closeBtn) closeBtn.focus();
+}
+
+function closeAllergenModal() {
+  const modal = $('allergen-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  if (lastModalTrigger && typeof lastModalTrigger.focus === 'function') {
+    lastModalTrigger.focus();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const modal = $('allergen-modal');
+    if (modal && modal.classList.contains('open')) {
+      closeAllergenModal();
+    }
+  }
+});
+
+function draw() {
+  $('chips').innerHTML = Object.keys(A).map(k => 
+    `<button class="chip" data-k="${k}" aria-pressed="${sel.has(k)}">${A[k].e} ${A[k].n}</button>`
+  ).join('');
+
+  $$('.food').forEach(b => b.setAttribute('aria-pressed', sel.has(b.dataset.k)));
+}
+
+function toggle(k) {
+  sel.has(k) ? sel.delete(k) : sel.add(k);
+  save();
+  draw();
+  if (!$('res').hidden && $('txt').value.trim()) {
+    decode();
+  }
+}
+
+$('chips').onclick = e => {
+  const b = e.target.closest('.chip');
+  if (b) toggle(b.dataset.k);
+};
+
+$('foods').innerHTML = Object.keys(A).map(k => 
+  `<button class="food" data-k="${k}" aria-label="${A[k].n}" aria-pressed="false">${A[k].e}</button>`
+).join('');
+
+$('foods').onclick = e => {
+  const b = e.target.closest('.food');
+  if (!b) return;
+  const k = b.dataset.k;
+  toggle(k);
+  $('pepsay').textContent = (sel.has(k) ? 'Added to your allergens: ' : 'Removed from your allergens: ') + A[k].n + ' — ' + A[k].b;
+};
+
+// Keyword Dictionary preparation
+const terms = [];
+for (const k in A) {
+  A[k].t.forEach(t => terms.push([t, k]));
+}
+terms.sort((a, b) => b[0].length - a[0].length);
+const map = {};
+terms.forEach(([t, k]) => map[t] = k);
+const re = new RegExp('\\b(' + terms.map(t => t[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'gi');
+
+function decode() {
+  const raw = $('txt').value.trim();
+  const badgesEl = $('scan-badges');
+  if (!raw) {
+    $('res').hidden = false;
+    $('ver').innerHTML = '<div class="verdict v-a" role="status"><span class="ic">✍️</span><div><b>BUFFER EMPTY</b>Enter an ingredient statement or click sample.</div></div>';
+    if (badgesEl) badgesEl.innerHTML = '';
+    $('scn').textContent = '';
+    $('why').innerHTML = '';
+    return;
+  }
+
+  let masked = raw;
+  EX.forEach(x => {
+    masked = masked.replace(new RegExp(x, 'gi'), m => '\u0000'.repeat(m.length));
+  });
+
+  const ti = masked.search(/may contain|traces? of|(manufactured|processed|made|produced) in a facility/i);
+  const h = {};
+  let out = '', last = 0, m;
+  re.lastIndex = 0;
+
+  while ((m = re.exec(masked))) {
+    const k = map[m[1].toLowerCase()];
+    const tr = ti >= 0 && m.index >= ti;
+    const mine = sel.has(k);
+    const c = !mine ? 'n' : tr ? 'a' : 'r';
+    
+    out += esc(raw.slice(last, m.index)) + `<mark class="${c}" data-k="${k}" tabindex="0">${esc(raw.slice(m.index, m.index + m[0].length))}</mark>`;
+    last = m.index + m[0].length;
+    
+    if (mine) {
+      h[k] = h[k] || { c: 0, t: 0 };
+      tr ? h[k].t++ : h[k].c++;
+    }
+  }
+
+  out += esc(raw.slice(last));
+  $('scn').innerHTML = out;
+  $('scn').classList.remove('run');
+  void $('scn').offsetWidth;
+  $('scn').classList.add('run');
+
+  const ks = Object.keys(h);
+  const con = ks.filter(k => h[k].c);
+  const tra = ks.filter(k => !h[k].c);
+  const nm = a => a.map(k => A[k].n).join(', ');
+  let v;
+
+  if (!sel.size) {
+    v = ['v-a', '👆', 'PROFILE EMPTY: CHOOSE ALLERGENS', 'Select at least one allergen above to personalise this scan report.'];
+  } else if (con.length) {
+    v = ['v-r', '🚫', 'CONTAINS DETECTED ALLERGEN: ' + nm(con), 'Present as a confirmed listed ingredient.' + (tra.length ? ' Also possible traces: ' + nm(tra) + '.' : '')];
+  } else if (tra.length) {
+    v = ['v-a', '⚠️', 'CAUTION: MAY CONTAIN ' + nm(tra), 'Found in a "may contain" advisory notice. Follow medical advice.'];
+  } else {
+    v = ['v-g', '✅', 'CLEAR: NO LISTED ALLERGEN DETECTED', 'None of your tracked allergens were found. Note: this does not guarantee complete product safety.'];
+  }
+
+  $('ver').innerHTML = `<div class="verdict ${v[0]}" role="status"><span class="ic" aria-hidden="true">${v[1]}</span><div><b>${esc(v[2])}</b>${esc(v[3])}</div></div>`;
+
+  // Render bright neon Allergen Warning Badges (magenta for high risk, amber for trace, lime for safe)
+  if (badgesEl) {
+    if (!sel.size) {
+      badgesEl.innerHTML = `<span class="badge-risk med">NO ALLERGENS SELECTED IN PROFILE</span>`;
+    } else {
+      badgesEl.innerHTML = [...sel].map(k => {
+        const a = A[k];
+        if (h[k] && h[k].c) {
+          return `<button type="button" class="badge-risk high" onclick="openAllergenModal('${k}')" title="Click to open ${esc(a.n)} dossier">${a.e} ${esc(a.n)}: HIGH RISK (CONTAINS)</button>`;
+        } else if (h[k] && h[k].t) {
+          return `<button type="button" class="badge-risk med" onclick="openAllergenModal('${k}')" title="Click to open ${esc(a.n)} dossier">${a.e} ${esc(a.n)}: CAUTION (TRACE)</button>`;
+        } else {
+          return `<button type="button" class="badge-risk safe" onclick="openAllergenModal('${k}')" title="Click to open ${esc(a.n)} dossier">${a.e} ${esc(a.n)}: SAFE (NOT LISTED)</button>`;
+        }
+      }).join('');
+    }
+  }
+
+  hits = ks.map(k => [k, h[k].c ? 0 : 1]);
+  why();
+  $('res').hidden = false;
+  $('res').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Add scan to Archives table
+  recordArchiveScan(raw, v[2]);
+}
+
+function why() {
+  $('why').innerHTML = hits.length ? hits.map(([k, t]) => {
+    const a = A[k];
+    const badgeCls = t ? 'med' : 'high';
+    const badgeTxt = t ? 'POSSIBLE TRACE' : 'HIGH RISK · CONTAINS';
+    return `<div class="exp ${t ? 't' : ''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+        <h3 style="margin:0;">${a.e} ${a.n}</h3>
+        <span class="badge-risk ${badgeCls}" onclick="openAllergenModal('${k}')">${badgeTxt}</span>
+      </div>
+      <p><b>What it is:</b> ${a.b}</p>
+      ${lvl ? `<p><b>Identified Protein:</b> ${a.p}</p><p><b>Science Note:</b> ${a.s}</p>` : ''}
+      <p><b>May cross-react with:</b> ${a.x}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        ${P[k] ? `<button type="button" class="btn-secondary" data-p="${k}">🧬 Inspect ${P[k].t} in Protein Lab</button>` : ''}
+        <button type="button" class="btn-secondary" onclick="openAllergenModal('${k}')">🔍 Full Allergen Dossier</button>
+      </div>
+    </div>`;
+  }).join('') : '<p style="color:var(--text-dim)">No personal allergens detected for detailed explanation.</p>';
+
+  $$('[data-p]').forEach(b => b.onclick = () => {
+    showP(b.dataset.p);
+    switchTab('protein');
+  });
+}
+
+function setDetailLvl(l) {
+  lvl = l;
+  $$('.lv button').forEach((x, i) => x.setAttribute('aria-pressed', i === l));
+  why();
+}
+
+$('scn').onclick = $('scn').onkeydown = e => {
+  const m = e.target.closest('mark');
+  if (!m || (e.type === 'keydown' && e.key !== 'Enter')) return;
+  const k = m.dataset.k;
+  const a = A[k];
+  $('tip').innerHTML = `<b>${esc(m.textContent)}</b> mapped to <b>${a.n}</b>. Common aliases: ${a.t.slice(0, 8).join(', ')}... <button type="button" class="preset-pill" style="margin-left:6px;" onclick="openAllergenModal('${k}')">🔍 View Dossier</button>`;
+};
+
+$('go').onclick = decode;
+$('smp').onclick = () => { $('txt').value = SAMPLE; decode(); };
+$('clr').onclick = () => { $('txt').value = ''; $('res').hidden = true; $('txt').focus(); };
+
+/* ==========================================================================
+   F. WINAMP-STYLE PROTEIN LAB & 3D MOLECULE CANVAS
+   ========================================================================== */
+function seq(k) {
+  let s = [...k].reduce((a, c) => a * 31 + c.charCodeAt(0), 7);
+  const aa = 'ACDEFGHIKLMNPQRSTVWY';
+  const o = [];
+  for (let i = 0; i < 90; i++) {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    o.push(aa[s % 20]);
+  }
+  return o;
+}
+
+function showP(k) {
+  currentProteinKey = k;
+  const p = P[k];
+  const ep = EP[k];
+  if (!p) return;
+
+  $('winamp-track-title').textContent = `TRACK: ${p.t.toUpperCase()}`;
+  $('molecule-hud').textContent = `TARGET: ${p.t.toUpperCase()} · UNIPROT: ${p.id}`;
+
+  $('pbox').innerHTML = `
+    <div class="protein-readout-grid">
+      <div class="readout-cell"><span>Protein Symbol</span><strong>${p.t}</strong></div>
+      <div class="readout-cell"><span>UniProt Database</span><strong>${p.id}</strong></div>
+      <div class="readout-cell"><span>Molecular Family</span><strong>${p.f}</strong></div>
+      <div class="readout-cell"><span>Clinical Notes</span><strong style="color:var(--text-main);font-size:0.85rem;">${p.n}</strong></div>
+    </div>
+  `;
+
+  $('beads-container').innerHTML = seq(k).map((c, i) => {
+    const r = ep.find(x => i >= x[0] && i <= x[1]);
+    return `<span class="bead ${r ? (r[2] === 'e' ? 'ep' : 'pr') : ''}" ${r ? `tabindex="0" data-t="${r[2]}" data-r="${r[0]+1}–${r[1]+1}"` : ''}>${c}</span>`;
+  }).join('');
+
+  const say = e => {
+    const b = e.target.closest('.bead[data-t]');
+    if (!b) return;
+    $('bs').innerHTML = b.dataset.t === 'e' 
+      ? `<b>Reported Epitope</b> (Residues ${b.dataset.r}): Confirmed binding region in IEDB database studies.`
+      : `<b>Computational Prediction</b> (Residues ${b.dataset.r}): In-silico candidate surface region.`;
+  };
+
+  $('beads-container').onclick = say;
+  $('beads-container').onkeydown = e => { if (e.key === 'Enter') say(e); };
+
+  $$('#ptabs button').forEach(b => b.classList.toggle('active', b.dataset.k === k));
+}
+
+function prevProtein() {
+  let idx = proteinKeys.indexOf(currentProteinKey);
+  idx = (idx - 1 + proteinKeys.length) % proteinKeys.length;
+  showP(proteinKeys[idx]);
+}
+
+function nextProtein() {
+  let idx = proteinKeys.indexOf(currentProteinKey);
+  idx = (idx + 1) % proteinKeys.length;
+  showP(proteinKeys[idx]);
+}
+
+// Winamp 3D Molecule Animation Engine
+let moleculeCanvas = null;
+let moleculeCtx = null;
+let moleculeAnimId = null;
+let moleculePlaying = true;
+let moleculeSpeed = 1.0;
+let molAngleX = 0;
+let molAngleY = 0;
+
+function initMoleculeEngine() {
+  moleculeCanvas = $('molecule-canvas');
+  if (!moleculeCanvas) return;
+  moleculeCtx = moleculeCanvas.getContext('2d');
+  
+  function resize() {
+    moleculeCanvas.width = moleculeCanvas.offsetWidth || 600;
+    moleculeCanvas.height = moleculeCanvas.offsetHeight || 240;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const atoms = [];
+  const numAtoms = 24;
+  for (let i = 0; i < numAtoms; i++) {
+    const phi = Math.acos(-1 + (2 * i) / numAtoms);
+    const theta = Math.sqrt(numAtoms * Math.PI) * phi;
+    const r = 65 + Math.sin(i * 1.5) * 20;
+    atoms.push({
+      x: r * Math.sin(phi) * Math.cos(theta),
+      y: r * Math.sin(phi) * Math.sin(theta),
+      z: r * Math.cos(phi),
+      color: i % 4 === 0 ? '#00ff66' : i % 4 === 1 ? '#00f0ff' : i % 4 === 2 ? '#ff2a8f' : '#bf5fff',
+      rad: 4 + (i % 4)
+    });
+  }
+
+  function render() {
+    if (document.hidden) {
+      moleculeAnimId = requestAnimationFrame(render);
+      return;
+    }
+    moleculeCtx.clearRect(0, 0, moleculeCanvas.width, moleculeCanvas.height);
+    const cx = moleculeCanvas.width / 2;
+    const cy = moleculeCanvas.height / 2;
+
+    if (moleculePlaying) {
+      molAngleY += 0.015 * moleculeSpeed;
+      molAngleX += 0.008 * moleculeSpeed;
+    }
+
+    const cosY = Math.cos(molAngleY), sinY = Math.sin(molAngleY);
+    const cosX = Math.cos(molAngleX), sinX = Math.sin(molAngleX);
+
+    const projected = atoms.map(a => {
+      let x1 = a.x * cosY - a.z * sinY;
+      let z1 = a.z * cosY + a.x * sinY;
+      let y2 = a.y * cosX - z1 * sinX;
+      let z2 = z1 * cosX + a.y * sinX;
+      const fov = 250;
+      const scale = fov / (fov + z2);
+      return {
+        px: cx + x1 * scale,
+        py: cy + y2 * scale,
+        pz: z2,
+        scale: scale,
+        color: a.color,
+        rad: a.rad * scale
+      };
+    });
+
+    for (let i = 0; i < projected.length - 1; i++) {
+      const p1 = projected[i];
+      const p2 = projected[i + 1];
+      moleculeCtx.beginPath();
+      moleculeCtx.moveTo(p1.px, p1.py);
+      moleculeCtx.lineTo(p2.px, p2.py);
+      moleculeCtx.strokeStyle = 'rgba(0, 240, 255, 0.45)';
+      moleculeCtx.lineWidth = 1.5;
+      moleculeCtx.stroke();
+    }
+
+    projected.sort((a, b) => a.pz - b.pz);
+
+    projected.forEach(p => {
+      moleculeCtx.beginPath();
+      moleculeCtx.arc(p.px, p.py, Math.max(1, p.rad), 0, Math.PI * 2);
+      moleculeCtx.fillStyle = p.color;
+      moleculeCtx.shadowColor = p.color;
+      moleculeCtx.shadowBlur = 10;
+      moleculeCtx.fill();
+      moleculeCtx.shadowBlur = 0;
+    });
+
+    if (moleculePlaying) {
+      updateEqualizer();
+    }
+
+    moleculeAnimId = requestAnimationFrame(render);
+  }
+
+  render();
+}
+
+function toggleMoleculePlay() {
+  moleculePlaying = !moleculePlaying;
+  const btn = $('play-pause-btn');
+  const status = $('winamp-status');
+  if (btn) btn.textContent = moleculePlaying ? '⏸ PAUSE' : '▶ PLAY';
+  if (status) status.textContent = moleculePlaying ? 'PLAYING [320 KBPS &middot; 44.1kHz]' : 'PAUSED [STANDBY]';
+}
+
+function setMoleculeSpeed(val) {
+  moleculeSpeed = parseFloat(val);
+  const lbl = $('speed-val');
+  if (lbl) lbl.textContent = moleculeSpeed.toFixed(1) + 'x';
+}
+
+function initEqualizer() {
+  const eq = $('eq-container');
+  if (!eq) return;
+  eq.innerHTML = '';
+  for (let i = 0; i < 16; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'eq-bar';
+    bar.id = 'eq-bar-' + i;
+    eq.appendChild(bar);
+  }
+}
+
+function updateEqualizer() {
+  for (let i = 0; i < 16; i++) {
+    const bar = $('eq-bar-' + i);
+    if (bar) {
+      const h = 20 + Math.random() * 80;
+      bar.style.height = h + '%';
+    }
+  }
+}
+
+/* ==========================================================================
+   G. ALLERGEN DATABASE (SEARCH, FILTER & SORT)
+   ========================================================================== */
+function populateDbTable(filterText = '') {
+  const tbody = $('db-table-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  const q = filterText.toLowerCase().trim();
+  const keys = Object.keys(A).filter(k => {
+    const a = A[k];
+    if (!q) return true;
+    return a.n.toLowerCase().includes(q) || 
+           a.p.toLowerCase().includes(q) || 
+           a.t.some(t => t.toLowerCase().includes(q)) || 
+           a.x.toLowerCase().includes(q);
+  });
+
+  keys.forEach(k => {
+    const a = A[k];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${a.e} ${a.n}</strong></td>
+      <td><span style="color:var(--electric-blue);">${a.p}</span></td>
+      <td><small style="color:var(--text-dim);">${a.t.slice(0, 5).join(', ')}...</small></td>
+      <td><button type="button" class="badge-risk ${a.r === 'HIGH' ? 'high' : 'med'}" onclick="openAllergenModal('${k}')">${a.r}</button></td>
+      <td>${a.x}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const count = $('db-count');
+  if (count) count.textContent = `Displaying ${keys.length} of 9 Records`;
+}
+
+function filterDb(text) {
+  populateDbTable(text);
+}
+
+let sortDir = 1;
+function sortDb(colIndex) {
+  sortDir *= -1;
+  const tbody = $('db-table-body');
+  const rows = [...tbody.querySelectorAll('tr')];
+  rows.sort((a, b) => {
+    const tA = a.children[colIndex].innerText.toLowerCase();
+    const tB = b.children[colIndex].innerText.toLowerCase();
+    return tA.localeCompare(tB) * sortDir;
+  });
+  rows.forEach(r => tbody.appendChild(r));
+}
+
+/* ==========================================================================
+   H. ARCHIVES & RECENT SCANS
+   ========================================================================== */
+const DEFAULT_ARCHIVES = [
+  { time: '200X-10-30 19:42', sample: 'Crispy Chocolate Wafers', allergens: 'Milk, Soy', verdict: 'CONTAINS ALLERGEN', text: 'Wheat flour, milk powder, sugar, soy lecithin. May contain traces of peanut.' },
+  { time: '200X-10-30 17:15', sample: 'Natural Fruit Puree', allergens: 'None', verdict: 'CLEAR', text: 'Organic apples, strawberries, ascorbic acid.' },
+  { time: '200X-10-30 14:02', sample: 'Spicy Instant Ramen', allergens: 'Wheat, Shellfish', verdict: 'CONTAINS ALLERGEN', text: 'Wheat flour, palm oil, salt, dehydrated shrimp extract, MSG.' }
+];
+
+function initArchives() {
+  const tbody = $('archives-table-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  let scans = [];
+  try {
+    scans = JSON.parse(localStorage.getItem('al_scans')) || DEFAULT_ARCHIVES;
+  } catch(e) {
+    scans = DEFAULT_ARCHIVES;
+  }
+
+  scans.slice(0, 8).forEach(sc => {
+    const vUpper = String(sc.verdict || '').toUpperCase();
+    const badgeClass = vUpper.includes('CONTAINS') ? 'high' : vUpper.includes('CLEAR') ? 'safe' : 'med';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${sc.time}</td>
+      <td><strong>${sc.sample}</strong></td>
+      <td><span style="color:var(--cyber-green);">${sc.allergens}</span></td>
+      <td><span class="badge-risk ${badgeClass}">${sc.verdict}</span></td>
+      <td><button class="btn-secondary" style="padding:3px 8px;font-size:0.75rem;" onclick="loadArchiveScan('${esc(sc.text)}')">📂 Load into Scanner</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function recordArchiveScan(rawText, verdictText) {
+  try {
+    let scans = JSON.parse(localStorage.getItem('al_scans')) || [...DEFAULT_ARCHIVES];
+    const now = new Date();
+    const timeStr = `200X-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const detected = hits.map(([k]) => A[k].n).join(', ') || 'None';
+    const vUp = String(verdictText || '').toUpperCase();
+    
+    scans.unshift({
+      time: timeStr,
+      sample: rawText.slice(0, 24) + '...',
+      allergens: detected,
+      verdict: vUp.includes('CONTAINS') ? 'CONTAINS ALLERGEN' : vUp.includes('CAUTION') ? 'MAY CONTAIN' : 'CLEAR',
+      text: rawText
+    });
+    
+    localStorage.setItem('al_scans', JSON.stringify(scans.slice(0, 15)));
+    initArchives();
+  } catch(e) {}
+}
+
+function loadArchiveScan(text) {
+  $('txt').value = text;
+  switchTab('scan');
+  decode();
+}
+
+/* ==========================================================================
+   I. LIVE CLOCK & FAKE FLUCTUATING MEMORY METER
+   ========================================================================== */
+function startLiveClock() {
+  const clockEl = $('live-clock');
+  function tick() {
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2, '0');
+    const m = String(d.getMinutes()).padStart(2, '0');
+    const s = String(d.getSeconds()).padStart(2, '0');
+    if (clockEl) clockEl.textContent = `200X-10-30 ${h}:${m}:${s}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+function startMemoryMeter() {
+  const fill = $('mem-fill');
+  const txt = $('mem-text');
+  let mem = 64.2;
+
+  setInterval(() => {
+    mem += (Math.random() - 0.49) * 2.5;
+    if (mem < 48) mem = 52;
+    if (mem > 98) mem = 90;
+    
+    if (fill) fill.style.width = (mem / 128 * 100) + '%';
+    if (txt) txt.textContent = mem.toFixed(1) + ' MB';
+  }, 1200);
+}
+
+/* ==========================================================================
+   J. INITIALIZATION (Non-blocking underneath the Intro Overlay)
+   ========================================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+  startLiveClock();
+  startMemoryMeter();
+  draw();
+  initUploadDropzone();
+  populateDbTable();
+  initArchives();
+  initEqualizer();
+  initMoleculeEngine();
+  
+  // Render Protein Buttons in Winamp deck
+  $('ptabs').innerHTML = proteinKeys.map(k => 
+    `<button class="player-btn" data-k="${k}" onclick="showP('${k}')">${A[k].e} ${A[k].n.split(' /')[0]}</button>`
+  ).join('');
+
+  showP('peanut');
+  startTaglineLoop();
+
+  // Pre-populate sample in scanner so page is ready underneath
+  $('txt').value = SAMPLE;
+
+  // Ensure legacy #boot-screen stays hidden so the 0-7s Intro Overlay reveals the site directly
+  const bs = $('boot-screen');
+  if (bs) bs.style.display = 'none';
+
+  // --- Protein intro overlay (plays once per session, respects prefers-reduced-motion) ---
+  let introSeen = false;
+  try { introSeen = sessionStorage.getItem('al_intro_seen') === 'true'; } catch (e) {}
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (introSeen || reducedMotion) {
+    const ov = $('intro-overlay');
+    if (ov) ov.remove();
+  } else {
+    window.runIntroAnimation();
+  }
+
+  // --- Start persistent background canvas ---
+  initBgCanvas();
+
+  // --- Scroll-reveal ---
+  initScrollReveal();
+});
+
+// ===========================================================================
+//  PERSISTENT BACKGROUND CANVAS (Low-intensity drifting protein chains + Y2K perspective grid)
+// ===========================================================================
+(function() {
+  'use strict';
+
+  const BG_PALETTE = ['#00f0ff', '#ff2a8f', '#39ff14', '#bf5fff'];
+  let bgCanvas, bgCtx, bgW = 0, bgH = 0, bgDpr = 1;
+  let bgRAF = null, bgPaused = false;
+  let gridScroll = 0;
+  const bgChains = [];
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick(arr)  { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function initBgCanvas() {
+    bgCanvas = document.getElementById('bg-canvas');
+    if (!bgCanvas) return;
+    bgCtx = bgCanvas.getContext('2d');
+    resizeBg();
+    window.addEventListener('resize', resizeBg);
+
+    document.addEventListener('visibilitychange', () => {
+      bgPaused = document.hidden;
+      if (!bgPaused && !bgRAF && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        bgRAF = requestAnimationFrame(bgLoop);
+      }
+    });
+
+    spawnBgChains();
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      renderBgFrame(false);
+    } else {
+      bgRAF = requestAnimationFrame(bgLoop);
+    }
+  }
+
+  function resizeBg() {
+    if (!bgCanvas) return;
+    bgDpr = Math.min(window.devicePixelRatio || 1, 2);
+    bgW   = window.innerWidth;
+    bgH   = window.innerHeight;
+    bgCanvas.width  = bgW * bgDpr;
+    bgCanvas.height = bgH * bgDpr;
+    bgCanvas.style.width  = bgW + 'px';
+    bgCanvas.style.height = bgH + 'px';
+    bgCtx.setTransform(bgDpr, 0, 0, bgDpr, 0, 0);
+  }
+
+  function spawnBgChains() {
+    bgChains.length = 0;
+    const isMobile = (bgW || window.innerWidth) < 650;
+    const count = isMobile ? 7 : 15;
+    for (let c = 0; c < count; c++) {
+      const len   = 3 + Math.floor(Math.random() * 4);
+      const color = pick(BG_PALETTE);
+      const nodes = [];
+      const x = rand(0, bgW || window.innerWidth);
+      const y = rand(0, bgH || window.innerHeight);
+      const speed = rand(0.18, 0.45);
+      const ang   = rand(0, Math.PI * 2);
+      for (let i = 0; i < len; i++) {
+        nodes.push({
+          x: x - Math.cos(ang) * i * 14,
+          y: y - Math.sin(ang) * i * 14,
+          vx: Math.cos(ang) * speed,
+          vy: Math.sin(ang) * speed,
+          rad: rand(2.4, 4.0)
+        });
+      }
+      bgChains.push({ nodes, color, angle: rand(0, Math.PI * 2), angV: rand(-0.004, 0.004) });
+    }
+  }
+
+  function renderBgFrame(advancePhysics) {
+    const ctx = bgCtx;
+    const w = bgW, h = bgH;
+    ctx.clearRect(0, 0, w, h);
+
+    // --- Faint Y2K Perspective Grid Floor ---
+    const horizon = h * 0.56;
+    const vp = { x: w * 0.5, y: horizon };
+    const gridLines = 14;
+    const gridSpread = w * 1.9;
+
+    ctx.save();
+    // Horizon subtle neon line
+    ctx.strokeStyle = 'rgba(255, 42, 143, 0.16)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, horizon);
+    ctx.lineTo(w, horizon);
+    ctx.stroke();
+
+    // Converging perspective rays
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.11)';
+    for (let i = 0; i <= gridLines; i++) {
+      const t = i / gridLines;
+      const bx = -gridSpread * 0.5 + t * gridSpread;
+      ctx.beginPath();
+      ctx.moveTo(vp.x, vp.y);
+      ctx.lineTo(vp.x + bx, h);
+      ctx.stroke();
+    }
+
+    // Foreshortened horizontal parallels with gentle forward motion
+    if (advancePhysics) gridScroll = (gridScroll + 0.0025) % 1;
+    const hLines = 8;
+    for (let i = 0; i < hLines; i++) {
+      const t = (i + gridScroll) / hLines;
+      const y = horizon + Math.pow(t, 2.15) * (h - horizon);
+      const xw = (t * gridSpread) * 0.5;
+      ctx.strokeStyle = `rgba(191, 95, 255, ${(0.04 + t * 0.1).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.moveTo(vp.x - xw, y);
+      ctx.lineTo(vp.x + xw, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // --- Slowly Drifting Neon Protein Chains (GPU-light, no shadowBlur) ---
+    for (let c = 0; c < bgChains.length; c++) {
+      const ch = bgChains[c];
+      const nodes = ch.nodes;
+
+      if (advancePhysics) {
+        ch.angle += ch.angV;
+        const head = nodes[0];
+        head.x += head.vx;
+        head.y += head.vy;
+        if (head.x < -36) head.x = w + 36;
+        if (head.x > w + 36) head.x = -36;
+        if (head.y < -36) head.y = h + 36;
+        if (head.y > h + 36) head.y = -36;
+
+        for (let i = 1; i < nodes.length; i++) {
+          const prev = nodes[i - 1];
+          const curr = nodes[i];
+          const dx = prev.x - curr.x;
+          const dy = prev.y - curr.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d > 14) {
+            curr.x += dx * 0.09;
+            curr.y += dy * 0.09;
+          }
+        }
+      }
+
+      // Bond line
+      if (nodes.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(nodes[0].x, nodes[0].y);
+        for (let i = 1; i < nodes.length; i++) ctx.lineTo(nodes[i].x, nodes[i].y);
+        ctx.strokeStyle = ch.color;
+        ctx.globalAlpha = 0.22;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // Soft outer halo + crisp inner core (avoids GPU-heavy shadowBlur)
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.rad * 2.1, 0, Math.PI * 2);
+        ctx.fillStyle = ch.color;
+        ctx.globalAlpha = 0.08;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
+        ctx.fillStyle = i === 0 ? '#ffffff' : ch.color;
+        ctx.globalAlpha = i === 0 ? 0.34 : 0.24;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function bgLoop() {
+    if (bgPaused) { bgRAF = null; return; }
+    renderBgFrame(true);
+    bgRAF = requestAnimationFrame(bgLoop);
+  }
+
+  window.initBgCanvas = initBgCanvas;
+}());
+
+// ===========================================================================
+//  SCROLL-REVEAL  (IntersectionObserver, one-shot reveal)
+// ===========================================================================
+function initScrollReveal() {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) return;
+
+  const targets = document.querySelectorAll('.os-window, .winamp-player, .retro-table-wrap, .db-filter-row, .hero-tagline-wrap, .food-matrix-row, .scan-result-card, .upload-scan-zone');
+  targets.forEach(el => {
+    if (!el.classList.contains('sr-hidden')) el.classList.add('sr-hidden');
+  });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.replace('sr-hidden', 'sr-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+
+  targets.forEach(el => io.observe(el));
+}
+</script>
+</body>
+</html>

@@ -748,33 +748,130 @@ body::after {
   height: clamp(38px, 6vw, 56px);
 }
 
-/* Tagline with continuous animated flowing green/blue gradient and scramble */
+/* Tagline with continuous animated flowing cyan/magenta/lime/violet gradient, scramble, glitch & pulsing glow */
 .scramble-tagline-container {
-  min-height: clamp(3.2rem, 8vw, 7rem);
+  min-height: clamp(5.2rem, 15vw, 12.8rem);
   display: flex;
   align-items: center;
+  position: relative;
+  margin: 6px 0 12px 0;
 }
 
 .scramble-tagline {
   font-family: var(--font-head);
-  font-size: clamp(2.2rem, 6.2vw, 4.8rem);
+  font-size: clamp(2.5rem, 7vw, 6rem);
   font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background: linear-gradient(90deg, #00ff66 0%, #00f0ff 40%, #ffffff 60%, #00ff66 100%);
-  background-size: 200% auto;
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+  background: linear-gradient(
+    90deg,
+    #00f0ff 0%,
+    #ff2a8f 25%,
+    #39ff14 50%,
+    #bf5fff 75%,
+    #00f0ff 100%
+  );
+  background-size: 300% 100%;
+  background-clip: text;
   -webkit-background-clip: text;
+  color: transparent;
   -webkit-text-fill-color: transparent;
-  animation: flowing-tagline 5s linear infinite;
+  animation:
+    flowing-tagline 5.5s linear infinite,
+    tagline-glow-pulse 3.2s ease-in-out infinite alternate,
+    tagline-glitch-flicker 7s infinite;
   display: inline-block;
   position: relative;
-  filter: drop-shadow(0 0 16px rgba(0, 255, 102, 0.4));
+  filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.5)) drop-shadow(0 0 32px rgba(255, 42, 143, 0.3));
+}
+
+.scramble-tagline::before,
+.scramble-tagline::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scramble-tagline::before {
+  color: #00f0ff;
+  -webkit-text-fill-color: #00f0ff;
+  text-shadow: -2px 0 #ff2a8f;
+  clip-path: polygon(0 18%, 100% 18%, 100% 44%, 0 44%);
+  animation: tagline-chroma-top 7s infinite;
+}
+
+.scramble-tagline::after {
+  color: #bf5fff;
+  -webkit-text-fill-color: #bf5fff;
+  text-shadow: 2px 0 #39ff14;
+  clip-path: polygon(0 62%, 100% 62%, 100% 86%, 0 86%);
+  animation: tagline-chroma-bot 7s infinite;
+}
+
+.scramble-tagline .tagline-cursor {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.88em;
+  vertical-align: -0.08em;
+  margin-left: 4px;
+  background: #00f0ff;
+  box-shadow: 0 0 12px #00f0ff, 0 0 24px #ff2a8f;
+  animation: cursor-blink 0.8s steps(2, start) infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 @keyframes flowing-tagline {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@keyframes tagline-glow-pulse {
+  0% {
+    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.45)) drop-shadow(0 0 24px rgba(191, 95, 255, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(255, 42, 143, 0.6)) drop-shadow(0 0 42px rgba(57, 255, 20, 0.35));
+  }
+  100% {
+    filter: drop-shadow(0 0 26px rgba(0, 240, 255, 0.7)) drop-shadow(0 0 48px rgba(191, 95, 255, 0.5));
+  }
+}
+
+@keyframes tagline-glitch-flicker {
+  0%, 91%, 94%, 96.5%, 100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+  92% {
+    opacity: 0.86;
+    transform: translate3d(-2px, 1px, 0) skewX(-2deg);
+  }
+  93% {
+    opacity: 0.95;
+    transform: translate3d(2px, -1px, 0) skewX(1.5deg);
+  }
+  95.5% {
+    opacity: 0.78;
+    transform: translate3d(-1px, 0, 0) skewX(-0.8deg);
+  }
+}
+
+@keyframes tagline-chroma-top {
+  0%, 91%, 94%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+  92% { opacity: 0.75; transform: translate3d(-3px, -1px, 0); }
+  93% { opacity: 0.5; transform: translate3d(3px, 1px, 0); }
+}
+
+@keyframes tagline-chroma-bot {
+  0%, 94.5%, 97%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+  95.2% { opacity: 0.7; transform: translate3d(3px, 1px, 0); }
+  96% { opacity: 0.45; transform: translate3d(-2px, -1px, 0); }
 }
 
 .tagline-subtext {
@@ -1645,10 +1742,6 @@ table.retro-table tr:hover {
     display: none;
   }
   
-  .scramble-tagline {
-    font-size: 2.1rem;
-  }
-  
   .win-content {
     padding: 14px;
   }
@@ -1681,63 +1774,263 @@ body {
 :focus-visible {
   outline: 2px solid #00f0ff !important;
   outline-offset: 3px !important;
-  box-shadow: 0 0 0 4px rgba(0,240,255,0.25), 0 0 14px rgba(0,240,255,0.35) !important;
+  box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.28), 0 0 18px rgba(0, 240, 255, 0.65) !important;
 }
 
 /* Tighter ring on small elements */
 .chip:focus-visible,
 .food:focus-visible,
 .win-btn:focus-visible,
-.player-btn:focus-visible {
-  outline-offset: 1px !important;
+.player-btn:focus-visible,
+.preset-pill:focus-visible {
+  outline-offset: 2px !important;
 }
 
 /* ==========================================================================
-   ENHANCED ALLERGEN BADGE NEON COLORS
+   ENHANCED ALLERGEN BADGE NEON COLORS (MAGENTA / AMBER / LIME WITH GLOW)
    ========================================================================== */
 .badge-risk {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 9px;
+  gap: 5px;
+  padding: 4px 10px;
   font-size: 0.72rem;
   font-family: var(--font-head);
-  font-weight: 700;
-  letter-spacing: 0.07em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  border-radius: 2px;
+  border-radius: 3px;
   position: relative;
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
 }
 
-.badge-risk:hover { transform: scale(1.06); }
+.badge-risk:hover {
+  transform: translateY(-1px) scale(1.06);
+}
 
-/* HIGH RISK — vivid magenta */
+/* HIGH RISK / CONTAINS — vivid neon magenta */
 .badge-risk.high {
-  background: rgba(255, 0, 110, 0.18);
-  border: 1px solid #ff006e;
-  color: #ff70aa;
-  box-shadow: 0 0 8px rgba(255,0,110,0.55), inset 0 0 6px rgba(255,0,110,0.15);
-  text-shadow: 0 0 8px #ff006e;
+  background: rgba(255, 0, 110, 0.22);
+  border: 1.5px solid #ff2a8f;
+  color: #ff99c8;
+  box-shadow: 0 0 12px rgba(255, 42, 143, 0.65), inset 0 0 8px rgba(255, 42, 143, 0.25);
+  text-shadow: 0 0 8px #ff2a8f;
 }
-.badge-risk.high::before { content: '⚠ '; }
+.badge-risk.high::before { content: '⚠ '; color: #ff2a8f; }
 
-/* MED RISK — amber */
+/* MED RISK / TRACE — neon amber */
 .badge-risk.med {
-  background: rgba(255,170,0,0.18);
-  border: 1px solid #ffaa00;
-  color: #ffd280;
-  box-shadow: 0 0 8px rgba(255,170,0,0.45), inset 0 0 6px rgba(255,170,0,0.12);
+  background: rgba(255, 170, 0, 0.2);
+  border: 1.5px solid #ffbe0b;
+  color: #ffe082;
+  box-shadow: 0 0 12px rgba(255, 190, 11, 0.55), inset 0 0 8px rgba(255, 190, 11, 0.2);
   text-shadow: 0 0 8px #ffaa00;
 }
+.badge-risk.med::before { content: '⚡ '; color: #ffbe0b; }
 
-/* SAFE / CLEAR — lime green */
+/* SAFE / CLEAR — bright neon lime green */
 .badge-risk.safe, .badge-risk.low {
-  background: rgba(57,255,20,0.12);
-  border: 1px solid #39ff14;
-  color: #7fff6e;
-  box-shadow: 0 0 8px rgba(57,255,20,0.4), inset 0 0 6px rgba(57,255,20,0.1);
+  background: rgba(57, 255, 20, 0.16);
+  border: 1.5px solid #39ff14;
+  color: #a6ff96;
+  box-shadow: 0 0 12px rgba(57, 255, 20, 0.6), inset 0 0 8px rgba(57, 255, 20, 0.2);
   text-shadow: 0 0 8px #39ff14;
+}
+.badge-risk.safe::before, .badge-risk.low::before { content: '✓ '; color: #39ff14; }
+
+/* Scan result allergen badge strip */
+.scan-badges-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 16px 0;
+  padding: 10px 12px;
+  background: rgba(6, 9, 15, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  border-radius: 4px;
+}
+
+/* Highlighted mark tags in decoded label */
+mark {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+mark:hover, mark:focus-visible {
+  transform: translateY(-2px) scale(1.05);
+}
+mark.r {
+  background: rgba(255, 0, 110, 0.32);
+  color: #ffffff;
+  border: 1.5px solid #ff2a8f;
+  box-shadow: 0 0 12px rgba(255, 42, 143, 0.65), inset 0 0 6px rgba(255, 42, 143, 0.3);
+  text-shadow: 0 0 6px #ff2a8f;
+}
+mark.a {
+  background: rgba(255, 190, 11, 0.28);
+  color: #ffffff;
+  border: 1.5px solid #ffbe0b;
+  box-shadow: 0 0 12px rgba(255, 190, 11, 0.55), inset 0 0 6px rgba(255, 190, 11, 0.25);
+  text-shadow: 0 0 6px #ffaa00;
+}
+mark.n {
+  background: rgba(191, 95, 255, 0.16);
+  color: #e2b8ff;
+  border: 1px dashed #bf5fff;
+  box-shadow: 0 0 8px rgba(191, 95, 255, 0.3);
+}
+
+/* ==========================================================================
+   Y2K NEON UPLOAD / OPTICAL SCAN AREA
+   ========================================================================== */
+.upload-scan-zone {
+  position: relative;
+  border: 2px dashed rgba(0, 240, 255, 0.45);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.1), transparent 70%),
+    linear-gradient(180deg, rgba(14, 20, 32, 0.9) 0%, rgba(7, 10, 16, 0.95) 100%);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  cursor: pointer;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.18s ease, background 0.22s ease;
+}
+
+.upload-scan-zone:hover,
+.upload-scan-zone.drag-over {
+  border-color: #00f0ff;
+  border-style: solid;
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.35), inset 0 0 18px rgba(0, 240, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.upload-zone-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.upload-reticle-icon {
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid #00f0ff;
+  background: rgba(0, 240, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.upload-zone-title {
+  font-family: var(--font-head);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #00f0ff;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.45);
+}
+
+.upload-zone-sub {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.preset-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.preset-pill {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  padding: 5px 10px;
+  background: rgba(191, 95, 255, 0.14);
+  border: 1px solid rgba(191, 95, 255, 0.55);
+  color: #e5c2ff;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.18s ease;
+}
+
+.preset-pill:hover {
+  background: rgba(191, 95, 255, 0.28);
+  border-color: #bf5fff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(191, 95, 255, 0.55);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   NEON Y2K ALLERGEN & PROTEIN DOSSIER MODAL
+   ========================================================================== */
+.y2k-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150000;
+  background: rgba(5, 6, 12, 0.82);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.y2k-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.y2k-modal-window {
+  width: 100%;
+  max-width: 600px;
+  background: #10131d;
+  border: 2px solid #00f0ff;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.92),
+    0 0 30px rgba(0, 240, 255, 0.4),
+    0 0 60px rgba(255, 42, 143, 0.2);
+  transform: translateY(16px) scale(0.96);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.y2k-modal-backdrop.open .y2k-modal-window {
+  transform: translateY(0) scale(1);
+}
+
+.y2k-modal-body {
+  padding: 20px;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.alias-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.alias-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 3px 9px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.38);
+  color: #a8f9ff;
+  border-radius: 2px;
 }
 
 /* ==========================================================================
@@ -1838,10 +2131,13 @@ textarea#txt {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   caret-color: var(--cyber-green);
 }
+textarea#txt:hover {
+  border-color: rgba(0, 240, 255, 0.55);
+}
 textarea#txt:focus {
   outline: none;
   border-color: var(--cyber-green);
-  box-shadow: 0 0 0 3px rgba(0,255,102,0.15), 0 0 20px rgba(0,255,102,0.2), inset 0 2px 8px rgba(0,0,0,0.9);
+  box-shadow: 0 0 0 3px rgba(0,255,102,0.18), 0 0 22px rgba(0,255,102,0.28), inset 0 2px 8px rgba(0,0,0,0.9);
 }
 
 .db-search-input {
@@ -1849,54 +2145,76 @@ textarea#txt:focus {
   caret-color: var(--cyber-green);
   outline: none;
 }
+.db-search-input:hover {
+  border-color: rgba(0, 240, 255, 0.55);
+}
 .db-search-input:focus {
   border-color: var(--electric-blue);
-  box-shadow: 0 0 0 3px rgba(0,240,255,0.15), 0 0 16px rgba(0,240,255,0.2);
+  box-shadow: 0 0 0 3px rgba(0,240,255,0.18), 0 0 18px rgba(0,240,255,0.28);
 }
 
 /* ==========================================================================
    ENHANCED OS WINDOWS & CARDS
    ========================================================================== */
 .os-window {
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .os-window:hover {
-  box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 28px rgba(0,240,255,0.1);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 28px rgba(0,240,255,0.14);
 }
 
 .scan-result-card {
   transition: box-shadow 0.3s ease;
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.08), inset 0 0 18px rgba(0, 0, 0, 0.8);
 }
 
 .exp {
-  transition: border-left-color 0.2s ease, background 0.2s ease;
+  transition: border-left-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  border-left: 4px solid #ff2a8f;
 }
 .exp:hover {
-  background: #0a0e15;
+  background: #0b1018;
   border-left-color: var(--electric-blue);
+  box-shadow: 0 4px 18px rgba(0, 240, 255, 0.14);
+  transform: translateX(2px);
 }
 
 /* ==========================================================================
-   ENHANCED VERDICT / RESULT CARDS
+   ENHANCED VERDICT / RESULT CARDS (NEON MAGENTA / AMBER / LIME)
    ========================================================================== */
 .verdict {
   transition: box-shadow 0.3s ease;
 }
-.v-r { animation: verdict-pulse-red  3s ease-in-out infinite alternate; }
-.v-g { animation: verdict-pulse-green 3s ease-in-out infinite alternate; }
-.v-a { animation: verdict-pulse-amber 3s ease-in-out infinite alternate; }
+.v-r {
+  background: rgba(255, 0, 110, 0.18);
+  border-color: #ff2a8f;
+  color: #ffd6e8;
+  animation: verdict-pulse-red 3s ease-in-out infinite alternate;
+}
+.v-g {
+  background: rgba(57, 255, 20, 0.15);
+  border-color: #39ff14;
+  color: #dcffd6;
+  animation: verdict-pulse-green 3s ease-in-out infinite alternate;
+}
+.v-a {
+  background: rgba(255, 190, 11, 0.16);
+  border-color: #ffbe0b;
+  color: #ffecb3;
+  animation: verdict-pulse-amber 3s ease-in-out infinite alternate;
+}
 
 @keyframes verdict-pulse-red {
-  from { box-shadow: 0 0 18px var(--alert-red-glow); }
-  to   { box-shadow: 0 0 32px rgba(255,42,95,0.6), 0 0 60px rgba(255,42,95,0.2); }
+  from { box-shadow: 0 0 18px rgba(255, 42, 143, 0.45); }
+  to   { box-shadow: 0 0 34px rgba(255, 42, 143, 0.7), 0 0 60px rgba(255, 42, 143, 0.25); }
 }
 @keyframes verdict-pulse-green {
-  from { box-shadow: 0 0 18px var(--cyber-green-glow); }
-  to   { box-shadow: 0 0 32px rgba(0,255,102,0.55), 0 0 60px rgba(0,255,102,0.2); }
+  from { box-shadow: 0 0 18px rgba(57, 255, 20, 0.4); }
+  to   { box-shadow: 0 0 34px rgba(57, 255, 20, 0.65), 0 0 60px rgba(57, 255, 20, 0.22); }
 }
 @keyframes verdict-pulse-amber {
-  from { box-shadow: 0 0 18px var(--alert-amber-glow); }
-  to   { box-shadow: 0 0 32px rgba(255,170,0,0.5), 0 0 60px rgba(255,170,0,0.18); }
+  from { box-shadow: 0 0 18px rgba(255, 190, 11, 0.4); }
+  to   { box-shadow: 0 0 34px rgba(255, 190, 11, 0.6), 0 0 60px rgba(255, 190, 11, 0.2); }
 }
 
 /* ==========================================================================
@@ -1975,16 +2293,14 @@ table.retro-table tr:hover {
 .sr-hidden:nth-child(4) { transition-delay: 240ms; }
 .sr-hidden:nth-child(5) { transition-delay: 320ms; }
 
-@media (prefers-reduced-motion: reduce) {
-  .sr-hidden { opacity: 1 !important; transform: none !important; transition: none !important; }
-}
-</style>
-<style>
+/* ==========================================================================
+   FULL-SCREEN PROTEIN CHAIN INTRO OVERLAY
+   ========================================================================== */
 #intro-overlay {
   position: fixed;
   inset: 0;
   z-index: 200000;
-  background: #050508;
+  background: transparent;
   overflow: hidden;
   pointer-events: all;
 }
@@ -2002,31 +2318,49 @@ table.retro-table tr:hover {
   bottom: 28px;
   right: 28px;
   z-index: 10;
-  background: transparent;
-  border: 1px dashed rgba(0,240,255,0.5);
-  color: rgba(0,240,255,0.7);
-  font-family: var(--font-mono);
+  background: rgba(8, 12, 20, 0.78);
+  border: 1.5px solid rgba(0, 240, 255, 0.65);
+  color: #00f0ff;
+  font-family: var(--font-head);
   font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.1em;
-  padding: 7px 16px;
+  padding: 9px 18px;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
-  border-radius: 2px;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.25);
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  border-radius: 3px;
 }
 #intro-skip-btn:hover {
-  color: #00f0ff;
-  border-color: #00f0ff;
-  box-shadow: 0 0 12px rgba(0,240,255,0.3);
+  color: #ffffff;
+  border-color: #ff2a8f;
+  background: rgba(255, 42, 143, 0.22);
+  box-shadow: 0 0 18px rgba(255, 42, 143, 0.6), 0 0 30px rgba(0, 240, 255, 0.35);
+  transform: translateY(-1px);
 }
 
-/* Iris/aperture wipe — overlay contracts inward like a camera aperture */
-@keyframes intro-iris-close {
-  0%   { clip-path: circle(120% at 50% 50%); }
-  100% { clip-path: circle(0%   at 50% 50%); }
-}
-#intro-overlay.iris-wipe {
-  animation: intro-iris-close 1s cubic-bezier(0.4, 0, 0.6, 1) forwards;
-  pointer-events: none;
+/* Reduced motion support: static gradient tagline, no animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .sr-hidden {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .scramble-tagline {
+    animation: none !important;
+    background-position: 0% 50% !important;
+    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.35)) !important;
+  }
+  .scramble-tagline::before,
+  .scramble-tagline::after,
+  .scramble-tagline .tagline-cursor {
+    display: none !important;
+  }
 }
 </style>
 </head>
@@ -2038,15 +2372,15 @@ table.retro-table tr:hover {
 <!-- ==========================================================================
      PROTEIN CHAIN INTRO OVERLAY
      ========================================================================== -->
-<div id="intro-overlay" role="dialog" aria-modal="true" aria-label="AllerLens Intro Animation" aria-live="polite">
+<div id="intro-overlay" role="region" aria-label="AllerLens Intro Animation">
   <canvas id="intro-canvas"></canvas>
-  <button id="intro-skip-btn" onclick="skipIntro()" aria-label="Skip intro animation">[ SKIP INTRO ]</button>
+  <button id="intro-skip-btn" type="button" onclick="skipIntro()" aria-label="Skip intro animation">[ SKIP INTRO ⏭ ]</button>
 </div>
 
 <!-- ==========================================================================
-     BOOT SCREEN: ALLERLENS_BOOT.EXE
+     BOOT SCREEN: ALLERLENS_BOOT.EXE (Hidden by default so Intro Overlay reveals site directly)
      ========================================================================== -->
-<div id="boot-screen" role="dialog" aria-modal="true" aria-label="System Boot Sequence">
+<div id="boot-screen" style="display:none;" role="dialog" aria-modal="true" aria-label="System Boot Sequence">
   <canvas id="boot-canvas"></canvas>
   
   <div class="boot-window">
@@ -2238,8 +2572,8 @@ table.retro-table tr:hover {
 
             <!-- Dynamic Scramble Tagline -->
             <div class="scramble-tagline-container">
-              <h1 class="scramble-tagline" id="dynamic-tagline" aria-label="Decode the label. Meet the protein.">
-                DECODE THE LABEL. MEET THE PROTEIN.
+              <h1 class="scramble-tagline" id="dynamic-tagline" data-text="Decode the label. Meet the protein." aria-label="Decode the label. Meet the protein.">
+                <span id="tagline-text-span" aria-hidden="true">Decode the label. Meet the protein.</span><span class="tagline-cursor" aria-hidden="true"></span>
               </h1>
             </div>
 
@@ -2313,7 +2647,25 @@ table.retro-table tr:hover {
             <div class="allergen-chips-wrap" id="chips" role="group" aria-label="Allergen Profile Selection"></div>
           </div>
 
-          <h2 class="section-title">2. Input Food Ingredient Statement</h2>
+          <h2 class="section-title">2. Upload / Scan Label or Input Ingredients</h2>
+          
+          <!-- Y2K Neon Upload / Optical Scan Area -->
+          <div class="upload-scan-zone" id="upload-dropzone" role="button" tabindex="0" aria-label="Upload or drop food label file to scan">
+            <input type="file" id="label-file-input" accept=".txt,.csv,.json,image/*" hidden>
+            <div class="upload-zone-left">
+              <div class="upload-reticle-icon" aria-hidden="true">📷</div>
+              <div>
+                <div class="upload-zone-title" id="upload-status-title">DROP LABEL FILE OR CLICK TO OPTICAL-SCAN</div>
+                <div class="upload-zone-sub" id="upload-status-sub">Supports .txt / label image OCR simulation, or pick a quick preset right →</div>
+              </div>
+            </div>
+            <div class="preset-pills-row" onclick="event.stopPropagation()">
+              <button type="button" class="preset-pill" onclick="loadPresetSample('wafers')">🍫 Choco Wafers</button>
+              <button type="button" class="preset-pill" onclick="loadPresetSample('ramen')">🍜 Spicy Shrimp Ramen</button>
+              <button type="button" class="preset-pill" onclick="loadPresetSample('smoothie')">🍓 Safe Berry Puree</button>
+            </div>
+          </div>
+
           <textarea id="txt" aria-label="Ingredient list" placeholder="Paste product label ingredients or click 'Try a sample' below..."></textarea>
 
           <div class="scan-btn-row">
@@ -2325,6 +2677,7 @@ table.retro-table tr:hover {
           <!-- Scan Results -->
           <div id="res" hidden class="scan-result-card">
             <div id="ver"></div>
+            <div id="scan-badges" class="scan-badges-bar" role="group" aria-label="Allergen Profile Risk Badges"></div>
             
             <h3 style="font-family:var(--font-head);font-size:1.05rem;color:var(--electric-blue);margin:14px 0 6px;">
               SPECTRAL DECODED TEXT
@@ -2332,10 +2685,10 @@ table.retro-table tr:hover {
             <div class="scan-output-box" id="scn"></div>
 
             <div class="legend-row">
-              <mark class="r">YOUR ALLERGEN</mark>
-              <mark class="a">MAY CONTAIN</mark>
+              <mark class="r">YOUR ALLERGEN (HIGH RISK)</mark>
+              <mark class="a">MAY CONTAIN (TRACE)</mark>
               <mark class="n">OTHER ALLERGEN</mark>
-              <span>&middot; Click any highlight to inspect hidden aliases</span>
+              <span>&middot; Click any highlight or badge to inspect hidden aliases &amp; dossier</span>
             </div>
 
             <div id="tip" style="color:var(--cyber-green);font-size:0.88rem;margin-bottom:12px;" aria-live="polite"></div>
@@ -2563,6 +2916,21 @@ table.retro-table tr:hover {
 </div>
 
 <!-- ==========================================================================
+     NEON Y2K ALLERGEN & PROTEIN DOSSIER MODAL
+     ========================================================================== -->
+<div class="y2k-modal-backdrop" id="allergen-modal" role="dialog" aria-modal="true" aria-labelledby="modal-allergen-title" aria-hidden="true" onclick="if(event.target===this)closeAllergenModal()">
+  <div class="y2k-modal-window">
+    <div class="win-titlebar" style="cursor:default;">
+      <div class="win-title" id="modal-allergen-title"><span>🧬</span> ALLERGEN_DOSSIER.DAT</div>
+      <div class="win-controls">
+        <button type="button" class="win-btn close" id="modal-close-btn" onclick="closeAllergenModal()" aria-label="Close modal">✕</button>
+      </div>
+    </div>
+    <div class="y2k-modal-body" id="modal-allergen-body"></div>
+  </div>
+</div>
+
+<!-- ==========================================================================
      VANILLA JAVASCRIPT: PRESERVED LOGIC & NEW RETRO OS CAPABILITIES
      ========================================================================== -->
 <script>
@@ -2731,31 +3099,28 @@ function finishBoot() {
 }
 
 // ---------------------------------------------------------------------------
-// PROTEIN INTRO ANIMATION ENGINE
+// PROTEIN INTRO ANIMATION ENGINE (0-7s Sequence)
 // ---------------------------------------------------------------------------
 (function () {
   'use strict';
 
-  /* -- Colour palette ---------------------------------------------------- */
-  const PALETTE = ['#00f0ff','#ff2a8f','#39ff14','#bf5fff'];
-  const isMobile = window.innerWidth < 600;
-  const MAX_CHAINS = isMobile ? 32 : 60;
-  const SPARK_TTL  = 28;  // frames
+  /* -- Colour palette: Neon Cyan, Magenta, Lime, Violet ------------------ */
+  const PALETTE = ['#00f0ff', '#ff2a8f', '#39ff14', '#bf5fff'];
+  const SPARK_TTL = 26;
+  const CELL_SIZE = 64; // Spatial hash cell size for O(1) neighbor lookup
 
   /* -- State ------------------------------------------------------------- */
-  let introRAF  = null;
+  let introRAF = null;
   let introStartT = null;
   let introCanvas, introCtx;
-  let cw, ch;           // logical (CSS) size
-  let dpr = 1;
-  const chains  = [];   // [{nodes, color, angle, angularV, phase}]
-  const sparks  = [];   // [{x,y,vx,vy,life,maxLife,color}]
-  let flashAlpha = 0;   // white flash intensity 0-1
-  let flashDir   = 0;   // +1 = brightening, -1 = fading
-  let introPhase = 'drift';   // 'drift' | 'collide' | 'attract' | 'iris'
-  let irisT      = 0;   // 0→1 iris reveal progress
-
-  /* Wordmark target positions (centre-relative) — computed at runtime */
+  let cw = 0, ch = 0, dpr = 1;
+  let maxChains = 18;
+  let maxNodesTotal = 80;
+  const chains = [];      // [{nodes, color, angle, angularV, mergeCooldown}]
+  const sparks = [];      // [{x,y,vx,vy,life,maxLife,color}]
+  const flashRings = [];  // [{x,y,r,maxR,alpha,color}]
+  let flashAlpha = 0;     // full-screen flash intensity 0-1
+  let targetsAssigned = false;
   let wordmarkTargets = [];
 
   /* -- Helpers ----------------------------------------------------------- */
@@ -2764,7 +3129,13 @@ function finishBoot() {
   function lerp(a, b, t) { return a + (b - a) * t; }
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
 
-  /* -- Canvas setup ------------------------------------------------------- */
+  function totalNodeCount() {
+    let count = 0;
+    for (let i = 0; i < chains.length; i++) count += chains[i].nodes.length;
+    return count;
+  }
+
+  /* -- Canvas setup & resize --------------------------------------------- */
   function setupCanvas() {
     introCanvas = $('intro-canvas');
     if (!introCanvas) return false;
@@ -2779,160 +3150,281 @@ function finishBoot() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     cw  = window.innerWidth;
     ch  = window.innerHeight;
+    const isMobile = cw < 650;
+    maxNodesTotal = isMobile ? 38 : 80;
+    maxChains     = isMobile ? 10 : 20;
     introCanvas.width  = cw * dpr;
     introCanvas.height = ch * dpr;
     introCanvas.style.width  = cw + 'px';
     introCanvas.style.height = ch + 'px';
     introCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // Regenerate wordmark targets when size changes
     wordmarkTargets = buildWordmarkTargets(cw / 2, ch / 2);
   }
 
-  /* -- Wordmark target points ------------------------------------------- */
-  /* Approximates 'AllerLens' + a lens ring with ~60-ish sample points.     */
+  /* -- Wordmark & lens target coordinates -------------------------------- */
   function buildWordmarkTargets(cx, cy) {
     const pts = [];
-    // Lens circle
-    const R = Math.min(cw, ch) * 0.12;
-    for (let i = 0; i < 20; i++) {
-      const a = (i / 20) * Math.PI * 2;
-      pts.push({ x: cx + Math.cos(a) * R,       y: cy + Math.sin(a) * R });
-      pts.push({ x: cx + Math.cos(a) * R * 0.5, y: cy + Math.sin(a) * R * 0.5 });
+    const R = Math.min(cw, ch) * 0.115;
+    // Outer & inner lens rings
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * Math.PI * 2;
+      pts.push({ x: cx + Math.cos(a) * R,       y: cy - R * 0.35 + Math.sin(a) * R });
+      pts.push({ x: cx + Math.cos(a) * R * 0.52, y: cy - R * 0.35 + Math.sin(a) * R * 0.52 });
     }
     // Cross-hairs
     for (let i = -4; i <= 4; i++) {
-      pts.push({ x: cx + i * R * 0.18, y: cy });
-      pts.push({ x: cx,                y: cy + i * R * 0.18 });
+      pts.push({ x: cx + i * R * 0.2, y: cy - R * 0.35 });
+      pts.push({ x: cx,               y: cy - R * 0.35 + i * R * 0.2 });
     }
-    // Centre dot cluster
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * Math.PI * 2;
-      pts.push({ x: cx + Math.cos(a) * R * 0.18, y: cy + Math.sin(a) * R * 0.18 });
-    }
-    // "AllerLens" text-shape point cloud (hand-sampled letter centres)
-    const fs   = Math.min(cw * 0.085, 64);
-    const ty   = cy + R + fs * 1.2;
+    // "AllerLens" wordmark point cloud below lens
+    const fs = clamp(Math.min(cw * 0.08, 60), 24, 60);
+    const ty = cy + R * 0.85;
     const word = 'AllerLens';
-    const totalW = word.length * fs * 0.6;
-    let tx = cx - totalW / 2;
+    const totalW = word.length * fs * 0.58;
+    const startX = cx - totalW / 2;
     for (let c = 0; c < word.length; c++) {
-      const lx = tx + c * fs * 0.6 + fs * 0.3;
+      const lx = startX + c * fs * 0.58 + fs * 0.28;
       for (let row = 0; row < 4; row++) {
-        pts.push({ x: lx + rand(-fs * 0.15, fs * 0.15), y: ty + row * fs * 0.2 });
+        pts.push({ x: lx + (row - 1.5) * fs * 0.08, y: ty + (row - 1.5) * fs * 0.16 });
       }
     }
     return pts;
   }
 
-  /* -- Spawn a chain from a random screen edge --------------------------- */
+  /* -- Spawn a short chain (3-6 nodes) from a random screen edge --------- */
   function spawnChain() {
-    const len   = 3 + Math.floor(Math.random() * 4); // 3-6 nodes
+    if (chains.length >= maxChains || totalNodeCount() >= maxNodesTotal) return;
+    const remaining = maxNodesTotal - totalNodeCount();
+    const len = Math.min(remaining, 3 + Math.floor(Math.random() * 4)); // 3-6 nodes
+    if (len < 3) return;
+
     const color = pick(PALETTE);
-    const edge  = Math.floor(Math.random() * 4);  // 0=top 1=right 2=bottom 3=left
+    const edge = Math.floor(Math.random() * 4);
     let sx, sy;
     switch (edge) {
-      case 0: sx = rand(0, cw); sy = -30;      break;
-      case 1: sx = cw + 30;    sy = rand(0, ch); break;
-      case 2: sx = rand(0, cw); sy = ch + 30;  break;
-      default: sx = -30;       sy = rand(0, ch);
+      case 0: sx = rand(cw * 0.1, cw * 0.9); sy = -24;      break;
+      case 1: sx = cw + 24;                  sy = rand(ch * 0.1, ch * 0.9); break;
+      case 2: sx = rand(cw * 0.1, cw * 0.9); sy = ch + 24;  break;
+      default: sx = -24;                     sy = rand(ch * 0.1, ch * 0.9);
     }
-    const speed = rand(0.8, 2.2);
-    const ang   = Math.atan2(ch / 2 - sy, cw / 2 - sx) + rand(-0.7, 0.7);
+    const targetX = cw * 0.5 + rand(-cw * 0.22, cw * 0.22);
+    const targetY = ch * 0.5 + rand(-ch * 0.22, ch * 0.22);
+    const ang = Math.atan2(targetY - sy, targetX - sx);
+    const speed = rand(1.6, 3.1);
+    const spacing = 14;
     const nodes = [];
     for (let i = 0; i < len; i++) {
       nodes.push({
-        x:   sx - Math.cos(ang) * i * 14,
-        y:   sy - Math.sin(ang) * i * 14,
-        vx:  Math.cos(ang) * speed,
-        vy:  Math.sin(ang) * speed,
-        rad: rand(3.5, 6),
-        // attraction target (filled during attract phase)
-        tx: 0, ty: 0
+        x: sx - Math.cos(ang) * i * spacing,
+        y: sy - Math.sin(ang) * i * spacing,
+        vx: Math.cos(ang) * speed,
+        vy: Math.sin(ang) * speed,
+        rad: i === 0 ? 5.2 : rand(3.6, 4.8),
+        tx: cxDefault(),
+        ty: cyDefault()
       });
     }
-    chains.push({ nodes, color, angle: rand(0, Math.PI * 2), angularV: rand(-0.015, 0.015) });
+    chains.push({
+      nodes,
+      color,
+      angle: rand(0, Math.PI * 2),
+      angularV: (Math.random() < 0.5 ? -1 : 1) * rand(0.012, 0.028),
+      mergeCooldown: 0
+    });
   }
 
-  /* -- Emit sparks on collision ----------------------------------------- */
-  function emitSparks(x, y, color) {
-    for (let i = 0; i < 6; i++) {
+  function cxDefault() { return cw / 2; }
+  function cyDefault() { return ch / 2; }
+
+  /* -- Update chain kinematics with slight rotation ---------------------- */
+  function stepChainKinematics(chObj, bounceWalls) {
+    if (chObj.mergeCooldown > 0) chObj.mergeCooldown--;
+    chObj.angle += chObj.angularV;
+    const head = chObj.nodes[0];
+
+    // Slight rotational curl on velocity
+    const rotCos = Math.cos(chObj.angularV * 0.35);
+    const rotSin = Math.sin(chObj.angularV * 0.35);
+    const nvx = head.vx * rotCos - head.vy * rotSin;
+    const nvy = head.vx * rotSin + head.vy * rotCos;
+    head.vx = nvx;
+    head.vy = nvy;
+
+    head.x += head.vx;
+    head.y += head.vy;
+
+    if (bounceWalls) {
+      const margin = 24;
+      if (head.x < margin)      { head.x = margin;      head.vx = Math.abs(head.vx); }
+      if (head.x > cw - margin) { head.x = cw - margin; head.vx = -Math.abs(head.vx); }
+      if (head.y < margin)      { head.y = margin;      head.vy = Math.abs(head.vy); }
+      if (head.y > ch - margin) { head.y = ch - margin; head.vy = -Math.abs(head.vy); }
+    }
+
+    // Follow-the-leader with rotational sway so each chain visibly rotates
+    const spacing = 14;
+    for (let i = 1; i < chObj.nodes.length; i++) {
+      const prev = chObj.nodes[i - 1];
+      const curr = chObj.nodes[i];
+      const dx = curr.x - prev.x;
+      const dy = curr.y - prev.y;
+      let segAng = Math.atan2(dy, dx) + chObj.angularV * 0.65;
+      const targetX = prev.x + Math.cos(segAng) * spacing;
+      const targetY = prev.y + Math.sin(segAng) * spacing;
+      curr.x = lerp(curr.x, targetX, 0.42);
+      curr.y = lerp(curr.y, targetY, 0.42);
+      curr.vx = head.vx;
+      curr.vy = head.vy;
+    }
+  }
+
+  /* -- Emit spark particles & local flash ring on collision -------------- */
+  function emitCollisionFX(x, y, colorA, colorB) {
+    for (let i = 0; i < 8; i++) {
       const a = Math.random() * Math.PI * 2;
-      const s = rand(1.5, 4);
+      const s = rand(1.8, 4.8);
       sparks.push({
         x, y,
         vx: Math.cos(a) * s,
         vy: Math.sin(a) * s,
         life: SPARK_TTL,
         maxLife: SPARK_TTL,
-        color
+        color: i % 2 === 0 ? colorA : colorB
       });
     }
+    flashRings.push({ x, y, r: 4, maxR: 28, alpha: 0.9, color: colorA });
+    flashAlpha = Math.min(0.32, flashAlpha + 0.08);
   }
 
-  /* -- Simple circle-vs-circle collision between chain leaders ----------- */
-  function handleCollisions() {
-    // Only check first node of each chain (the "head")
-    for (let a = 0; a < chains.length; a++) {
-      for (let b = a + 1; b < chains.length; b++) {
-        const na = chains[a].nodes[0];
-        const nb = chains[b].nodes[0];
-        const dx = nb.x - na.x;
-        const dy = nb.y - na.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const minDist = na.rad + nb.rad + 4;
-        if (dist < minDist && dist > 0.001) {
-          // Elastic reflect — swap velocity components along collision axis
-          const nx = dx / dist;
-          const ny = dy / dist;
-          const dvx = na.vx - nb.vx;
-          const dvy = na.vy - nb.vy;
-          const dot = dvx * nx + dvy * ny;
-          if (dot > 0) {
-            na.vx -= dot * nx;
-            na.vy -= dot * ny;
-            nb.vx += dot * nx;
-            nb.vy += dot * ny;
-          }
-          // Separate overlap
-          const overlap = (minDist - dist) / 2;
-          na.x -= nx * overlap;
-          na.y -= ny * overlap;
-          nb.x += nx * overlap;
-          nb.y += ny * overlap;
-          // Flash & sparks
-          flashAlpha = Math.min(1, flashAlpha + 0.12);
-          flashDir   = -1;
-          emitSparks((na.x + nb.x) / 2, (na.y + nb.y) / 2, chains[a].color);
-          // Occasionally merge two chains end-to-end
-          if (Math.random() < 0.18 && chains[a].nodes.length + chains[b].nodes.length <= 9) {
-            chains[a].nodes = chains[a].nodes.concat(chains[b].nodes.slice().reverse());
-            chains.splice(b, 1);
-            break;
+  /* -- Spatial hash grid + circle collision + end-to-end chain bonding --- */
+  function handleCollisionsSpatial() {
+    const grid = new Map();
+    for (let cIdx = 0; cIdx < chains.length; cIdx++) {
+      const nodes = chains[cIdx].nodes;
+      for (let nIdx = 0; nIdx < nodes.length; nIdx++) {
+        const n = nodes[nIdx];
+        const gx = Math.floor(n.x / CELL_SIZE);
+        const gy = Math.floor(n.y / CELL_SIZE);
+        const key = gx + ',' + gy;
+        let cell = grid.get(key);
+        if (!cell) { cell = []; grid.set(key, cell); }
+        cell.push({ cIdx, nIdx, node: n });
+      }
+    }
+
+    const toMerge = [];
+    const checkedPairs = new Set();
+
+    grid.forEach((entries, key) => {
+      const [gx, gy] = key.split(',').map(Number);
+      for (let ox = -1; ox <= 1; ox++) {
+        for (let oy = -1; oy <= 1; oy++) {
+          const neighbor = grid.get((gx + ox) + ',' + (gy + oy));
+          if (!neighbor) continue;
+          for (let i = 0; i < entries.length; i++) {
+            const A = entries[i];
+            for (let j = 0; j < neighbor.length; j++) {
+              const B = neighbor[j];
+              if (A.cIdx >= B.cIdx) continue;
+              const pairKey = A.cIdx + ':' + B.cIdx;
+              if (checkedPairs.has(pairKey)) continue;
+
+              const dx = B.node.x - A.node.x;
+              const dy = B.node.y - A.node.y;
+              const distSq = dx * dx + dy * dy;
+              const minDist = A.node.rad + B.node.rad + 5;
+              if (distSq < minDist * minDist && distSq > 0.001) {
+                checkedPairs.add(pairKey);
+                const dist = Math.sqrt(distSq);
+                const nx = dx / dist;
+                const ny = dy / dist;
+
+                const headA = chains[A.cIdx].nodes[0];
+                const headB = chains[B.cIdx].nodes[0];
+
+                // Elastic velocity reflection on chain heads
+                const dvx = headA.vx - headB.vx;
+                const dvy = headA.vy - headB.vy;
+                const dot = dvx * nx + dvy * ny;
+                if (dot > 0) {
+                  headA.vx -= dot * nx * 1.05;
+                  headA.vy -= dot * ny * 1.05;
+                  headB.vx += dot * nx * 1.05;
+                  headB.vy += dot * ny * 1.05;
+                } else {
+                  headA.vx = -headA.vx;
+                  headB.vx = -headB.vx;
+                }
+
+                // Separate overlap
+                const overlap = (minDist - dist) * 0.6;
+                headA.x -= nx * overlap;
+                headA.y -= ny * overlap;
+                headB.x += nx * overlap;
+                headB.y += ny * overlap;
+
+                const cx = (A.node.x + B.node.x) * 0.5;
+                const cy = (A.node.y + B.node.y) * 0.5;
+                emitCollisionFX(cx, cy, chains[A.cIdx].color, chains[B.cIdx].color);
+
+                // Bond end-to-end into a longer chain if eligible
+                const chA = chains[A.cIdx];
+                const chB = chains[B.cIdx];
+                if (
+                  chA.mergeCooldown === 0 &&
+                  chB.mergeCooldown === 0 &&
+                  chA.nodes.length + chB.nodes.length <= 12 &&
+                  Math.random() < 0.38
+                ) {
+                  toMerge.push([A.cIdx, B.cIdx]);
+                }
+              }
+            }
           }
         }
       }
+    });
+
+    // Execute end-to-end merges (from highest index down)
+    const mergedIndices = new Set();
+    for (let i = 0; i < toMerge.length; i++) {
+      const [idxA, idxB] = toMerge[i];
+      if (mergedIndices.has(idxA) || mergedIndices.has(idxB)) continue;
+      if (!chains[idxA] || !chains[idxB]) continue;
+      chains[idxA].nodes = chains[idxA].nodes.concat(chains[idxB].nodes);
+      chains[idxA].mergeCooldown = 25;
+      mergedIndices.add(idxB);
+    }
+    if (mergedIndices.size > 0) {
+      const sortedRemove = [...mergedIndices].sort((a, b) => b - a);
+      sortedRemove.forEach(idx => chains.splice(idx, 1));
     }
   }
 
-  /* -- Assign wordmark target for each chain node ----------------------- */
+  /* -- Assign wordmark target for each chain node ------------------------ */
   function assignTargets() {
-    // flatten all nodes
-    const allNodes = [];
-    chains.forEach(ch => ch.nodes.forEach(n => allNodes.push(n)));
-    for (let i = 0; i < allNodes.length; i++) {
-      const t = wordmarkTargets[i % wordmarkTargets.length];
-      allNodes[i].tx = t.x;
-      allNodes[i].ty = t.y;
-    }
+    if (!wordmarkTargets.length) wordmarkTargets = buildWordmarkTargets(cw / 2, ch / 2);
+    let idx = 0;
+    chains.forEach(chObj => {
+      chObj.nodes.forEach(n => {
+        const t = wordmarkTargets[idx % wordmarkTargets.length];
+        n.tx = t.x;
+        n.ty = t.y;
+        idx++;
+      });
+    });
   }
 
-  /* -- Draw a single protein chain -------------------------------------- */
+  /* -- Draw a single protein chain --------------------------------------- */
   function drawChain(chain, alpha) {
     const ctx = introCtx;
+    const nodes = chain.nodes;
+    if (!nodes.length) return;
+
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    const nodes = chain.nodes;
+    // Connecting peptide bond lines
     if (nodes.length > 1) {
       ctx.beginPath();
       ctx.moveTo(nodes[0].x, nodes[0].y);
@@ -2940,243 +3432,291 @@ function finishBoot() {
         ctx.lineTo(nodes[i].x, nodes[i].y);
       }
       ctx.strokeStyle = chain.color;
-      ctx.lineWidth   = 2;
+      ctx.lineWidth   = 2.2;
       ctx.shadowColor = chain.color;
       ctx.shadowBlur  = 14;
       ctx.stroke();
-      ctx.shadowBlur  = 0;
     }
 
-    nodes.forEach((node, i) => {
+    // Glowing nodes
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
       ctx.beginPath();
       ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
       ctx.fillStyle   = i === 0 ? '#ffffff' : chain.color;
       ctx.shadowColor = chain.color;
-      ctx.shadowBlur  = 18;
+      ctx.shadowBlur  = 16;
       ctx.fill();
-      ctx.shadowBlur  = 0;
-    });
+    }
 
     ctx.restore();
   }
 
-  /* -- Draw wordmark (lens + text) at centre ----------------------------- */
-  function drawWordmark(alpha) {
+  /* -- Draw AllerLens wordmark + lens icon at center --------------------- */
+  function drawWordmark(alpha, scale = 1) {
     const ctx = introCtx;
     ctx.save();
-    ctx.globalAlpha = alpha;
+    ctx.globalAlpha = clamp(alpha, 0, 1);
     const cx = cw / 2;
     const cy = ch / 2;
-    const R  = Math.min(cw, ch) * 0.12;
+    const R  = Math.min(cw, ch) * 0.115 * scale;
+    const lensY = cy - R * 0.35;
 
-    // Outer ring
+    // Outer neon cyan ring
     ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.arc(cx, lensY, R, 0, Math.PI * 2);
     ctx.strokeStyle = '#00f0ff';
     ctx.lineWidth   = 3;
     ctx.shadowColor = '#00f0ff';
     ctx.shadowBlur  = 24;
     ctx.stroke();
 
-    // Inner ring
+    // Inner violet ring
     ctx.beginPath();
-    ctx.arc(cx, cy, R * 0.5, 0, Math.PI * 2);
+    ctx.arc(cx, lensY, R * 0.52, 0, Math.PI * 2);
     ctx.strokeStyle = '#bf5fff';
     ctx.lineWidth   = 2;
     ctx.shadowColor = '#bf5fff';
     ctx.shadowBlur  = 18;
     ctx.stroke();
 
-    // Centre dot
+    // Center magenta core
     ctx.beginPath();
-    ctx.arc(cx, cy, R * 0.12, 0, Math.PI * 2);
+    ctx.arc(cx, lensY, R * 0.14, 0, Math.PI * 2);
     ctx.fillStyle   = '#ff2a8f';
     ctx.shadowColor = '#ff2a8f';
     ctx.shadowBlur  = 20;
     ctx.fill();
 
-    // Cross-hairs
-    ctx.shadowBlur = 8;
-    [['#00f0ff', 0], ['#00f0ff', Math.PI / 2], ['#00f0ff', Math.PI], ['#00f0ff', Math.PI * 1.5]].forEach(([c, a]) => {
+    // Lime & cyan crosshairs
+    [0, Math.PI / 2, Math.PI, Math.PI * 1.5].forEach((a, i) => {
       ctx.beginPath();
-      ctx.moveTo(cx + Math.cos(a) * R * 0.5, cy + Math.sin(a) * R * 0.5);
-      ctx.lineTo(cx + Math.cos(a) * R * 1.2, cy + Math.sin(a) * R * 1.2);
-      ctx.strokeStyle = c;
-      ctx.lineWidth   = 1.5;
+      ctx.moveTo(cx + Math.cos(a) * R * 0.56, lensY + Math.sin(a) * R * 0.56);
+      ctx.lineTo(cx + Math.cos(a) * R * 1.22, lensY + Math.sin(a) * R * 1.22);
+      ctx.strokeStyle = i % 2 === 0 ? '#00f0ff' : '#39ff14';
+      ctx.lineWidth   = 2;
       ctx.stroke();
     });
-    ctx.shadowBlur = 0;
 
-    // Text
-    const fs = clamp(Math.min(cw * 0.085, 64), 24, 64);
-    ctx.font         = `800 ${fs}px 'Orbitron', sans-serif`;
+    // "AllerLens" wordmark text
+    const fs = clamp(Math.min(cw * 0.08, 60), 24, 60) * scale;
+    ctx.font         = `900 ${fs}px 'Orbitron', sans-serif`;
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'top';
     ctx.shadowColor  = '#00f0ff';
     ctx.shadowBlur   = 28;
     ctx.fillStyle    = '#ffffff';
-    ctx.fillText('AllerLens', cx, cy + R + fs * 0.5);
-    ctx.shadowBlur = 0;
+    ctx.fillText('AllerLens', cx, cy + R * 0.72);
 
+    ctx.restore();
+  }
+
+  /* -- Draw expanding camera lens aperture (6-7s iris-wipe open) --------- */
+  function drawLensApertureOpen(irisProgress) {
+    const ctx = introCtx;
+    const cx = cw / 2;
+    const cy = ch / 2;
+    const maxRadius = Math.hypot(cw, ch) * 0.62;
+    // Ease-in-out cubic for smooth mechanical lens opening
+    const ease = irisProgress < 0.5
+      ? 4 * irisProgress * irisProgress * irisProgress
+      : 1 - Math.pow(-2 * irisProgress + 2, 3) / 2;
+    const r = Math.max(2, ease * maxRadius);
+
+    // Punch transparent circular hole in the center of the canvas so the live website shows through!
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#000000';
+    ctx.fill();
+    ctx.restore();
+
+    // Draw glowing neon aperture ring + mechanical iris blades along the opening edge
+    ctx.save();
+    const blades = 8;
+    ctx.strokeStyle = '#00f0ff';
+    ctx.lineWidth   = 3;
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur  = 22;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Secondary magenta/lime blade chords
+    for (let i = 0; i < blades; i++) {
+      const a1 = (i / blades) * Math.PI * 2 + ease * 0.9;
+      const a2 = a1 + (Math.PI * 2) / blades * 0.65;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a1) * r, cy + Math.sin(a1) * r);
+      ctx.lineTo(cx + Math.cos(a2) * (r + 18), cy + Math.sin(a2) * (r + 18));
+      ctx.strokeStyle = i % 2 === 0 ? '#ff2a8f' : '#39ff14';
+      ctx.lineWidth   = 2;
+      ctx.stroke();
+    }
     ctx.restore();
   }
 
   /* -- Main rAF loop ----------------------------------------------------- */
   function introLoop(ts) {
-    if (!introStartT) introStartT = ts;
-    const elapsed = (ts - introStartT) / 1000; // seconds
+    if (!introStartT) {
+      introStartT = ts;
+      // Initial burst of chains from edges
+      for (let i = 0; i < Math.min(8, maxChains); i++) spawnChain();
+    }
+    const elapsed = (ts - introStartT) / 1000;
 
-    /* Phase transitions */
-    if (elapsed < 2)          introPhase = 'drift';
-    else if (elapsed < 4.5)   introPhase = 'collide';
-    else if (elapsed < 6)     introPhase = 'attract';
-    else if (elapsed < 7)     introPhase = 'iris';
-    else { dismissIntroOverlay(); return; }
+    if (elapsed >= 7.0) {
+      dismissIntroOverlay();
+      return;
+    }
 
     const ctx = introCtx;
-    /* Dark trail */
-    ctx.fillStyle = 'rgba(5,5,8,0.28)';
-    ctx.fillRect(0, 0, cw, ch);
 
-    /* ---- PHASE 1: DRIFT (0-2s) ---------------------------------------- */
-    if (introPhase === 'drift') {
-      // Spawn up to MAX_CHAINS
-      if (chains.length < MAX_CHAINS && Math.random() < 0.35) spawnChain();
-
-      chains.forEach(ch => {
-        ch.angle += ch.angularV;
-        ch.nodes.forEach((n, i) => {
-          if (i === 0) {
-            n.x += n.vx;
-            n.y += n.vy;
-          } else {
-            const prev = ch.nodes[i - 1];
-            const dx = prev.x - n.x, dy = prev.y - n.y;
-            const d  = Math.sqrt(dx * dx + dy * dy);
-            if (d > 15) { n.x += dx * 0.12; n.y += dy * 0.12; }
-          }
-        });
-        drawChain(ch, 0.92);
-      });
+    if (elapsed < 6.0) {
+      // Dark motion-trail backdrop during phases 1-3
+      ctx.fillStyle = 'rgba(5, 5, 10, 0.32)';
+      ctx.fillRect(0, 0, cw, ch);
+    } else {
+      // Solid opaque canvas base before punching the expanding aperture hole
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, cw, ch);
     }
 
-    /* ---- PHASE 2: COLLIDE (2-4.5s) ------------------------------------ */
-    if (introPhase === 'collide') {
-      handleCollisions();
-      // Soft wall bounce
-      chains.forEach(ch => {
-        ch.angle += ch.angularV;
-        ch.nodes.forEach((n, i) => {
-          if (i === 0) {
-            n.x += n.vx; n.y += n.vy;
-            if (n.x < 10 || n.x > cw - 10) n.vx *= -1;
-            if (n.y < 10 || n.y > ch - 10) n.vy *= -1;
-          } else {
-            const prev = ch.nodes[i - 1];
-            const dx = prev.x - n.x, dy = prev.y - n.y;
-            const d  = Math.sqrt(dx * dx + dy * dy);
-            if (d > 15) { n.x += dx * 0.12; n.y += dy * 0.12; }
-          }
-        });
-        drawChain(ch, 0.92);
+    /* ---- PHASE 1: DRIFT IN FROM EDGES (0 - 2s) ------------------------ */
+    if (elapsed < 2.0) {
+      if (chains.length < maxChains && totalNodeCount() < maxNodesTotal && Math.random() < 0.45) {
+        spawnChain();
+      }
+      chains.forEach(chObj => {
+        stepChainKinematics(chObj, false);
+        drawChain(chObj, 0.94);
       });
     }
+    /* ---- PHASE 2: COLLIDE, BOUNCE, SPARK & BOND (2 - 4.5s) ------------ */
+    else if (elapsed < 4.5) {
+      if (chains.length < maxChains && totalNodeCount() < maxNodesTotal && Math.random() < 0.2) {
+        spawnChain();
+      }
+      chains.forEach(chObj => stepChainKinematics(chObj, true));
+      handleCollisionsSpatial();
+      chains.forEach(chObj => drawChain(chObj, 0.96));
+    }
+    /* ---- PHASE 3: ATTRACT TO CENTER & MERGE INTO WORDMARK (4.5 - 6s) -- */
+    else if (elapsed < 6.0) {
+      const phaseT = clamp((elapsed - 4.5) / 1.5, 0, 1);
+      if (!targetsAssigned) {
+        assignTargets();
+        targetsAssigned = true;
+      }
 
-    /* ---- PHASE 3: ATTRACT (4.5-6s) ------------------------------------ */
-    if (introPhase === 'attract') {
-      const phaseT = (elapsed - 4.5) / 1.5; // 0→1
-      if (phaseT < 0.05) assignTargets(); // one-time assignment
-
-      chains.forEach(ch => {
-        ch.nodes.forEach(n => {
-          n.x = lerp(n.x, n.tx, 0.055);
-          n.y = lerp(n.y, n.ty, 0.055);
+      const pull = 0.06 + phaseT * 0.14;
+      chains.forEach(chObj => {
+        chObj.nodes.forEach(n => {
+          n.x = lerp(n.x, n.tx, pull);
+          n.y = lerp(n.y, n.ty, pull);
         });
-        drawChain(ch, 1 - phaseT * 0.7);
+        drawChain(chObj, Math.max(0, 1 - phaseT * 0.85));
       });
 
-      // Grow wordmark
-      drawWordmark(phaseT * 0.85);
+      // Wordmark & lens materialize as chains converge
+      drawWordmark(Math.pow(phaseT, 1.3), 0.92 + phaseT * 0.08);
 
-      // Build flash at end
-      if (phaseT > 0.8) {
-        flashAlpha = (phaseT - 0.8) / 0.2;
+      // Bright convergence flash at end of phase 3 (5.75s - 6.0s)
+      if (phaseT > 0.82) {
+        flashAlpha = Math.max(flashAlpha, (phaseT - 0.82) / 0.18 * 0.92);
       }
     }
-
-    /* ---- PHASE 4: IRIS (6-7s) — aperture closes inward ------------------- */
-    if (introPhase === 'iris') {
-      irisT = clamp((elapsed - 6) / 1, 0, 1);
-      // Wordmark fades out
-      drawWordmark(1 - irisT);
-
-      // Shrink overlay clip-path from 120% down to 0% (iris closes)
-      const pct = 120 * (1 - irisT);
-      const ov = $('intro-overlay');
-      if (ov) ov.style.clipPath = `circle(${pct}% at 50% 50%)`;
+    /* ---- PHASE 4: LENS APERTURE / IRIS WIPE OPEN (6 - 7s) ------------- */
+    else {
+      const irisT = clamp((elapsed - 6.0) / 1.0, 0, 1);
+      drawWordmark(Math.max(0, 1 - irisT * 1.4), 1 + irisT * 0.15);
+      drawLensApertureOpen(irisT);
     }
 
-    /* Sparks */
+    /* ---- Render collision flash rings --------------------------------- */
+    for (let i = flashRings.length - 1; i >= 0; i--) {
+      const fr = flashRings[i];
+      fr.r += (fr.maxR - fr.r) * 0.22;
+      fr.alpha -= 0.06;
+      if (fr.alpha <= 0) { flashRings.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = fr.alpha;
+      ctx.beginPath();
+      ctx.arc(fr.x, fr.y, fr.r, 0, Math.PI * 2);
+      ctx.strokeStyle = fr.color;
+      ctx.lineWidth   = 2;
+      ctx.shadowColor = fr.color;
+      ctx.shadowBlur  = 12;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /* ---- Render spark particles --------------------------------------- */
     for (let i = sparks.length - 1; i >= 0; i--) {
       const sp = sparks[i];
       sp.life--;
       if (sp.life <= 0) { sparks.splice(i, 1); continue; }
-      sp.x += sp.vx; sp.y += sp.vy; sp.vy += 0.08;
-      const a = sp.life / sp.maxLife;
-      ctx.globalAlpha = a * 0.85;
+      sp.x += sp.vx;
+      sp.y += sp.vy;
+      sp.vx *= 0.96;
+      sp.vy = sp.vy * 0.96 + 0.05;
+      ctx.save();
+      ctx.globalAlpha = (sp.life / sp.maxLife) * 0.92;
       ctx.beginPath();
-      ctx.arc(sp.x, sp.y, 2.5, 0, Math.PI * 2);
+      ctx.arc(sp.x, sp.y, 2.4, 0, Math.PI * 2);
       ctx.fillStyle   = sp.color;
       ctx.shadowColor = sp.color;
       ctx.shadowBlur  = 8;
       ctx.fill();
-      ctx.shadowBlur  = 0;
-      ctx.globalAlpha = 1;
+      ctx.restore();
     }
 
-    /* Flash overlay */
-    if (flashAlpha > 0) {
-      ctx.globalAlpha = flashAlpha;
+    /* ---- Render full-screen flash overlay ----------------------------- */
+    if (flashAlpha > 0.005) {
+      ctx.save();
+      ctx.globalAlpha = clamp(flashAlpha, 0, 1);
       ctx.fillStyle   = '#ffffff';
       ctx.fillRect(0, 0, cw, ch);
-      ctx.globalAlpha = 1;
-      flashAlpha = Math.max(0, flashAlpha - 0.04);
+      ctx.restore();
+      flashAlpha = Math.max(0, flashAlpha - 0.055);
     }
 
     introRAF = requestAnimationFrame(introLoop);
   }
 
-  /* -- Dismiss overlay -------------------------------------------------- */
+  /* -- Remove overlay cleanly from DOM ----------------------------------- */
   function dismissIntroOverlay() {
-    sessionStorage.setItem('al_intro_seen', 'true');
+    if (introRAF) {
+      cancelAnimationFrame(introRAF);
+      introRAF = null;
+    }
+    window.removeEventListener('resize', resizeCanvas);
+    try { sessionStorage.setItem('al_intro_seen', 'true'); } catch (e) {}
     const ov = $('intro-overlay');
-    if (ov) {
-      ov.addEventListener('animationend', () => ov.remove(), { once: true });
-      ov.classList.add('iris-wipe');
-      // Fallback removal
-      setTimeout(() => { if (ov.parentNode) ov.remove(); }, 1200);
+    if (ov && ov.parentNode) {
+      ov.remove();
     }
   }
 
   /* -- Public API -------------------------------------------------------- */
-  window.skipIntro = function() {
-    if (introRAF) cancelAnimationFrame(introRAF);
+  window.skipIntro = function () {
     dismissIntroOverlay();
   };
 
-  window.runIntroAnimation = function() {
+  window.runIntroAnimation = function () {
     if (!setupCanvas()) return;
-    // Clear any previous state
     chains.length = 0;
     sparks.length = 0;
-    flashAlpha  = 0;
+    flashRings.length = 0;
+    flashAlpha = 0;
     introStartT = null;
-    irisT       = 0;
-    introPhase  = 'drift';
+    targetsAssigned = false;
+    introCtx.fillStyle = '#050508';
+    introCtx.fillRect(0, 0, cw, ch);
     introRAF = requestAnimationFrame(introLoop);
   };
-
-}()); // end IIFE
+}());
 
 // ---------------------------------------------------------------------------
 // BOOT CANVAS (background particles in the Y2K boot window) — kept simple
@@ -3192,112 +3732,129 @@ function initBootCanvas() {
   }
   resize();
   window.addEventListener('resize', resize);
-  const numChains = window.innerWidth < 700 ? 6 : 14;
-  const chains = [];
-  for (let c = 0; c < numChains; c++) {
-    const len   = 3 + Math.floor(Math.random() * 4);
-    const nodes = [];
-    let x = Math.random() * canvas.width;
-    let y = Math.random() * canvas.height;
-    let vx = (Math.random() - 0.5) * 1.5;
-    let vy = (Math.random() - 0.5) * 1.5;
-    for (let i = 0; i < len; i++) {
-      nodes.push({ x: x + i * 12, y: y + i * 12, vx, vy,
-        rad: 3.5 + Math.random() * 2,
-        color: Math.random() > 0.5 ? '#00ff66' : '#00f0ff' });
-    }
-    chains.push(nodes);
-  }
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    chains.forEach(chain => {
-      chain[0].x += chain[0].vx;
-      chain[0].y += chain[0].vy;
-      if (chain[0].x < 20 || chain[0].x > canvas.width  - 20) chain[0].vx *= -1;
-      if (chain[0].y < 20 || chain[0].y > canvas.height - 20) chain[0].vy *= -1;
-      for (let i = 1; i < chain.length; i++) {
-        const dx = chain[i-1].x - chain[i].x, dy = chain[i-1].y - chain[i].y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d > 16) { chain[i].x += dx * 0.1; chain[i].y += dy * 0.1; }
-      }
-      ctx.beginPath();
-      ctx.moveTo(chain[0].x, chain[0].y);
-      for (let i = 1; i < chain.length; i++) ctx.lineTo(chain[i].x, chain[i].y);
-      ctx.strokeStyle = 'rgba(0,240,255,0.4)';
-      ctx.lineWidth   = 2;
-      ctx.stroke();
-      chain.forEach(node => {
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
-        ctx.fillStyle   = node.color;
-        ctx.shadowColor = node.color;
-        ctx.shadowBlur  = 8;
-        ctx.fill();
-        ctx.shadowBlur  = 0;
-      });
-    });
-    bootCanvasAnim = requestAnimationFrame(draw);
-  }
-  draw();
 }
 function stopBootCanvas() {
   if (bootCanvasAnim) cancelAnimationFrame(bootCanvasAnim);
 }
 
 /* ==========================================================================
-   C. DYNAMIC SCRAMBLE / FLOWING TAGLINE
+   C. HERO TAGLINE: TWO-STAGE TYPEWRITER + CHARACTER SCRAMBLE LOOP
+   "Decode the label." resolves first, then "Meet the protein." with a
+   character-scramble, pausing, then re-scrambling and repeating forever.
    ========================================================================== */
-const TAGLINE_STRINGS = [
-  "DECODE THE LABEL. MEET THE PROTEIN.",
-  "PRECISION SPECTROMETRY &middot; BIO-EPITOPE OS",
-  "IDENTIFY HIDDEN TRIGGERS IN SECONDS",
-  "DECODE THE LABEL. MEET THE PROTEIN."
-];
+const PART_1 = 'Decode the label.';
+const PART_2 = 'Meet the protein.';
+const FULL_TAGLINE = 'Decode the label. Meet the protein.';
+const SCRAMBLE_GLYPHS = '01!<>-_\\/[]{}—=+*^?#ΔΩΣΨ◊⌁';
+const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
 
-let taglineIdx = 0;
-const scrambleChars = "01!@#$%^&*<>[]{}CYBER_PROTEIN";
+let taglineLoopTimer = null;
+let taglineRAF = null;
 
-function scrambleText(element, finalString, duration = 1200) {
-  if (!element || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    if (element) element.innerHTML = finalString;
-    return;
+function randomGlyphs(count) {
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    out += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
   }
-  
-  const startTime = Date.now();
-  const len = finalString.length;
-  
-  function update() {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(1, elapsed / duration);
-    const resolvedChars = Math.floor(progress * len);
-    
-    let str = "";
-    for (let i = 0; i < len; i++) {
-      if (i < resolvedChars) {
-        str += finalString[i];
-      } else {
-        str += scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-      }
-    }
-    
-    element.innerHTML = str;
-    
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    }
-  }
-  
-  update();
+  return out;
 }
 
 function startTaglineLoop() {
-  const el = $('dynamic-tagline');
-  if (!el) return;
-  
-  setInterval(() => {
-    taglineIdx = (taglineIdx + 1) % TAGLINE_STRINGS.length;
-    scrambleText(el, TAGLINE_STRINGS[taglineIdx]);
-  }, 6000);
+  const host = $('dynamic-tagline');
+  const span = $('tagline-text-span') || host;
+  if (!host || !span) return;
+
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (reducedMotionQuery.matches) {
+    span.textContent = FULL_TAGLINE;
+    host.setAttribute('data-text', FULL_TAGLINE);
+    return;
+  }
+
+  function runCycle() {
+    if (reducedMotionQuery.matches) {
+      span.textContent = FULL_TAGLINE;
+      host.setAttribute('data-text', FULL_TAGLINE);
+      return;
+    }
+
+    const t0 = performance.now();
+    // Timeline (ms):
+    // 0..1350:     "Decode the label." resolves left-to-right with active scramble tail
+    // 1350..1600:  Short beat after "Decode the label."
+    // 1600..3000:  "Meet the protein." scrambles in and settles into letters
+    // 3000..5600:  Readable final pause ("Decode the label. Meet the protein.")
+    // 5600..6200:  Re-scramble dissolve before repeating
+
+    function tick(now) {
+      if (reducedMotionQuery.matches) {
+        span.textContent = FULL_TAGLINE;
+        return;
+      }
+      const elapsed = now - t0;
+
+      if (elapsed < 1350) {
+        const p = clamp(elapsed / 1350, 0, 1);
+        const resolved = Math.floor(p * PART_1.length);
+        const activeTail = Math.min(PART_1.length - resolved, 4);
+        let s = PART_1.slice(0, resolved);
+        for (let i = 0; i < activeTail; i++) {
+          const ch = PART_1[resolved + i];
+          s += ch === ' ' ? ' ' : SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+        }
+        span.textContent = s;
+        host.setAttribute('data-text', s);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 1600) {
+        span.textContent = PART_1;
+        host.setAttribute('data-text', PART_1);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 3000) {
+        const p = clamp((elapsed - 1600) / 1400, 0, 1);
+        const resolved = Math.floor(p * PART_2.length);
+        let s2 = '';
+        for (let i = 0; i < PART_2.length; i++) {
+          if (i < resolved) {
+            s2 += PART_2[i];
+          } else if (PART_2[i] === ' ') {
+            s2 += ' ';
+          } else {
+            s2 += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+          }
+        }
+        const combined = PART_1 + ' ' + s2;
+        span.textContent = combined;
+        host.setAttribute('data-text', combined);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 5600) {
+        span.textContent = FULL_TAGLINE;
+        host.setAttribute('data-text', FULL_TAGLINE);
+        taglineRAF = requestAnimationFrame(tick);
+      } else if (elapsed < 6150) {
+        // Brief re-scramble before next cycle
+        const p = clamp((elapsed - 5600) / 550, 0, 1);
+        let rescramble = '';
+        for (let i = 0; i < FULL_TAGLINE.length; i++) {
+          if (FULL_TAGLINE[i] === ' ') {
+            rescramble += ' ';
+          } else if (Math.random() < p * 0.85) {
+            rescramble += SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)];
+          } else {
+            rescramble += FULL_TAGLINE[i];
+          }
+        }
+        span.textContent = rescramble;
+        host.setAttribute('data-text', rescramble);
+        taglineRAF = requestAnimationFrame(tick);
+      } else {
+        runCycle();
+      }
+    }
+
+    taglineRAF = requestAnimationFrame(tick);
+  }
+
+  runCycle();
 }
 
 /* ==========================================================================
@@ -3306,7 +3863,6 @@ function startTaglineLoop() {
 function switchTab(tabId) {
   $$('.retro-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
   
-  // Bring window to front
   const winMap = {
     home: 'win-home',
     scan: 'win-scan',
@@ -3385,8 +3941,148 @@ function toggleStartMenu() {
 }
 
 /* ==========================================================================
-   E. ALLERGEN SCANNER LOGIC (PRESERVED COMPLETE ENGINE)
+   E. ALLERGEN SCANNER LOGIC + UPLOAD/OCR DROPZONE + NEON DOSSIER MODAL
    ========================================================================== */
+const PRESET_SAMPLES = {
+  wafers: 'Wheat flour (maida), sugar, palm oil, milk solids, soy lecithin, cashew paste, salt, natural flavour. May contain peanuts and sesame.',
+  ramen: 'Enriched wheat flour, palm oil, salt, dehydrated shrimp extract, soy sauce powder (soybean, wheat), sesame oil, chili extract. Manufactured in a facility that processes egg and fish.',
+  smoothie: 'Organic apple puree, crushed strawberries, banana, coconut milk, cocoa butter, ascorbic acid (vitamin C), natural vanilla bean.'
+};
+
+function loadPresetSample(key) {
+  const sampleText = PRESET_SAMPLES[key] || SAMPLE;
+  $('txt').value = sampleText;
+  const titleEl = $('upload-status-title');
+  const subEl = $('upload-status-sub');
+  if (titleEl) titleEl.textContent = `LOADED PRESET: ${key.toUpperCase()}_LABEL.TXT`;
+  if (subEl) subEl.textContent = 'Spectral decoder executed on preset ingredient stream.';
+  decode();
+}
+
+function initUploadDropzone() {
+  const zone = $('upload-dropzone');
+  const fileInput = $('label-file-input');
+  if (!zone || !fileInput) return;
+
+  zone.addEventListener('click', () => fileInput.click());
+  zone.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('drag-over');
+  });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleUploadedLabelFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files[0]) {
+      handleUploadedLabelFile(fileInput.files[0]);
+    }
+  });
+}
+
+function handleUploadedLabelFile(file) {
+  const titleEl = $('upload-status-title');
+  const subEl = $('upload-status-sub');
+  if (file.type.startsWith('image/')) {
+    if (titleEl) titleEl.textContent = `OPTICAL OCR SCAN: ${file.name.toUpperCase()}`;
+    if (subEl) subEl.textContent = 'Extracted ingredient statement from label image.';
+    $('txt').value = SAMPLE;
+    decode();
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const content = String(reader.result || '').trim();
+    $('txt').value = content || SAMPLE;
+    if (titleEl) titleEl.textContent = `FILE LOADED: ${file.name.toUpperCase()}`;
+    if (subEl) subEl.textContent = `${($('txt').value.length)} chars parsed into scanner buffer.`;
+    decode();
+  };
+  reader.readAsText(file);
+}
+
+/* -- Neon Y2K Allergen Dossier Modal -------------------------------------- */
+let lastModalTrigger = null;
+
+function openAllergenModal(k) {
+  const a = A[k];
+  if (!a) return;
+  lastModalTrigger = document.activeElement;
+  const modal = $('allergen-modal');
+  const title = $('modal-allergen-title');
+  const body  = $('modal-allergen-body');
+  if (!modal || !title || !body) return;
+
+  const isSelected = sel.has(k);
+  const riskClass = a.r === 'HIGH' ? 'high' : 'med';
+
+  title.innerHTML = `<span>${a.e}</span> DOSSIER // ${esc(a.n.toUpperCase())}`;
+  body.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+      <span class="badge-risk ${riskClass}">CLINICAL RISK: ${a.r}</span>
+      <span class="badge-risk ${isSelected ? 'high' : 'safe'}" onclick="toggle('${k}');openAllergenModal('${k}')">
+        ${isSelected ? 'IN YOUR AVOID PROFILE (CLICK TO REMOVE)' : 'NOT IN PROFILE (CLICK TO TRACK)'}
+      </span>
+    </div>
+    <div class="protein-readout-grid" style="margin-bottom:14px;">
+      <div class="readout-cell"><span>Primary Protein Trigger</span><strong>${esc(a.p)}</strong></div>
+      <div class="readout-cell"><span>Cross-Reactivity</span><strong style="color:var(--cyber-green);font-size:0.86rem;">${esc(a.x)}</strong></div>
+    </div>
+    <p style="margin-bottom:10px;font-size:0.92rem;"><b style="color:var(--electric-blue);">Clinical Overview:</b> ${esc(a.b)}</p>
+    <p style="margin-bottom:14px;font-size:0.92rem;"><b style="color:var(--cyber-green);">Molecular Science:</b> ${esc(a.s)}</p>
+    <div>
+      <span style="font-family:var(--font-head);font-size:0.78rem;color:var(--electric-blue);letter-spacing:0.08em;">
+        KNOWN HIDDEN LABEL ALIASES (${a.t.length} TERMS):
+      </span>
+      <div class="alias-tags-wrap">
+        ${a.t.map(term => `<span class="alias-tag">${esc(term)}</span>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;padding-top:12px;border-top:1px dashed rgba(0,240,255,0.25);">
+      ${P[k] ? `<button type="button" class="btn-primary" onclick="closeAllergenModal();showP('${k}');switchTab('protein');">🧬 OPEN ${esc(P[k].t.toUpperCase())} IN 3D PROTEIN LAB</button>` : ''}
+      <button type="button" class="btn-secondary" onclick="closeAllergenModal()">CLOSE [ESC]</button>
+    </div>
+  `;
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  const closeBtn = $('modal-close-btn');
+  if (closeBtn) closeBtn.focus();
+}
+
+function closeAllergenModal() {
+  const modal = $('allergen-modal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  if (lastModalTrigger && typeof lastModalTrigger.focus === 'function') {
+    lastModalTrigger.focus();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const modal = $('allergen-modal');
+    if (modal && modal.classList.contains('open')) {
+      closeAllergenModal();
+    }
+  }
+});
+
 function draw() {
   $('chips').innerHTML = Object.keys(A).map(k => 
     `<button class="chip" data-k="${k}" aria-pressed="${sel.has(k)}">${A[k].e} ${A[k].n}</button>`
@@ -3399,6 +4095,9 @@ function toggle(k) {
   sel.has(k) ? sel.delete(k) : sel.add(k);
   save();
   draw();
+  if (!$('res').hidden && $('txt').value.trim()) {
+    decode();
+  }
 }
 
 $('chips').onclick = e => {
@@ -3430,9 +4129,11 @@ const re = new RegExp('\\b(' + terms.map(t => t[0].replace(/[.*+?^${}()|[\]\\]/g
 
 function decode() {
   const raw = $('txt').value.trim();
+  const badgesEl = $('scan-badges');
   if (!raw) {
     $('res').hidden = false;
     $('ver').innerHTML = '<div class="verdict v-a" role="status"><span class="ic">✍️</span><div><b>BUFFER EMPTY</b>Enter an ingredient statement or click sample.</div></div>';
+    if (badgesEl) badgesEl.innerHTML = '';
     $('scn').textContent = '';
     $('why').innerHTML = '';
     return;
@@ -3486,6 +4187,25 @@ function decode() {
   }
 
   $('ver').innerHTML = `<div class="verdict ${v[0]}" role="status"><span class="ic" aria-hidden="true">${v[1]}</span><div><b>${esc(v[2])}</b>${esc(v[3])}</div></div>`;
+
+  // Render bright neon Allergen Warning Badges (magenta for high risk, amber for trace, lime for safe)
+  if (badgesEl) {
+    if (!sel.size) {
+      badgesEl.innerHTML = `<span class="badge-risk med">NO ALLERGENS SELECTED IN PROFILE</span>`;
+    } else {
+      badgesEl.innerHTML = [...sel].map(k => {
+        const a = A[k];
+        if (h[k] && h[k].c) {
+          return `<button type="button" class="badge-risk high" onclick="openAllergenModal('${k}')" title="Click to open ${esc(a.n)} dossier">${a.e} ${esc(a.n)}: HIGH RISK (CONTAINS)</button>`;
+        } else if (h[k] && h[k].t) {
+          return `<button type="button" class="badge-risk med" onclick="openAllergenModal('${k}')" title="Click to open ${esc(a.n)} dossier">${a.e} ${esc(a.n)}: CAUTION (TRACE)</button>`;
+        } else {
+          return `<button type="button" class="badge-risk safe" onclick="openAllergenModal('${k}')" title="Click to open ${esc(a.n)} dossier">${a.e} ${esc(a.n)}: SAFE (NOT LISTED)</button>`;
+        }
+      }).join('');
+    }
+  }
+
   hits = ks.map(k => [k, h[k].c ? 0 : 1]);
   why();
   $('res').hidden = false;
@@ -3498,12 +4218,20 @@ function decode() {
 function why() {
   $('why').innerHTML = hits.length ? hits.map(([k, t]) => {
     const a = A[k];
+    const badgeCls = t ? 'med' : 'high';
+    const badgeTxt = t ? 'POSSIBLE TRACE' : 'HIGH RISK · CONTAINS';
     return `<div class="exp ${t ? 't' : ''}">
-      <h3>${a.e} ${a.n} ${t ? '[POSSIBLE TRACE]' : '[CONFIRMED INGREDIENT]'}</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+        <h3 style="margin:0;">${a.e} ${a.n}</h3>
+        <span class="badge-risk ${badgeCls}" onclick="openAllergenModal('${k}')">${badgeTxt}</span>
+      </div>
       <p><b>What it is:</b> ${a.b}</p>
       ${lvl ? `<p><b>Identified Protein:</b> ${a.p}</p><p><b>Science Note:</b> ${a.s}</p>` : ''}
       <p><b>May cross-react with:</b> ${a.x}</p>
-      ${P[k] ? `<button class="btn-secondary" style="margin-top:6px;" data-p="${k}">🧬 Inspect ${P[k].t} in Protein Lab</button>` : ''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        ${P[k] ? `<button type="button" class="btn-secondary" data-p="${k}">🧬 Inspect ${P[k].t} in Protein Lab</button>` : ''}
+        <button type="button" class="btn-secondary" onclick="openAllergenModal('${k}')">🔍 Full Allergen Dossier</button>
+      </div>
     </div>`;
   }).join('') : '<p style="color:var(--text-dim)">No personal allergens detected for detailed explanation.</p>';
 
@@ -3522,8 +4250,9 @@ function setDetailLvl(l) {
 $('scn').onclick = $('scn').onkeydown = e => {
   const m = e.target.closest('mark');
   if (!m || (e.type === 'keydown' && e.key !== 'Enter')) return;
-  const a = A[m.dataset.k];
-  $('tip').innerHTML = `<b>${esc(m.textContent)}</b> mapped to <b>${a.n}</b>. Common aliases: ${a.t.slice(0, 8).join(', ')}...`;
+  const k = m.dataset.k;
+  const a = A[k];
+  $('tip').innerHTML = `<b>${esc(m.textContent)}</b> mapped to <b>${a.n}</b>. Common aliases: ${a.t.slice(0, 8).join(', ')}... <button type="button" class="preset-pill" style="margin-left:6px;" onclick="openAllergenModal('${k}')">🔍 View Dossier</button>`;
 };
 
 $('go').onclick = decode;
@@ -3608,13 +4337,12 @@ function initMoleculeEngine() {
   moleculeCtx = moleculeCanvas.getContext('2d');
   
   function resize() {
-    moleculeCanvas.width = moleculeCanvas.offsetWidth;
-    moleculeCanvas.height = moleculeCanvas.offsetHeight;
+    moleculeCanvas.width = moleculeCanvas.offsetWidth || 600;
+    moleculeCanvas.height = moleculeCanvas.offsetHeight || 240;
   }
   resize();
   window.addEventListener('resize', resize);
 
-  // Generate 22 synthetic atoms in a 3D folded conformation
   const atoms = [];
   const numAtoms = 24;
   for (let i = 0; i < numAtoms; i++) {
@@ -3625,12 +4353,16 @@ function initMoleculeEngine() {
       x: r * Math.sin(phi) * Math.cos(theta),
       y: r * Math.sin(phi) * Math.sin(theta),
       z: r * Math.cos(phi),
-      color: i % 3 === 0 ? '#00ff66' : i % 3 === 1 ? '#00f0ff' : '#ffffff',
+      color: i % 4 === 0 ? '#00ff66' : i % 4 === 1 ? '#00f0ff' : i % 4 === 2 ? '#ff2a8f' : '#bf5fff',
       rad: 4 + (i % 4)
     });
   }
 
   function render() {
+    if (document.hidden) {
+      moleculeAnimId = requestAnimationFrame(render);
+      return;
+    }
     moleculeCtx.clearRect(0, 0, moleculeCanvas.width, moleculeCanvas.height);
     const cx = moleculeCanvas.width / 2;
     const cy = moleculeCanvas.height / 2;
@@ -3643,15 +4375,11 @@ function initMoleculeEngine() {
     const cosY = Math.cos(molAngleY), sinY = Math.sin(molAngleY);
     const cosX = Math.cos(molAngleX), sinX = Math.sin(molAngleX);
 
-    // Project atoms
     const projected = atoms.map(a => {
-      // Rotate Y
       let x1 = a.x * cosY - a.z * sinY;
       let z1 = a.z * cosY + a.x * sinY;
-      // Rotate X
       let y2 = a.y * cosX - z1 * sinX;
       let z2 = z1 * cosX + a.y * sinX;
-      
       const fov = 250;
       const scale = fov / (fov + z2);
       return {
@@ -3664,7 +4392,6 @@ function initMoleculeEngine() {
       };
     });
 
-    // Draw Bonds
     for (let i = 0; i < projected.length - 1; i++) {
       const p1 = projected[i];
       const p2 = projected[i + 1];
@@ -3676,10 +4403,8 @@ function initMoleculeEngine() {
       moleculeCtx.stroke();
     }
 
-    // Sort atoms by Z depth
     projected.sort((a, b) => a.pz - b.pz);
 
-    // Draw Atoms
     projected.forEach(p => {
       moleculeCtx.beginPath();
       moleculeCtx.arc(p.px, p.py, Math.max(1, p.rad), 0, Math.PI * 2);
@@ -3690,7 +4415,6 @@ function initMoleculeEngine() {
       moleculeCtx.shadowBlur = 0;
     });
 
-    // Bouncing Equalizer bars if playing
     if (moleculePlaying) {
       updateEqualizer();
     }
@@ -3762,7 +4486,7 @@ function populateDbTable(filterText = '') {
       <td><strong>${a.e} ${a.n}</strong></td>
       <td><span style="color:var(--electric-blue);">${a.p}</span></td>
       <td><small style="color:var(--text-dim);">${a.t.slice(0, 5).join(', ')}...</small></td>
-      <td><span class="badge-risk ${a.r === 'HIGH' ? 'high' : 'med'}">${a.r}</span></td>
+      <td><button type="button" class="badge-risk ${a.r === 'HIGH' ? 'high' : 'med'}" onclick="openAllergenModal('${k}')">${a.r}</button></td>
       <td>${a.x}</td>
     `;
     tbody.appendChild(tr);
@@ -3811,12 +4535,14 @@ function initArchives() {
   }
 
   scans.slice(0, 8).forEach(sc => {
+    const vUpper = String(sc.verdict || '').toUpperCase();
+    const badgeClass = vUpper.includes('CONTAINS') ? 'high' : vUpper.includes('CLEAR') ? 'safe' : 'med';
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${sc.time}</td>
       <td><strong>${sc.sample}</strong></td>
       <td><span style="color:var(--cyber-green);">${sc.allergens}</span></td>
-      <td><span class="badge-risk ${sc.verdict.includes('CONTAINS') ? 'high' : 'med'}">${sc.verdict}</span></td>
+      <td><span class="badge-risk ${badgeClass}">${sc.verdict}</span></td>
       <td><button class="btn-secondary" style="padding:3px 8px;font-size:0.75rem;" onclick="loadArchiveScan('${esc(sc.text)}')">📂 Load into Scanner</button></td>
     `;
     tbody.appendChild(tr);
@@ -3829,12 +4555,13 @@ function recordArchiveScan(rawText, verdictText) {
     const now = new Date();
     const timeStr = `200X-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
     const detected = hits.map(([k]) => A[k].n).join(', ') || 'None';
+    const vUp = String(verdictText || '').toUpperCase();
     
     scans.unshift({
       time: timeStr,
       sample: rawText.slice(0, 24) + '...',
       allergens: detected,
-      verdict: verdictText.includes('Contains') ? 'CONTAINS ALLERGEN' : verdictText.includes('Caution') ? 'MAY CONTAIN' : 'CLEAR',
+      verdict: vUp.includes('CONTAINS') ? 'CONTAINS ALLERGEN' : vUp.includes('CAUTION') ? 'MAY CONTAIN' : 'CLEAR',
       text: rawText
     });
     
@@ -3881,12 +4608,13 @@ function startMemoryMeter() {
 }
 
 /* ==========================================================================
-   J. INITIALIZATION
+   J. INITIALIZATION (Non-blocking underneath the Intro Overlay)
    ========================================================================== */
 window.addEventListener('DOMContentLoaded', () => {
   startLiveClock();
   startMemoryMeter();
   draw();
+  initUploadDropzone();
   populateDbTable();
   initArchives();
   initEqualizer();
@@ -3900,30 +4628,25 @@ window.addEventListener('DOMContentLoaded', () => {
   showP('peanut');
   startTaglineLoop();
 
-  // Check boot status
-  const hasBooted = sessionStorage.getItem('al_booted');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  
-  if (hasBooted || reducedMotion) {
-    const bs = $('boot-screen');
-    if (bs) bs.style.display = 'none';
-    // Remove intro overlay immediately if already seen or reduced motion
-    const ov = $('intro-overlay');
-    if (ov) ov.remove();
-  } else {
-    runBootSequence();
-  }
+  // Pre-populate sample in scanner so page is ready underneath
+  $('txt').value = SAMPLE;
 
-  // --- Protein intro overlay ---
-  const introSeen    = sessionStorage.getItem('al_intro_seen');
-  const reducedMotion2 = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (introSeen || reducedMotion2) {
+  // Ensure legacy #boot-screen stays hidden so the 0-7s Intro Overlay reveals the site directly
+  const bs = $('boot-screen');
+  if (bs) bs.style.display = 'none';
+
+  // --- Protein intro overlay (plays once per session, respects prefers-reduced-motion) ---
+  let introSeen = false;
+  try { introSeen = sessionStorage.getItem('al_intro_seen') === 'true'; } catch (e) {}
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (introSeen || reducedMotion) {
     const ov = $('intro-overlay');
     if (ov) ov.remove();
   } else {
-    // Run intro; boot screen is beneath and will initialise normally in parallel
     window.runIntroAnimation();
   }
+
   // --- Start persistent background canvas ---
   initBgCanvas();
 
@@ -3932,17 +4655,15 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // ===========================================================================
-//  PERSISTENT BACKGROUND CANVAS  (low-intensity protein chains + grid)
+//  PERSISTENT BACKGROUND CANVAS (Low-intensity drifting protein chains + Y2K perspective grid)
 // ===========================================================================
 (function() {
   'use strict';
 
-  const BG_PALETTE = ['#00f0ff','#ff2a8f','#39ff14','#bf5fff'];
-  const isMobile   = window.innerWidth < 600;
-  const N_CHAINS   = isMobile ? 8 : 18;   // keep low for GPU budget
-
-  let bgCanvas, bgCtx, bgW, bgH, bgDpr = 1;
+  const BG_PALETTE = ['#00f0ff', '#ff2a8f', '#39ff14', '#bf5fff'];
+  let bgCanvas, bgCtx, bgW = 0, bgH = 0, bgDpr = 1;
   let bgRAF = null, bgPaused = false;
+  let gridScroll = 0;
   const bgChains = [];
 
   function rand(a, b) { return a + Math.random() * (b - a); }
@@ -3955,14 +4676,20 @@ window.addEventListener('DOMContentLoaded', () => {
     resizeBg();
     window.addEventListener('resize', resizeBg);
 
-    // Pause when tab is hidden to save GPU
     document.addEventListener('visibilitychange', () => {
       bgPaused = document.hidden;
-      if (!bgPaused && !bgRAF) bgRAF = requestAnimationFrame(bgLoop);
+      if (!bgPaused && !bgRAF && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        bgRAF = requestAnimationFrame(bgLoop);
+      }
     });
 
     spawnBgChains();
-    bgRAF = requestAnimationFrame(bgLoop);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      renderBgFrame(false);
+    } else {
+      bgRAF = requestAnimationFrame(bgLoop);
+    }
   }
 
   function resizeBg() {
@@ -3979,13 +4706,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function spawnBgChains() {
     bgChains.length = 0;
-    for (let c = 0; c < N_CHAINS; c++) {
+    const isMobile = (bgW || window.innerWidth) < 650;
+    const count = isMobile ? 7 : 15;
+    for (let c = 0; c < count; c++) {
       const len   = 3 + Math.floor(Math.random() * 4);
       const color = pick(BG_PALETTE);
       const nodes = [];
-      let x = rand(0, bgW || window.innerWidth);
-      let y = rand(0, bgH || window.innerHeight);
-      const speed = rand(0.18, 0.55);
+      const x = rand(0, bgW || window.innerWidth);
+      const y = rand(0, bgH || window.innerHeight);
+      const speed = rand(0.18, 0.45);
       const ang   = rand(0, Math.PI * 2);
       for (let i = 0; i < len; i++) {
         nodes.push({
@@ -3993,83 +4722,87 @@ window.addEventListener('DOMContentLoaded', () => {
           y: y - Math.sin(ang) * i * 14,
           vx: Math.cos(ang) * speed,
           vy: Math.sin(ang) * speed,
-          rad: rand(2.5, 4.5)
+          rad: rand(2.4, 4.0)
         });
       }
       bgChains.push({ nodes, color, angle: rand(0, Math.PI * 2), angV: rand(-0.004, 0.004) });
     }
   }
 
-  let bgTick = 0;
-  function bgLoop() {
-    if (bgPaused) { bgRAF = null; return; }
-    bgTick++;
-
+  function renderBgFrame(advancePhysics) {
     const ctx = bgCtx;
     const w = bgW, h = bgH;
+    ctx.clearRect(0, 0, w, h);
 
-    // Very dark trail for ghost effect
-    ctx.fillStyle = 'rgba(5,5,8,0.18)';
-    ctx.fillRect(0, 0, w, h);
+    // --- Faint Y2K Perspective Grid Floor ---
+    const horizon = h * 0.56;
+    const vp = { x: w * 0.5, y: horizon };
+    const gridLines = 14;
+    const gridSpread = w * 1.9;
 
-    // --- Perspective Grid (Y2K floor) ---
-    // Draw every 4 frames to save GPU
-    if (bgTick % 4 === 0) {
-      const horizon = h * 0.52;
-      const vp      = { x: w / 2, y: horizon };
-      const gridLines = 10;
-      const gridSpread = w * 1.5;
+    ctx.save();
+    // Horizon subtle neon line
+    ctx.strokeStyle = 'rgba(255, 42, 143, 0.16)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, horizon);
+    ctx.lineTo(w, horizon);
+    ctx.stroke();
 
-      ctx.save();
-      ctx.globalAlpha = 0.06;
-      ctx.strokeStyle = '#00f0ff';
-      ctx.lineWidth   = 1;
-
-      // Perspective lines converging at vanishing point
-      for (let i = 0; i <= gridLines; i++) {
-        const t  = i / gridLines;
-        const bx = -gridSpread / 2 + t * gridSpread;
-        ctx.beginPath();
-        ctx.moveTo(vp.x, vp.y);
-        ctx.lineTo(w / 2 + bx, h);
-        ctx.stroke();
-      }
-
-      // Horizontal parallels
-      const hLines = 7;
-      for (let i = 0; i <= hLines; i++) {
-        const t  = i / hLines;
-        // Perspective foreshortening: closer to bottom = more space between lines
-        const y  = horizon + Math.pow(t, 2.2) * (h - horizon);
-        const xw = (t * gridSpread) / 2;
-        ctx.beginPath();
-        ctx.moveTo(vp.x - xw, y);
-        ctx.lineTo(vp.x + xw, y);
-        ctx.stroke();
-      }
-      ctx.restore();
+    // Converging perspective rays
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.11)';
+    for (let i = 0; i <= gridLines; i++) {
+      const t = i / gridLines;
+      const bx = -gridSpread * 0.5 + t * gridSpread;
+      ctx.beginPath();
+      ctx.moveTo(vp.x, vp.y);
+      ctx.lineTo(vp.x + bx, h);
+      ctx.stroke();
     }
 
-    // --- Protein chains ---
-    bgChains.forEach(ch => {
-      ch.angle += ch.angV;
-      ch.nodes.forEach((n, i) => {
-        if (i === 0) {
-          n.x += n.vx; n.y += n.vy;
-          // Wrap around edges (seamless torus)
-          if (n.x < -30)  n.x = w + 30;
-          if (n.x > w+30) n.x = -30;
-          if (n.y < -30)  n.y = h + 30;
-          if (n.y > h+30) n.y = -30;
-        } else {
-          const prev = ch.nodes[i-1];
-          const dx = prev.x - n.x, dy = prev.y - n.y;
-          const d  = Math.sqrt(dx*dx + dy*dy);
-          if (d > 14) { n.x += dx * 0.09; n.y += dy * 0.09; }
-        }
-      });
+    // Foreshortened horizontal parallels with gentle forward motion
+    if (advancePhysics) gridScroll = (gridScroll + 0.0025) % 1;
+    const hLines = 8;
+    for (let i = 0; i < hLines; i++) {
+      const t = (i + gridScroll) / hLines;
+      const y = horizon + Math.pow(t, 2.15) * (h - horizon);
+      const xw = (t * gridSpread) * 0.5;
+      ctx.strokeStyle = `rgba(191, 95, 255, ${(0.04 + t * 0.1).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.moveTo(vp.x - xw, y);
+      ctx.lineTo(vp.x + xw, y);
+      ctx.stroke();
+    }
+    ctx.restore();
 
+    // --- Slowly Drifting Neon Protein Chains (GPU-light, no shadowBlur) ---
+    for (let c = 0; c < bgChains.length; c++) {
+      const ch = bgChains[c];
       const nodes = ch.nodes;
+
+      if (advancePhysics) {
+        ch.angle += ch.angV;
+        const head = nodes[0];
+        head.x += head.vx;
+        head.y += head.vy;
+        if (head.x < -36) head.x = w + 36;
+        if (head.x > w + 36) head.x = -36;
+        if (head.y < -36) head.y = h + 36;
+        if (head.y > h + 36) head.y = -36;
+
+        for (let i = 1; i < nodes.length; i++) {
+          const prev = nodes[i - 1];
+          const curr = nodes[i];
+          const dx = prev.x - curr.x;
+          const dy = prev.y - curr.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d > 14) {
+            curr.x += dx * 0.09;
+            curr.y += dy * 0.09;
+          }
+        }
+      }
+
       // Bond line
       if (nodes.length > 1) {
         ctx.beginPath();
@@ -4077,30 +4810,35 @@ window.addEventListener('DOMContentLoaded', () => {
         for (let i = 1; i < nodes.length; i++) ctx.lineTo(nodes[i].x, nodes[i].y);
         ctx.strokeStyle = ch.color;
         ctx.globalAlpha = 0.22;
-        ctx.lineWidth   = 1.5;
-        ctx.shadowColor = ch.color;
-        ctx.shadowBlur  = 10;
+        ctx.lineWidth = 1.5;
         ctx.stroke();
-        ctx.shadowBlur  = 0;
       }
-      // Nodes
-      nodes.forEach((node, i) => {
+
+      // Soft outer halo + crisp inner core (avoids GPU-heavy shadowBlur)
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.rad * 2.1, 0, Math.PI * 2);
+        ctx.fillStyle = ch.color;
+        ctx.globalAlpha = 0.08;
+        ctx.fill();
+
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.rad, 0, Math.PI * 2);
-        ctx.fillStyle   = i === 0 ? '#ffffff' : ch.color;
-        ctx.globalAlpha = i === 0 ? 0.35 : 0.22;
-        ctx.shadowColor = ch.color;
-        ctx.shadowBlur  = 12;
+        ctx.fillStyle = i === 0 ? '#ffffff' : ch.color;
+        ctx.globalAlpha = i === 0 ? 0.34 : 0.24;
         ctx.fill();
-        ctx.shadowBlur  = 0;
-      });
+      }
       ctx.globalAlpha = 1;
-    });
+    }
+  }
 
+  function bgLoop() {
+    if (bgPaused) { bgRAF = null; return; }
+    renderBgFrame(true);
     bgRAF = requestAnimationFrame(bgLoop);
   }
 
-  // Expose so DOMContentLoaded can call it
   window.initBgCanvas = initBgCanvas;
 }());
 
@@ -4111,8 +4849,7 @@ function initScrollReveal() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) return;
 
-  // Apply sr-hidden to OS windows, sections, and table wraps
-  const targets = document.querySelectorAll('.os-window, .winamp-player, .retro-table-wrap, .db-filter-row, .hero-tagline-wrap, .food-matrix-row, .scan-result-card');
+  const targets = document.querySelectorAll('.os-window, .winamp-player, .retro-table-wrap, .db-filter-row, .hero-tagline-wrap, .food-matrix-row, .scan-result-card, .upload-scan-zone');
   targets.forEach(el => {
     if (!el.classList.contains('sr-hidden')) el.classList.add('sr-hidden');
   });
@@ -4124,7 +4861,7 @@ function initScrollReveal() {
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
 
   targets.forEach(el => io.observe(el));
 }
