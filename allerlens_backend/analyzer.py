@@ -10,10 +10,17 @@ from pathlib import Path
 DATA = json.loads((Path(__file__).parent / "data" / "allergens.json").read_text(encoding="utf-8"))
 ALLERGENS = DATA["allergens"]
 
-# term -> allergen key; longest terms first so "milk solids" wins over "milk"
-_TERMS = sorted(((t, k) for k, a in ALLERGENS.items() for t in a["terms"]), key=lambda x: -len(x[0]))
-_TERM_MAP = {t.lower(): k for t, k in _TERMS}
-_RE = re.compile(r"\b(" + "|".join(re.escape(t) for t, _ in _TERMS) + r")\b", re.I)
+# term -> list of allergen keys; longest terms first so "milk solids" wins over "milk"
+_TERM_MAP: dict[str, list[str]] = {}
+for _k, _a in ALLERGENS.items():
+    for _t in _a["terms"]:
+        _low = _t.lower()
+        if _low not in _TERM_MAP:
+            _TERM_MAP[_low] = []
+        if _k not in _TERM_MAP[_low]:
+            _TERM_MAP[_low].append(_k)
+_SORTED_TERMS = sorted(_TERM_MAP.keys(), key=len, reverse=True)
+_RE = re.compile(r"\b(" + "|".join(re.escape(t) for t in _SORTED_TERMS) + r")\b", re.I)
 _PAL = re.compile(DATA["precautionary_pattern"], re.I)
 
 
@@ -35,15 +42,18 @@ def analyze(label: str, profile: list[str]) -> dict:
 
     matches, hits = [], {}
     for m in _RE.finditer(masked):
-        key = _TERM_MAP[m.group(1).lower()]
+        keys = _TERM_MAP[m.group(1).lower()]
+        active_keys = [k for k in keys if k in profile]
         precautionary = pal_at >= 0 and m.start() >= pal_at
-        mine = key in profile
+        mine = len(active_keys) > 0
+        primary_key = active_keys[0] if mine else keys[0]
         kind = "other" if not mine else ("may_contain" if precautionary else "contains")
         matches.append({"text": raw[m.start():m.end()], "start": m.start(), "end": m.end(),
-                        "allergen": key, "kind": kind})
+                        "allergen": primary_key, "kind": kind})
         if mine:
-            h = hits.setdefault(key, {"contains": 0, "may_contain": 0})
-            h["may_contain" if precautionary else "contains"] += 1
+            for ak in active_keys:
+                h = hits.setdefault(ak, {"contains": 0, "may_contain": 0})
+                h["may_contain" if precautionary else "contains"] += 1
 
     contains = [k for k, h in hits.items() if h["contains"]]
     traces = [k for k, h in hits.items() if not h["contains"]]
