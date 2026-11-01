@@ -4,12 +4,28 @@ Run:   pip install -r requirements.txt && python app.py
 Try:   curl -X POST localhost:5000/api/analyze -H 'Content-Type: application/json' \
             -d '{"label":"Wheat flour, milk solids. May contain peanuts.","profile":["peanut","milk"]}'
 """
+from pathlib import Path
 import random
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request
 from analyzer import ALLERGENS, DATA, analyze
 
 app = Flask(__name__)
 AA = "ACDEFGHIKLMNPQRSTVWY"
+BASE_DIR = Path(__file__).resolve().parent
+
+
+@app.get("/")
+@app.get("/index.html")
+def serve_home():
+    for candidate in (
+        BASE_DIR / "index.html",
+        BASE_DIR.parent / "index.html",
+        BASE_DIR.parent / "allerlens formal.html",
+        BASE_DIR.parent / "allerlens-formal.html",
+    ):
+        if candidate.is_file():
+            return Response(candidate.read_text(encoding="utf-8"), mimetype="text/html")
+    return "index.html not found", 404
 
 
 @app.after_request
