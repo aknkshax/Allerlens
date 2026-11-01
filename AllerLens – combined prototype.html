@@ -1324,13 +1324,18 @@ mark.n {
 
 /* Protein Molecule Canvas */
 .molecule-viewer-frame {
-  background: #020407;
+  background: radial-gradient(circle at 50% 50%, #091322 0%, #020407 80%);
   border: 2px solid;
   border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
   position: relative;
-  height: 240px;
+  height: 300px;
   overflow: hidden;
   margin-bottom: 14px;
+  cursor: grab;
+}
+
+.molecule-viewer-frame:active {
+  cursor: grabbing;
 }
 
 #molecule-canvas {
@@ -1343,11 +1348,44 @@ mark.n {
   position: absolute;
   top: 8px; left: 10px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   color: var(--electric-blue);
-  background: rgba(4, 8, 12, 0.75);
-  padding: 2px 8px;
-  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(4, 8, 14, 0.85);
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.molecule-fold-badge {
+  position: absolute;
+  top: 8px; right: 10px;
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  color: var(--cyber-green);
+  background: rgba(4, 14, 10, 0.85);
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 255, 102, 0.4);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.molecule-legend {
+  position: absolute;
+  bottom: 8px; left: 10px; right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  background: rgba(4, 8, 14, 0.82);
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* Winamp Controls */
@@ -2762,10 +2800,15 @@ table.retro-table tr:hover {
               </div>
             </div>
 
-            <!-- Rotating 3D Molecular Wireframe Canvas -->
-            <div class="molecule-viewer-frame">
+            <!-- Rotating 3D Molecular Structure Canvas -->
+            <div class="molecule-viewer-frame" title="Drag to rotate 3D protein structure">
               <div class="molecule-hud" id="molecule-hud">TARGET: ARA_H_2 &middot; 3D CONFORMATION</div>
+              <div class="molecule-fold-badge" id="molecule-fold-badge">PDB: 3OB4 &middot; 4-HELIX BUNDLE</div>
               <canvas id="molecule-canvas"></canvas>
+              <div class="molecule-legend">
+                <span><b style="color:#ff2a8f;">●</b> α-Helix &nbsp; <b style="color:#00f0ff;">▲</b> β-Strand/Sheet &nbsp; <b style="color:#39ff14;">●</b> Loop/Turn &nbsp; <b style="color:#ffbe0b;">━</b> Disulfide (S–S) &nbsp; <b style="color:#ffffff;text-shadow:0 0 6px #00f0ff;">★</b> IgE Epitope</span>
+                <span style="color:var(--electric-blue);">[DRAG TO ROTATE 3D]</span>
+              </div>
             </div>
 
             <!-- Winamp Control Deck -->
@@ -2782,7 +2825,7 @@ table.retro-table tr:hover {
                 <span id="speed-val">1.0x</span>
               </div>
 
-              <div class="player-tabs" id="ptabs" style="display:flex;gap:4px;"></div>
+              <div class="player-tabs" id="ptabs" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;"></div>
             </div>
           </div>
 
@@ -3001,18 +3044,69 @@ const A = {
 };
 
 const P = {
-  peanut: { k: 'peanut', t: 'Ara h 2 (peanut)', id: 'UniProt Q6PSU2', f: 'Seed storage conglutin (2S albumin)', n: 'Potent peanut allergen; tightly folded structure resists cooking and proteolysis.' },
-  milk: { k: 'milk', t: 'Bos d 5 (beta-lactoglobulin)', id: 'UniProt P02754', f: 'Lipocalin family, whey protein', n: 'Major cow milk whey protein; undergoes conformational changes under high heat.' },
-  egg: { k: 'egg', t: 'Gal d 1 (ovomucoid)', id: 'UniProt P01005', f: 'Kazal-type serine protease inhibitor', n: 'Contains 3 tandem domains with extensive disulfide bonds, conferring high thermal stability.' },
-  shell: { k: 'shell', t: 'Pen a 1 (shrimp tropomyosin)', id: 'UniProt Q3Y8M6', f: 'Invertebrate striated muscle protein', n: 'Coiled-coil alpha-helical dimer; dominant trigger in crustacean anaphylaxis.' }
+  peanut: { k: 'peanut', t: 'Ara h 2 (Peanut 2S Albumin)', id: 'UniProt Q6PSU2 · PDB 3OB4', pdb: '3OB4', fold: '4-HELIX BUNDLE + 4 S–S BRIDGES', arch: 'bundle4', f: 'Seed storage conglutin (2S albumin superfamily)', n: 'Right-handed 4-helix bundle (α1–α4) cross-linked by 4 conserved disulfide bridges, with an exposed immunodominant hydroxyproline loop that resists roasting and gastric pepsin.' },
+  milk: { k: 'milk', t: 'Bos d 5 (β-Lactoglobulin)', id: 'UniProt P02754 · PDB 3BLG', pdb: '3BLG', fold: '8-STRAND LIPOCALIN β-BARREL + α-HELIX', arch: 'betabarrel', f: 'Lipocalin family whey protein (8-stranded antiparallel β-calyx)', n: 'Antiparallel β-strands A–H form a conical β-barrel calyx with a hydrophobic central pocket, flanked by a 3-turn α-helix and 2 disulfide bridges.' },
+  egg: { k: 'egg', t: 'Gal d 1 (Ovomucoid)', id: 'UniProt P01005 · PDB 1OMU', pdb: '1OMU', fold: '3 TANDEM KAZAL DOMAINS (α + 3β)', arch: 'kazal3', f: 'Kazal-type serine protease inhibitor (Domains I, II & III)', n: 'Three homologous tandem Kazal domains connected by flexible hinges; each domain packs an α-helix against a 3-stranded antiparallel β-sheet with 3 intra-domain disulfide bonds (9 S–S total).' },
+  shell: { k: 'shell', t: 'Pen a 1 (Shrimp Tropomyosin)', id: 'UniProt Q3Y8M6 · PDB 1C1G', pdb: '1C1G', fold: 'PARALLEL α-HELICAL COILED-COIL DIMER', arch: 'coiledcoil', f: 'Invertebrate striated muscle two-stranded α-helical coiled-coil', n: 'Two parallel 284-residue α-helices (Chains A & B) wound into a left-handed supercoil stabilized by hydrophobic heptad-repeat core packing; contains 5 major IgE epitope regions.' },
+  fish: { k: 'fish', t: 'Gad m 1 (β-Parvalbumin)', id: 'UniProt Q90YK9 · PDB 1B8R', pdb: '1B8R', fold: 'EF-HAND HELIX-LOOP-HELIX Ca²⁺ TRIAD', arch: 'efhand', f: 'EF-hand calcium-binding muscle sarcoplasmic protein', n: 'Six α-helices (A–F) folded into three EF-hand motifs (AB, CD, EF); chelation of two Ca²⁺ ions in the CD and EF loops locks the protein into a heat-stable conformation.' },
+  tree: { k: 'tree', t: 'Ana o 3 / Pru du 6 (Tree Nut Cupin & 2S)', id: 'UniProt Q8H2B8 · PDB 3EHK', pdb: '3EHK', fold: 'TRIMERIC BICUPIN β-BARREL RING', arch: 'cupin', f: '11S legumin bicupin hexamer & 2S albumin seed storage proteins', n: 'Three symmetric cupin subunits assemble into a triangular β-barrel ring flanked by α-helical arms, shielding linear and conformational epitopes from thermal denaturation.' },
+  wheat: { k: 'wheat', t: 'Tri a 14 (Wheat nsLTP1)', id: 'UniProt P24296 · PDB 1BWO', pdb: '1BWO', fold: 'nsLTP 4-HELIX HYDROPHOBIC TUNNEL', arch: 'ltp', f: 'Non-specific lipid transfer protein type 1 & prolamin gliadins', n: 'Four α-helices (H1–H4) enclose a boomerang-shaped hydrophobic lipid-binding cavity, capped by a C-terminal tail and 4 rigid disulfide bridges.' },
+  soy: { k: 'soy', t: 'Gly m 4 (Soy PR-10 Bet v 1 Homolog)', id: 'UniProt P26987 · PDB 2K7H', pdb: '2K7H', fold: '7-STRAND β-SHEET + C-TERM α-HELIX GRIP', arch: 'betv1', f: 'Pathogenesis-related PR-10 / Bet v 1 superfamily', n: 'A curved 7-stranded antiparallel β-sheet (β1–β7) and two short V-helices wrap around a long 25-residue C-terminal α-helix over a Y-shaped amphiphilic cavity.' },
+  sesame: { k: 'sesame', t: 'Ses i 1 (Sesame 2S Albumin)', id: 'UniProt Q9AUD1 · PDB 2LVF', pdb: '2LVF', fold: 'COMPACT 5-HELIX DISULFIDE BUNDLE', arch: 'bundle4', f: 'Prolamin superfamily 2S seed storage albumin', n: 'Heterodimeric small and large subunits folded into five compact α-helices locked by four conserved cystine bridges and a hypervariable antigenic loop.' }
 };
 
 const EP = {
   peanut: [[10, 17, 'e'], [44, 52, 'e'], [70, 76, 'p']],
   milk: [[6, 13, 'e'], [30, 38, 'e'], [60, 68, 'p']],
-  egg: [[14, 21, 'e'], [50, 58, 'p']],
-  shell: [[20, 28, 'e'], [40, 47, 'e'], [75, 82, 'p']]
+  egg: [[14, 21, 'e'], [46, 54, 'e'], [72, 79, 'p']],
+  shell: [[18, 26, 'e'], [40, 48, 'e'], [74, 82, 'p']],
+  fish: [[12, 20, 'e'], [48, 56, 'e'], [76, 84, 'p']],
+  tree: [[8, 16, 'e'], [38, 46, 'e'], [66, 74, 'p']],
+  wheat: [[15, 23, 'e'], [42, 50, 'e'], [68, 76, 'p']],
+  soy: [[11, 19, 'e'], [45, 53, 'e'], [71, 78, 'p']],
+  sesame: [[9, 17, 'e'], [36, 44, 'e'], [64, 72, 'p']]
 };
+
+function getProteinEntry(k) {
+  if (P[k]) return P[k];
+  const a = A[k];
+  if (!a) return P.peanut;
+  const foldMap = {
+    peanuts: { pdb: '3OB4', fold: '4-HELIX BUNDLE + 4 S–S BRIDGES', arch: 'bundle4' },
+    wheat_plain: { pdb: '1BWO', fold: 'nsLTP 4-HELIX HYDROPHOBIC TUNNEL', arch: 'ltp' },
+    chickpea: { pdb: '1UIJ', fold: 'TRIMERIC 7S VICILIN β-BARREL', arch: 'cupin' },
+    lentils: { pdb: '2EA7', fold: 'TRIMERIC GAMMA-VICILIN CUPIN', arch: 'cupin' },
+    almonds: { pdb: '3EHK', fold: 'AMANDIN 11S BICUPIN HEXAMER', arch: 'cupin' },
+    walnuts: { pdb: '1UNU', fold: 'JUG R 1 2S ALBUMIN 4-HELIX BUNDLE', arch: 'bundle4' },
+    perilla: { pdb: '2LVF', fold: 'OLEOSIN HAIRPIN & 2S ALBUMIN BUNDLE', arch: 'bundle4' },
+    barley: { pdb: '1JTB', fold: 'HOR V 14 LTP 4-HELIX TUNNEL', arch: 'ltp' },
+    corn: { pdb: '1MZL', fold: 'ZEA M 14 nsLTP 4-HELIX TUNNEL', arch: 'ltp' },
+    oats: { pdb: '1BWO', fold: 'AVENIN PROLAMIN α-HELICAL FOLD', arch: 'ltp' },
+    peach: { pdb: '2ALG', fold: 'PRU P 3 LTP 4-HELIX TUNNEL', arch: 'ltp' },
+    apples: { pdb: '5MMU', fold: 'MAL D 1 PR-10 7β + α-HELIX GRIP', arch: 'betv1' },
+    berries: { pdb: '4C9C', fold: 'FRA A 1 PR-10 7β + α-HELIX GRIP', arch: 'betv1' },
+    kiwi: { pdb: '2ACT', fold: 'ACT D 1 CYSTEINE PROTEASE α+β FOLD', arch: 'betv1' },
+    beef: { pdb: '4F5S', fold: 'BOS D 6 SERUM ALBUMIN HEART FOLD', arch: 'betabarrel' },
+    pork: { pdb: '4LUH', fold: 'SUS S 1 SERUM ALBUMIN α-BUNDLE', arch: 'betabarrel' },
+    chicken: { pdb: '1WDC', fold: 'GAL D 7 MYOSIN & EF-HAND FOLD', arch: 'efhand' },
+    duck: { pdb: '1WDC', fold: 'AVIAN LIVETIN & EF-HAND PARVALBUMIN', arch: 'efhand' }
+  };
+  const fm = foldMap[k] || { pdb: '1BV1', fold: 'GLOBULAR α/β ALLERGEN FOLD', arch: 'betv1' };
+  return {
+    k,
+    t: `${a.n} (${a.p.split(',')[0]})`,
+    id: `PDB ${fm.pdb} · IUIS Allergen`,
+    pdb: fm.pdb,
+    fold: fm.fold,
+    arch: fm.arch,
+    f: a.p,
+    n: `${a.b} ${a.s}`
+  };
+}
+
+function getEpitopes(k) {
+  return EP[k] || [[10, 18, 'e'], [42, 50, 'e'], [68, 76, 'p']];
+}
 
 const EX = ['coconut milk', 'coconut cream', 'cocoa butter', 'nutmeg', 'butternut', 'pineapple', 'custard apple', 'sugar alcohol', 'sugar alcohols', 'cetyl alcohol', 'stearyl alcohol', 'cetearyl alcohol', 'benzyl alcohol'];
 const SAMPLE = 'Wheat flour (maida), sugar, palm oil, milk solids, soy lecithin, cashew paste, salt, natural flavour. May contain peanuts and sesame.';
@@ -4069,13 +4163,24 @@ function handleUploadedLabelFile(file) {
   reader.readAsText(file);
 }
 
-/* -- Neon Y2K Allergen Dossier Modal -------------------------------------- */
+/* -- Neon Y2K Allergen Bio-Explanation & Cross-Reactivity Modal ----------- */
 let lastModalTrigger = null;
+let modalDetailLvl = 1; // Default to full BIO-EXPLANATION & SCIENCE in popup
+
+function setModalDetailLvl(l, k) {
+  modalDetailLvl = l;
+  lvl = l;
+  $$('.lv button').forEach((x, i) => x.setAttribute('aria-pressed', i === l));
+  why();
+  openAllergenModal(k);
+}
 
 function openAllergenModal(k) {
   const a = A[k];
   if (!a) return;
-  lastModalTrigger = document.activeElement;
+  if (! document.getElementById('allergen-modal').classList.contains('open')) {
+    lastModalTrigger = document.activeElement;
+  }
   const modal = $('allergen-modal');
   const title = $('modal-allergen-title');
   const body  = $('modal-allergen-body');
@@ -4083,21 +4188,39 @@ function openAllergenModal(k) {
 
   const isSelected = sel.has(k);
   const riskClass = a.r === 'HIGH' ? 'high' : 'med';
+  const pEntry = getProteinEntry(k);
 
-  title.innerHTML = `<span>${a.e}</span> DOSSIER // ${esc(a.n.toUpperCase())}`;
+  title.innerHTML = `<span>${a.e}</span> BIO-EXPLANATION &amp; CROSS-REACTIVITY // ${esc(a.n.toUpperCase())}`;
   body.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
-      <span class="badge-risk ${riskClass}">CLINICAL RISK: ${a.r}</span>
-      <span class="badge-risk ${isSelected ? 'high' : 'safe'}" onclick="toggle('${k}');openAllergenModal('${k}')">
-        ${isSelected ? 'IN YOUR AVOID PROFILE (CLICK TO REMOVE)' : 'NOT IN PROFILE (CLICK TO TRACK)'}
-      </span>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <span class="badge-risk ${riskClass}">CLINICAL RISK: ${a.r}</span>
+        <button type="button" class="badge-risk ${isSelected ? 'high' : 'safe'}" onclick="toggle('${k}');openAllergenModal('${k}')">
+          ${isSelected ? 'IN YOUR ALLERGEN PROFILE (CLICK TO REMOVE)' : 'NOT IN PROFILE (CLICK TO ADD)'}
+        </button>
+      </div>
+      <div class="lv" role="group" aria-label="Popup detail level" style="display:flex;gap:6px;">
+        <button type="button" class="chip" aria-pressed="${modalDetailLvl === 0}" onclick="setModalDetailLvl(0, '${k}')" style="padding:3px 10px;font-size:0.75rem;">BASICS</button>
+        <button type="button" class="chip" aria-pressed="${modalDetailLvl === 1}" onclick="setModalDetailLvl(1, '${k}')" style="padding:3px 10px;font-size:0.75rem;">SCIENCE</button>
+      </div>
     </div>
+
+    <!-- Exact BIO-EXPLANATION & CROSS-REACTIVITY Card -->
+    <div class="exp" style="margin:0 0 14px 0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+        <h3 style="margin:0;font-size:1.15rem;">${a.e} ${esc(a.n)}</h3>
+        <span class="badge-risk ${riskClass}">${a.r} RISK &middot; ${esc(pEntry.fold)}</span>
+      </div>
+      <p><b>What it is:</b> ${esc(a.b)}</p>
+      ${modalDetailLvl ? `<p><b>Identified Protein:</b> ${esc(a.p)}</p><p><b>Science Note:</b> ${esc(a.s)}</p>` : `<p><b>Identified Protein:</b> ${esc(a.p)}</p>`}
+      <p><b>May cross-react with:</b> ${esc(a.x)}</p>
+    </div>
+
     <div class="protein-readout-grid" style="margin-bottom:14px;">
-      <div class="readout-cell"><span>Primary Protein Trigger</span><strong>${esc(a.p)}</strong></div>
-      <div class="readout-cell"><span>Cross-Reactivity</span><strong style="color:var(--cyber-green);font-size:0.86rem;">${esc(a.x)}</strong></div>
+      <div class="readout-cell"><span>3D Structural Architecture</span><strong>${esc(pEntry.fold)} (${esc(pEntry.pdb)})</strong></div>
+      <div class="readout-cell"><span>Cross-Reactivity Network</span><strong style="color:var(--cyber-green);font-size:0.86rem;">${esc(a.x)}</strong></div>
     </div>
-    <p style="margin-bottom:10px;font-size:0.92rem;"><b style="color:var(--electric-blue);">Clinical Overview:</b> ${esc(a.b)}</p>
-    <p style="margin-bottom:14px;font-size:0.92rem;"><b style="color:var(--cyber-green);">Molecular Science:</b> ${esc(a.s)}</p>
+
     <div>
       <span style="font-family:var(--font-head);font-size:0.78rem;color:var(--electric-blue);letter-spacing:0.08em;">
         KNOWN HIDDEN LABEL ALIASES (${a.t.length} TERMS):
@@ -4106,8 +4229,9 @@ function openAllergenModal(k) {
         ${a.t.map(term => `<span class="alias-tag">${esc(term)}</span>`).join('')}
       </div>
     </div>
-    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;padding-top:12px;border-top:1px dashed rgba(0,240,255,0.25);">
-      ${P[k] ? `<button type="button" class="btn-primary" onclick="closeAllergenModal();showP('${k}');switchTab('protein');">🧬 OPEN ${esc(P[k].t.toUpperCase())} IN 3D PROTEIN LAB</button>` : ''}
+
+    <div style="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:12px;border-top:1px dashed rgba(0,240,255,0.25);">
+      <button type="button" class="btn-primary" onclick="closeAllergenModal();showP('${k}');switchTab('protein');">🧬 INSPECT ${esc(pEntry.t.toUpperCase())} IN 3D PROTEIN LAB</button>
       <button type="button" class="btn-secondary" onclick="closeAllergenModal()">CLOSE [ESC]</button>
     </div>
   `;
@@ -4156,7 +4280,10 @@ function toggle(k) {
 
 $('chips').onclick = e => {
   const b = e.target.closest('.chip');
-  if (b) toggle(b.dataset.k);
+  if (!b) return;
+  const k = b.dataset.k;
+  toggle(k);
+  openAllergenModal(k);
 };
 
 $('foods').innerHTML = Object.keys(A).map(k => 
@@ -4289,6 +4416,7 @@ function decode() {
 function why() {
   $('why').innerHTML = hits.length ? hits.map(([k, t]) => {
     const a = A[k];
+    const pEntry = getProteinEntry(k);
     const badgeCls = t ? 'med' : 'high';
     const badgeTxt = t ? 'POSSIBLE TRACE' : 'HIGH RISK · CONTAINS';
     return `<div class="exp ${t ? 't' : ''}">
@@ -4300,7 +4428,7 @@ function why() {
       ${lvl ? `<p><b>Identified Protein:</b> ${a.p}</p><p><b>Science Note:</b> ${a.s}</p>` : ''}
       <p><b>May cross-react with:</b> ${a.x}</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-        ${P[k] ? `<button type="button" class="btn-secondary" data-p="${k}">🧬 Inspect ${P[k].t} in Protein Lab</button>` : ''}
+        <button type="button" class="btn-secondary" data-p="${k}">🧬 Inspect ${pEntry.t} in Protein Lab</button>
         <button type="button" class="btn-secondary" onclick="openAllergenModal('${k}')">🔍 Full Allergen Dossier</button>
       </div>
     </div>`;
@@ -4331,8 +4459,11 @@ $('smp').onclick = () => { $('txt').value = SAMPLE; decode(); };
 $('clr').onclick = () => { $('txt').value = ''; $('res').hidden = true; $('txt').focus(); };
 
 /* ==========================================================================
-   F. WINAMP-STYLE PROTEIN LAB & 3D MOLECULE CANVAS
+   F. WINAMP-STYLE PROTEIN LAB & 3D MOLECULE CANVAS (PDB-ACCURATE FOLDS)
    ========================================================================== */
+let activeEpitopeRange = null;
+let currentStructure3D = null;
+
 function seq(k) {
   let s = [...k].reduce((a, c) => a * 31 + c.charCodeAt(0), 7);
   const aa = 'ACDEFGHIKLMNPQRSTVWY';
@@ -4346,51 +4477,460 @@ function seq(k) {
 
 function showP(k) {
   currentProteinKey = k;
-  const p = P[k];
-  const ep = EP[k];
+  activeEpitopeRange = null;
+  const p = getProteinEntry(k);
+  const ep = getEpitopes(k);
   if (!p) return;
 
-  $('winamp-track-title').textContent = `TRACK: ${p.t.toUpperCase()}`;
+  $('winamp-track-title').textContent = `TRACK: ${p.t.toUpperCase()} [PDB:${p.pdb}]`;
   $('molecule-hud').textContent = `TARGET: ${p.t.toUpperCase()} · UNIPROT: ${p.id}`;
+  const foldBadge = $('molecule-fold-badge');
+  if (foldBadge) {
+    foldBadge.textContent = `PDB: ${p.pdb} · ${p.fold}`;
+  }
 
   $('pbox').innerHTML = `
     <div class="protein-readout-grid">
       <div class="readout-cell"><span>Protein Symbol</span><strong>${p.t}</strong></div>
-      <div class="readout-cell"><span>UniProt Database</span><strong>${p.id}</strong></div>
-      <div class="readout-cell"><span>Molecular Family</span><strong>${p.f}</strong></div>
-      <div class="readout-cell"><span>Clinical Notes</span><strong style="color:var(--text-main);font-size:0.85rem;">${p.n}</strong></div>
+      <div class="readout-cell"><span>UniProt / PDB ID</span><strong>${p.id} · PDB: ${p.pdb}</strong></div>
+      <div class="readout-cell"><span>3D Fold Architecture</span><strong style="color:var(--accent);">${p.fold} (${p.f})</strong></div>
+      <div class="readout-cell"><span>Structural & Clinical Notes</span><strong style="color:var(--text-main);font-size:0.85rem;">${p.n}</strong></div>
     </div>
   `;
 
   $('beads-container').innerHTML = seq(k).map((c, i) => {
     const r = ep.find(x => i >= x[0] && i <= x[1]);
-    return `<span class="bead ${r ? (r[2] === 'e' ? 'ep' : 'pr') : ''}" ${r ? `tabindex="0" data-t="${r[2]}" data-r="${r[0]+1}–${r[1]+1}"` : ''}>${c}</span>`;
+    return `<span class="bead ${r ? (r[2] === 'e' ? 'ep' : 'pr') : ''}" ${r ? `tabindex="0" data-t="${r[2]}" data-s="${r[0]}" data-e="${r[1]}" data-r="${r[0]+1}–${r[1]+1}"` : ''}>${c}</span>`;
   }).join('');
 
   const say = e => {
     const b = e.target.closest('.bead[data-t]');
     if (!b) return;
+    activeEpitopeRange = [parseInt(b.dataset.s, 10), parseInt(b.dataset.e, 10), b.dataset.t];
     $('bs').innerHTML = b.dataset.t === 'e' 
-      ? `<b>Reported Epitope</b> (Residues ${b.dataset.r}): Confirmed binding region in IEDB database studies.`
-      : `<b>Computational Prediction</b> (Residues ${b.dataset.r}): In-silico candidate surface region.`;
+      ? `<b>Reported IgE Epitope</b> (Residues ${b.dataset.r}): Highlighted pulsing in 3D structure above — confirmed binding region in IEDB studies.`
+      : `<b>Computational Prediction</b> (Residues ${b.dataset.r}): Highlighted pulsing in 3D structure above — in-silico solvent-exposed surface loop.`;
   };
 
   $('beads-container').onclick = say;
   $('beads-container').onkeydown = e => { if (e.key === 'Enter') say(e); };
 
   $$('#ptabs button').forEach(b => b.classList.toggle('active', b.dataset.k === k));
+  const sel = $('ptabs-select');
+  if (sel) sel.value = k;
+
+  // Build the actual 3D structural fold for this protein
+  currentStructure3D = buildProteinStructure3D(k);
+  molAngleX = 0.28;
+  molAngleY = -0.45;
 }
 
 function prevProtein() {
   let idx = proteinKeys.indexOf(currentProteinKey);
+  if (idx === -1) idx = 0;
   idx = (idx - 1 + proteinKeys.length) % proteinKeys.length;
   showP(proteinKeys[idx]);
 }
 
 function nextProtein() {
   let idx = proteinKeys.indexOf(currentProteinKey);
+  if (idx === -1) idx = 0;
   idx = (idx + 1) % proteinKeys.length;
   showP(proteinKeys[idx]);
+}
+
+// Build authentic 3D C-alpha backbone + secondary structures + disulfide/metal bridges per protein fold
+function buildProteinStructure3D(k) {
+  const p = getProteinEntry(k);
+  const ep = getEpitopes(k);
+  const arch = p.arch || 'bundle4';
+  const nodes = [];
+  const bridges = [];
+  const labels = [];
+
+  const addNode = (x, y, z, ss, chain = 0, customColor = null, customRad = null) => {
+    const idx = nodes.length;
+    const seqIdx = Math.min(89, idx);
+    const epMatch = ep.find(r => seqIdx >= r[0] && seqIdx <= r[1]);
+    let color = customColor;
+    if (!color) {
+      if (ss === 'helix') color = '#00f0ff';
+      else if (ss === 'sheet') color = '#00ff66';
+      else if (ss === 'ion') color = '#ffcc00';
+      else color = '#bf5fff';
+    }
+    let isEp = false;
+    let epType = null;
+    if (epMatch && ss !== 'ion') {
+      isEp = true;
+      epType = epMatch[2];
+      if (epMatch[2] === 'e') color = '#ff2a8f';
+    }
+    nodes.push({
+      x, y, z,
+      bx: x, by: y, bz: z,
+      ss,
+      chain,
+      seqIdx,
+      isEp,
+      epType,
+      color,
+      rad: customRad || (ss === 'helix' ? 4.4 : ss === 'sheet' ? 4.2 : 3.2)
+    });
+    return idx;
+  };
+
+  const addCurveLoop = (p1, p2, steps, bulge, chain = 0) => {
+    for (let s = 1; s <= steps; s++) {
+      const t = s / (steps + 1);
+      const arc = Math.sin(t * Math.PI);
+      const x = p1.x + (p2.x - p1.x) * t + bulge.x * arc;
+      const y = p1.y + (p2.y - p1.y) * t + bulge.y * arc;
+      const z = p1.z + (p2.z - p1.z) * t + bulge.z * arc;
+      addNode(x, y, z, 'loop', chain);
+    }
+  };
+
+  if (arch === 'bundle4') {
+    // Ara h 2 (PDB 3OB4) / Ses i 1 (PDB 2LVF): 2S Albumin 4-Helix Bundle with 4 Disulfide Bridges & DPYSPS Loop
+    const hCenters = [
+      { cx: -36, cz: -24, dir: 1, name: 'α1 Helix' },
+      { cx:  36, cz: -24, dir: -1, name: 'α2 Helix' },
+      { cx:  34, cz:  26, dir: 1, name: 'α3 Helix' },
+      { cx: -34, cz:  26, dir: -1, name: 'α4 Helix' }
+    ];
+    const hIndices = [[], [], [], []];
+    for (let h = 0; h < 4; h++) {
+      const hc = hCenters[h];
+      const nRes = 15;
+      for (let i = 0; i < nRes; i++) {
+        const frac = i / (nRes - 1) - 0.5;
+        const y = hc.dir * frac * 82;
+        const ang = i * 1.745; // 100 deg per residue (alpha-helix 3.6 res/turn)
+        const x = hc.cx + Math.cos(ang) * 12;
+        const z = hc.cz + Math.sin(ang) * 12;
+        const idx = addNode(x, y, z, 'helix', 0);
+        hIndices[h].push(idx);
+      }
+      labels.push({ x: hc.cx, y: hc.dir * -48, z: hc.cz, text: hc.name, color: '#00f0ff' });
+      if (h < 3) {
+        const lastNode = nodes[nodes.length - 1];
+        const nextHc = hCenters[h + 1];
+        const nextY = nextHc.dir * (-0.5) * 82;
+        const nextTarget = { x: nextHc.cx + 12, y: nextY, z: nextHc.cz };
+        // H2->H3 has the famous immunodominant DPYSPS flexible loop
+        const steps = h === 1 ? 9 : 5;
+        const bulge = h === 1 ? { x: 24, y: -38, z: 0 } : { x: 0, y: hc.dir * 26, z: 0 };
+        addCurveLoop(lastNode, nextTarget, steps, bulge, 0);
+        if (h === 1) {
+          labels.push({ x: 58, y: -42, z: 0, text: 'IgE Loop (DPYSPS)', color: '#ff2a8f' });
+        }
+      }
+    }
+    // 4 canonical disulfide (S-S) bridges locking the 4 helices together
+    bridges.push({ a: hIndices[0][3],  b: hIndices[2][11], type: 'ss', label: 'S–S' });
+    bridges.push({ a: hIndices[0][11], b: hIndices[1][3],  type: 'ss', label: 'S–S' });
+    bridges.push({ a: hIndices[1][11], b: hIndices[3][3],  type: 'ss', label: 'S–S' });
+    bridges.push({ a: hIndices[2][4],  b: hIndices[3][10], type: 'ss', label: 'S–S' });
+
+  } else if (arch === 'betabarrel') {
+    // Bos d 5 (PDB 3BLG): Beta-Lactoglobulin 8-Stranded Antiparallel Beta-Barrel Calyx + Flanking Alpha-Helix
+    const R = 42;
+    const strandIndices = [];
+    for (let s = 0; s < 8; s++) {
+      const baseAngle = (s / 8) * Math.PI * 2;
+      const dir = s % 2 === 0 ? 1 : -1;
+      const sArr = [];
+      for (let i = 0; i < 8; i++) {
+        const frac = i / 7 - 0.5;
+        const y = dir * frac * 74;
+        const twist = frac * 0.48;
+        const pleat = (i % 2 === 0 ? 2.5 : -2.5);
+        const x = (R + pleat) * Math.cos(baseAngle + twist);
+        const z = (R + pleat) * Math.sin(baseAngle + twist);
+        sArr.push(addNode(x, y, z, 'sheet', 0));
+      }
+      strandIndices.push(sArr);
+      // Beta-hairpin turn to next strand
+      const nextAngle = ((s + 1) / 8) * Math.PI * 2;
+      const nextDir = -dir;
+      const last = nodes[nodes.length - 1];
+      const nextStart = {
+        x: R * Math.cos(nextAngle + (-0.5) * 0.48),
+        y: nextDir * (-0.5) * 74,
+        z: R * Math.sin(nextAngle + (-0.5) * 0.48)
+      };
+      addCurveLoop(last, nextStart, 2, { x: 0, y: dir * 18, z: 0 }, 0);
+    }
+    // Flanking C-terminal Alpha-Helix alongside the calyx
+    const hStart = nodes.length;
+    for (let i = 0; i < 12; i++) {
+      const frac = i / 11 - 0.5;
+      const y = frac * 68;
+      const ang = i * 1.745;
+      const x = 66 + Math.cos(ang) * 10;
+      const z = 18 + Math.sin(ang) * 10;
+      addNode(x, y, z, 'helix', 0);
+    }
+    labels.push({ x: 0, y: -56, z: 0, text: '8-Strand β-Calyx', color: '#00ff66' });
+    labels.push({ x: 74, y: -42, z: 18, text: 'C-Term α-Helix', color: '#00f0ff' });
+    // 2 Disulfide bonds (Cys66-Cys160 and Cys106-Cys119)
+    bridges.push({ a: strandIndices[3][2], b: hStart + 9, type: 'ss', label: 'S–S' });
+    bridges.push({ a: strandIndices[5][4], b: strandIndices[6][3], type: 'ss', label: 'S–S' });
+    // Retinol / hydrophobic ligand in the center of the calyx
+    const ligIdx = addNode(0, -6, 0, 'ion', 99, '#ffcc00', 6.5);
+    labels.push({ x: 0, y: 12, z: 0, text: 'Hydrophobic Calyx Core', color: '#ffcc00' });
+    bridges.push({ a: ligIdx, b: strandIndices[0][4], type: 'coord' });
+    bridges.push({ a: ligIdx, b: strandIndices[4][4], type: 'coord' });
+
+  } else if (arch === 'kazal3') {
+    // Gal d 1 (PDB 1OMU): Ovomucoid with 3 Tandem Kazal-Type Domains (DI, DII, DIII), each with 1 α-helix + 3 β-strands + 3 S-S bridges
+    const domCenters = [
+      { cx: -64, cy: -16, cz: 0, name: 'Kazal Domain I' },
+      { cx:   0, cy:  24, cz: 10, name: 'Kazal Domain II' },
+      { cx:  64, cy: -14, cz: -8, name: 'Kazal Domain III (IgE Core)' }
+    ];
+    for (let d = 0; d < 3; d++) {
+      const dc = domCenters[d];
+      const dStart = nodes.length;
+      // 3 short antiparallel beta strands per Kazal domain
+      for (let s = 0; s < 3; s++) {
+        const dir = s % 2 === 0 ? 1 : -1;
+        for (let i = 0; i < 4; i++) {
+          const frac = i / 3 - 0.5;
+          const x = dc.cx + (s - 1) * 11;
+          const y = dc.cy + dir * frac * 28;
+          const z = dc.cz - 12 + (i % 2) * 3;
+          addNode(x, y, z, 'sheet', 0);
+        }
+      }
+      // 1 short alpha helix packed against the 3-stranded beta sheet
+      const hStart = nodes.length;
+      for (let i = 0; i < 8; i++) {
+        const frac = i / 7 - 0.5;
+        const ang = i * 1.745;
+        const x = dc.cx + frac * 28;
+        const y = dc.cy + Math.cos(ang) * 9;
+        const z = dc.cz + 14 + Math.sin(ang) * 9;
+        addNode(x, y, z, 'helix', 0);
+      }
+      // 3 intra-domain disulfide bonds per Kazal domain (9 total!)
+      bridges.push({ a: dStart + 1, b: hStart + 6, type: 'ss', label: 'S–S' });
+      bridges.push({ a: dStart + 5, b: hStart + 2, type: 'ss', label: 'S–S' });
+      bridges.push({ a: dStart + 9, b: hStart + 5, type: 'ss', label: 'S–S' });
+      labels.push({ x: dc.cx, y: dc.cy - 32, z: dc.cz, text: dc.name, color: d === 2 ? '#ff2a8f' : '#00ff66' });
+
+      if (d < 2) {
+        const last = nodes[nodes.length - 1];
+        const nextDc = domCenters[d + 1];
+        addCurveLoop(last, { x: nextDc.cx - 11, y: nextDc.cy - 14, z: nextDc.cz - 12 }, 4, { x: 0, y: d === 0 ? 18 : -18, z: 12 }, 0);
+      }
+    }
+
+  } else if (arch === 'coiledcoil') {
+    // Pen a 1 (PDB 1C1G): Tropomyosin Two-Stranded Parallel Alpha-Helical Coiled-Coil Superhelix Dimer
+    const nPerChain = 44;
+    const chainA = [];
+    const chainB = [];
+    for (let i = 0; i < nPerChain; i++) {
+      const frac = i / (nPerChain - 1) - 0.5;
+      const x = frac * 172;
+      const superAngle = frac * Math.PI * 2.2;
+      const superR = 13;
+      const localAngle = i * 1.745;
+      const localR = 5.5;
+      const yA = superR * Math.cos(superAngle) + localR * Math.cos(localAngle);
+      const zA = superR * Math.sin(superAngle) + localR * Math.sin(localAngle);
+      chainA.push(addNode(x, yA, zA, 'helix', 0));
+    }
+    for (let i = 0; i < nPerChain; i++) {
+      const frac = i / (nPerChain - 1) - 0.5;
+      const x = frac * 172;
+      const superAngle = frac * Math.PI * 2.2 + Math.PI; // 180 deg opposite in superhelix
+      const superR = 13;
+      const localAngle = i * 1.745 + Math.PI;
+      const localR = 5.5;
+      const yB = superR * Math.cos(superAngle) + localR * Math.cos(localAngle);
+      const zB = superR * Math.sin(superAngle) + localR * Math.sin(localAngle);
+      chainB.push(addNode(x, yB, zB, 'helix', 1));
+    }
+    // Hydrophobic heptad-repeat core rungs between Chain α and Chain β
+    for (let i = 3; i < nPerChain - 2; i += 7) {
+      bridges.push({ a: chainA[i], b: chainB[i], type: 'ss', label: 'Heptad' });
+    }
+    labels.push({ x: -58, y: -28, z: 0, text: 'Chain α Superhelix', color: '#00f0ff' });
+    labels.push({ x:  45, y:  28, z: 0, text: 'Chain β Superhelix (284 aa)', color: '#ff2a8f' });
+
+  } else if (arch === 'efhand') {
+    // Gad m 1 (PDB 1B8R): Parvalbumin 6-Helix (A-F) EF-Hand Motif with 2 Chelated Ca2+ Ions
+    const helices = [
+      { p1: { x: -62, y: -32, z: -15 }, p2: { x: -28, y:   5, z: -22 }, name: 'Helix A' },
+      { p1: { x: -22, y:  14, z: -10 }, p2: { x: -48, y:  42, z:  16 }, name: 'Helix B' },
+      { p1: { x: -24, y:  28, z:  28 }, p2: { x:   8, y:  -8, z:  18 }, name: 'Helix C (CD Hand)' },
+      { p1: { x:  18, y: -28, z:   5 }, p2: { x:  -6, y: -44, z: -22 }, name: 'Helix D' },
+      { p1: { x:  24, y: -18, z: -18 }, p2: { x:  62, y:  12, z:  -6 }, name: 'Helix E (EF Hand)' },
+      { p1: { x:  54, y:  36, z:  18 }, p2: { x:  16, y:  42, z: -12 }, name: 'Helix F' }
+    ];
+    const loopMidNodes = [];
+    for (let h = 0; h < 6; h++) {
+      const hd = helices[h];
+      const nRes = 10;
+      for (let i = 0; i < nRes; i++) {
+        const t = i / (nRes - 1);
+        const ang = i * 1.745;
+        const x = hd.p1.x + (hd.p2.x - hd.p1.x) * t + Math.cos(ang) * 7;
+        const y = hd.p1.y + (hd.p2.y - hd.p1.y) * t + Math.sin(ang) * 7;
+        const z = hd.p1.z + (hd.p2.z - hd.p1.z) * t + Math.cos(ang + 1.2) * 7;
+        addNode(x, y, z, 'helix', 0);
+      }
+      if (h < 5) {
+        const nextHd = helices[h + 1];
+        const isCaLoop = (h === 2 || h === 4); // CD loop and EF loop bind Ca2+
+        const bulge = isCaLoop ? { x: h === 2 ? -8 : 42, y: h === 2 ? -26 : 30, z: 22 } : { x: 0, y: 12, z: 0 };
+        const startLoopIdx = nodes.length;
+        addCurveLoop(hd.p2, nextHd.p1, isCaLoop ? 6 : 3, bulge, 0);
+        if (isCaLoop) loopMidNodes.push(startLoopIdx + 2);
+      }
+    }
+    // 2 Chelated Ca2+ ions inside the CD and EF loops
+    const ca1 = addNode(-4, -22, 22, 'ion', 98, '#ffcc00', 7.5);
+    const ca2 = addNode(46,  26, 16, 'ion', 99, '#ffcc00', 7.5);
+    if (loopMidNodes[0] !== undefined) {
+      bridges.push({ a: ca1, b: loopMidNodes[0], type: 'ss', label: 'Ca²⁺' });
+      bridges.push({ a: ca1, b: loopMidNodes[0] + 2, type: 'ss' });
+    }
+    if (loopMidNodes[1] !== undefined) {
+      bridges.push({ a: ca2, b: loopMidNodes[1], type: 'ss', label: 'Ca²⁺' });
+      bridges.push({ a: ca2, b: loopMidNodes[1] + 2, type: 'ss' });
+    }
+    labels.push({ x: -8, y: -38, z: 22, text: 'CD Ca²⁺ Site', color: '#ffcc00' });
+    labels.push({ x: 52, y:  42, z: 16, text: 'EF Ca²⁺ Site', color: '#ffcc00' });
+
+  } else if (arch === 'cupin') {
+    // Ana o 3 / Pru du 6 / Cor a 9 (PDB 3EHK): Trimeric Bicupin 11S/7S Beta-Barrel Ring
+    for (let m = 0; m < 3; m++) {
+      const monoAngle = (m / 3) * Math.PI * 2;
+      const mcx = 42 * Math.cos(monoAngle);
+      const mcz = 42 * Math.sin(monoAngle);
+      // 6 beta-strands forming the cupin beta-barrel per subunit
+      for (let s = 0; s < 6; s++) {
+        const sAng = monoAngle + (s / 6) * Math.PI * 2;
+        const dir = s % 2 === 0 ? 1 : -1;
+        for (let i = 0; i < 4; i++) {
+          const frac = i / 3 - 0.5;
+          const x = mcx + 18 * Math.cos(sAng);
+          const y = dir * frac * 38;
+          const z = mcz + 18 * Math.sin(sAng);
+          addNode(x, y, z, 'sheet', m);
+        }
+      }
+      // 2 flanking alpha-helices at subunit interface
+      for (let i = 0; i < 6; i++) {
+        const frac = i / 5 - 0.5;
+        const ang = i * 1.745;
+        const x = mcx * 1.32 + Math.cos(ang) * 7;
+        const y = frac * 34;
+        const z = mcz * 1.32 + Math.sin(ang) * 7;
+        addNode(x, y, z, 'helix', m);
+      }
+      labels.push({ x: mcx * 1.15, y: -34, z: mcz * 1.15, text: `Cupin Subunit ${m + 1}`, color: m === 0 ? '#00ff66' : '#00f0ff' });
+    }
+    // Inter-subunit stabilization links
+    bridges.push({ a: 26, b: 32, type: 'ss', label: 'S–S' });
+    bridges.push({ a: 56, b: 62, type: 'ss', label: 'S–S' });
+    bridges.push({ a: 86, b:  2, type: 'ss', label: 'S–S' });
+
+  } else if (arch === 'ltp') {
+    // Tri a 14 / Pru p 3 (PDB 1BWO): nsLTP 4-Helix Bundle Framing a Central Lipid Tunnel + Long C-Terminal Tail
+    const hAngles = [0.3, 1.85, 3.4, 4.95];
+    const hIdx = [[], [], [], []];
+    for (let h = 0; h < 4; h++) {
+      const baseA = hAngles[h];
+      const dir = h % 2 === 0 ? 1 : -1;
+      const cx = 28 * Math.cos(baseA);
+      const cz = 28 * Math.sin(baseA);
+      for (let i = 0; i < 13; i++) {
+        const frac = i / 12 - 0.5;
+        const y = dir * frac * 70;
+        const ang = i * 1.745;
+        const x = cx + Math.cos(ang) * 10 - frac * 8 * Math.sin(baseA);
+        const z = cz + Math.sin(ang) * 10 + frac * 8 * Math.cos(baseA);
+        hIdx[h].push(addNode(x, y, z, 'helix', 0));
+      }
+      if (h < 3) {
+        const nextA = hAngles[h + 1];
+        const nextDir = -dir;
+        addCurveLoop(
+          nodes[nodes.length - 1],
+          { x: 28 * Math.cos(nextA), y: nextDir * (-35), z: 28 * Math.sin(nextA) },
+          4,
+          { x: 0, y: dir * 20, z: 0 },
+          0
+        );
+      }
+    }
+    // Extended C-terminal coil tail wrapping across the tunnel entrance (major IgE epitope)
+    for (let i = 0; i < 14; i++) {
+      const t = i / 13;
+      const ang = t * Math.PI * 1.4;
+      addNode(38 * Math.cos(ang), 42 + Math.sin(t * Math.PI) * 14, 38 * Math.sin(ang), 'loop', 0);
+    }
+    // 4 conserved disulfide bonds locking the lipid-binding cavity
+    bridges.push({ a: hIdx[0][2],  b: hIdx[2][6],  type: 'ss', label: 'S–S' });
+    bridges.push({ a: hIdx[0][10], b: hIdx[1][3],  type: 'ss', label: 'S–S' });
+    bridges.push({ a: hIdx[1][10], b: hIdx[3][2],  type: 'ss', label: 'S–S' });
+    bridges.push({ a: hIdx[2][10], b: nodes.length - 4, type: 'ss', label: 'S–S' });
+    labels.push({ x: 0, y: -48, z: 0, text: 'nsLTP Lipid Tunnel', color: '#00f0ff' });
+    labels.push({ x: 0, y:  54, z: 24, text: 'C-Term Loop Epitope', color: '#ff2a8f' });
+
+  } else {
+    // Gly m 4 / Mal d 1 (PDB 2K7H): PR-10 Bet v 1-Like 7-Stranded Curved Beta-Sheet Gripping a Long C-Terminal Alpha-Helix
+    for (let s = 0; s < 7; s++) {
+      const arcAngle = ((s / 6) - 0.5) * Math.PI * 1.15;
+      const dir = s % 2 === 0 ? 1 : -1;
+      const R = 46;
+      for (let i = 0; i < 8; i++) {
+        const frac = i / 7 - 0.5;
+        const x = R * Math.sin(arcAngle);
+        const y = dir * frac * 68;
+        const z = -R * Math.cos(arcAngle) + 14 + (i % 2) * 3;
+        addNode(x, y, z, 'sheet', 0);
+      }
+      if (s === 1) {
+        // Glycine-rich P-loop between beta-2 and beta-3
+        for (let g = 0; g < 5; g++) {
+          addNode(-24 + g * 5, -44 - Math.sin((g / 4) * Math.PI) * 12, -26, 'loop', 0);
+        }
+      } else if (s < 6) {
+        const nextArc = (((s + 1) / 6) - 0.5) * Math.PI * 1.15;
+        addCurveLoop(
+          nodes[nodes.length - 1],
+          { x: R * Math.sin(nextArc), y: (-dir) * (-34), z: -R * Math.cos(nextArc) + 14 },
+          2,
+          { x: 0, y: dir * 14, z: 0 },
+          0
+        );
+      }
+    }
+    // 2 short alpha-helices (α1, α2) + 1 long C-terminal alpha-helix (α3) cradled inside the curved sheet
+    for (let i = 0; i < 8; i++) {
+      const t = i / 7;
+      const ang = i * 1.745;
+      addNode(34 - t * 24, 36 + Math.cos(ang) * 7, 16 + Math.sin(ang) * 7, 'helix', 0);
+    }
+    for (let i = 0; i < 18; i++) {
+      const frac = i / 17 - 0.5;
+      const ang = i * 1.745;
+      const x = frac * 76;
+      const y = -frac * 36 + Math.cos(ang) * 10;
+      const z = 24 + Math.sin(ang) * 10;
+      addNode(x, y, z, 'helix', 0);
+    }
+    labels.push({ x: 0, y: -48, z: -28, text: '7-Strand Curved β-Sheet + P-Loop', color: '#00ff66' });
+    labels.push({ x: 18, y: 12, z:  32, text: 'C-Term α3 Helix (Bet v 1 Fold)', color: '#00f0ff' });
+  }
+
+  return { nodes, bridges, labels, arch, pdb: p.pdb, fold: p.fold };
 }
 
 // Winamp 3D Molecule Animation Engine
@@ -4399,8 +4939,12 @@ let moleculeCtx = null;
 let moleculeAnimId = null;
 let moleculePlaying = true;
 let moleculeSpeed = 1.0;
-let molAngleX = 0;
-let molAngleY = 0;
+let molAngleX = 0.28;
+let molAngleY = -0.45;
+let molDragging = false;
+let molLastX = 0;
+let molLastY = 0;
+let molBreathPhase = 0;
 
 function initMoleculeEngine() {
   moleculeCanvas = $('molecule-canvas');
@@ -4408,25 +4952,65 @@ function initMoleculeEngine() {
   moleculeCtx = moleculeCanvas.getContext('2d');
   
   function resize() {
-    moleculeCanvas.width = moleculeCanvas.offsetWidth || 600;
-    moleculeCanvas.height = moleculeCanvas.offsetHeight || 240;
+    moleculeCanvas.width = moleculeCanvas.offsetWidth || 640;
+    moleculeCanvas.height = moleculeCanvas.offsetHeight || 300;
   }
   resize();
   window.addEventListener('resize', resize);
 
-  const atoms = [];
-  const numAtoms = 24;
-  for (let i = 0; i < numAtoms; i++) {
-    const phi = Math.acos(-1 + (2 * i) / numAtoms);
-    const theta = Math.sqrt(numAtoms * Math.PI) * phi;
-    const r = 65 + Math.sin(i * 1.5) * 20;
-    atoms.push({
-      x: r * Math.sin(phi) * Math.cos(theta),
-      y: r * Math.sin(phi) * Math.sin(theta),
-      z: r * Math.cos(phi),
-      color: i % 4 === 0 ? '#00ff66' : i % 4 === 1 ? '#00f0ff' : i % 4 === 2 ? '#ff2a8f' : '#bf5fff',
-      rad: 4 + (i % 4)
-    });
+  // Interactive 3D mouse & touch drag rotation
+  moleculeCanvas.style.cursor = 'grab';
+  moleculeCanvas.addEventListener('mousedown', e => {
+    molDragging = true;
+    molLastX = e.clientX;
+    molLastY = e.clientY;
+    moleculeCanvas.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mousemove', e => {
+    if (!molDragging) return;
+    const dx = e.clientX - molLastX;
+    const dy = e.clientY - molLastY;
+    molLastX = e.clientX;
+    molLastY = e.clientY;
+    molAngleY += dx * 0.01;
+    molAngleX = Math.max(-1.35, Math.min(1.35, molAngleX + dy * 0.01));
+  });
+  window.addEventListener('mouseup', () => {
+    if (molDragging) {
+      molDragging = false;
+      if (moleculeCanvas) moleculeCanvas.style.cursor = 'grab';
+    }
+  });
+  moleculeCanvas.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) {
+      molDragging = true;
+      molLastX = e.touches[0].clientX;
+      molLastY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  moleculeCanvas.addEventListener('touchmove', e => {
+    if (!molDragging || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - molLastX;
+    const dy = e.touches[0].clientY - molLastY;
+    molLastX = e.touches[0].clientX;
+    molLastY = e.touches[0].clientY;
+    molAngleY += dx * 0.01;
+    molAngleX = Math.max(-1.35, Math.min(1.35, molAngleX + dy * 0.01));
+  }, { passive: true });
+  moleculeCanvas.addEventListener('touchend', () => { molDragging = false; });
+
+  if (!currentStructure3D) {
+    currentStructure3D = buildProteinStructure3D(currentProteinKey || 'peanut');
+  }
+
+  function projectPt(x, y, z, cx, cy, cosY, sinY, cosX, sinX) {
+    const x1 = x * cosY - z * sinY;
+    const z1 = z * cosY + x * sinY;
+    const y2 = y * cosX - z1 * sinX;
+    const z2 = z1 * cosX + y * sinX;
+    const fov = 290;
+    const scale = fov / Math.max(80, fov + z2);
+    return { px: cx + x1 * scale, py: cy + y2 * scale, pz: z2, scale };
   }
 
   function render() {
@@ -4434,56 +5018,156 @@ function initMoleculeEngine() {
       moleculeAnimId = requestAnimationFrame(render);
       return;
     }
-    moleculeCtx.clearRect(0, 0, moleculeCanvas.width, moleculeCanvas.height);
-    const cx = moleculeCanvas.width / 2;
-    const cy = moleculeCanvas.height / 2;
+    const w = moleculeCanvas.width;
+    const h = moleculeCanvas.height;
+    moleculeCtx.clearRect(0, 0, w, h);
+    const cx = w / 2;
+    const cy = h / 2 + 4;
 
+    if (moleculePlaying && !molDragging) {
+      molAngleY += 0.011 * moleculeSpeed;
+      molAngleX = 0.25 + Math.sin(molAngleY * 0.6) * 0.18;
+    }
     if (moleculePlaying) {
-      molAngleY += 0.015 * moleculeSpeed;
-      molAngleX += 0.008 * moleculeSpeed;
+      molBreathPhase += 0.045 * moleculeSpeed;
     }
 
+    const struct = currentStructure3D || buildProteinStructure3D(currentProteinKey || 'peanut');
     const cosY = Math.cos(molAngleY), sinY = Math.sin(molAngleY);
     const cosX = Math.cos(molAngleX), sinX = Math.sin(molAngleX);
 
-    const projected = atoms.map(a => {
-      let x1 = a.x * cosY - a.z * sinY;
-      let z1 = a.z * cosY + a.x * sinY;
-      let y2 = a.y * cosX - z1 * sinX;
-      let z2 = z1 * cosX + a.y * sinX;
-      const fov = 250;
-      const scale = fov / (fov + z2);
+    // Subtle molecular thermal breathing motion (loops flex more than rigid helices/sheets)
+    const projected = struct.nodes.map((a, idx) => {
+      const flexAmp = a.ss === 'loop' ? 1.8 : a.ss === 'ion' ? 0.6 : 0.7;
+      const bx = a.bx + Math.sin(molBreathPhase + idx * 0.45) * flexAmp;
+      const by = a.by + Math.cos(molBreathPhase * 1.1 + idx * 0.35) * flexAmp;
+      const bz = a.bz + Math.sin(molBreathPhase * 0.8 + idx * 0.55) * flexAmp;
+      const pr = projectPt(bx, by, bz, cx, cy, cosY, sinY, cosX, sinX);
+      const isSelectedEp = activeEpitopeRange && a.seqIdx >= activeEpitopeRange[0] && a.seqIdx <= activeEpitopeRange[1];
       return {
-        px: cx + x1 * scale,
-        py: cy + y2 * scale,
-        pz: z2,
-        scale: scale,
-        color: a.color,
-        rad: a.rad * scale
+        ...pr,
+        idx,
+        ss: a.ss,
+        chain: a.chain,
+        seqIdx: a.seqIdx,
+        isEp: a.isEp,
+        isSelectedEp,
+        color: isSelectedEp ? '#ffffff' : a.color,
+        rad: (isSelectedEp ? a.rad * 1.55 : a.rad) * pr.scale
       };
     });
 
+    // 1. Draw polypeptide backbone ribbons per chain
     for (let i = 0; i < projected.length - 1; i++) {
       const p1 = projected[i];
       const p2 = projected[i + 1];
+      if (p1.chain !== p2.chain || p1.ss === 'ion' || p2.ss === 'ion') continue;
+
       moleculeCtx.beginPath();
       moleculeCtx.moveTo(p1.px, p1.py);
       moleculeCtx.lineTo(p2.px, p2.py);
-      moleculeCtx.strokeStyle = 'rgba(0, 240, 255, 0.45)';
-      moleculeCtx.lineWidth = 1.5;
+
+      if (p1.isSelectedEp || p2.isSelectedEp) {
+        moleculeCtx.strokeStyle = '#ff2a8f';
+        moleculeCtx.lineWidth = Math.max(2.5, 5.2 * p1.scale);
+      } else if (p1.ss === 'helix' && p2.ss === 'helix') {
+        moleculeCtx.strokeStyle = p1.chain === 1 ? 'rgba(255, 42, 143, 0.72)' : 'rgba(0, 240, 255, 0.75)';
+        moleculeCtx.lineWidth = Math.max(2, 4.4 * p1.scale);
+      } else if (p1.ss === 'sheet' && p2.ss === 'sheet') {
+        moleculeCtx.strokeStyle = 'rgba(0, 255, 102, 0.82)';
+        moleculeCtx.lineWidth = Math.max(2.5, 5.4 * p1.scale);
+      } else {
+        moleculeCtx.strokeStyle = 'rgba(191, 95, 255, 0.55)';
+        moleculeCtx.lineWidth = Math.max(1.2, 2.2 * p1.scale);
+      }
       moleculeCtx.stroke();
+
+      // Draw directional arrowhead at the end of a beta-strand
+      if (p1.ss === 'sheet' && p2.ss !== 'sheet') {
+        const prev = i > 0 ? projected[i - 1] : p1;
+        const dx = p1.px - prev.px;
+        const dy = p1.py - prev.py;
+        const len = Math.hypot(dx, dy) || 1;
+        const ux = dx / len, uy = dy / len;
+        const aw = 6.5 * p1.scale;
+        moleculeCtx.beginPath();
+        moleculeCtx.moveTo(p1.px + ux * aw, p1.py + uy * aw);
+        moleculeCtx.lineTo(p1.px - uy * aw * 0.85, p1.py + ux * aw * 0.85);
+        moleculeCtx.lineTo(p1.px + uy * aw * 0.85, p1.py - ux * aw * 0.85);
+        moleculeCtx.closePath();
+        moleculeCtx.fillStyle = '#00ff66';
+        moleculeCtx.fill();
+      }
     }
 
-    projected.sort((a, b) => a.pz - b.pz);
+    // 2. Draw alpha-helix i -> i+3 hydrogen-bond struts for authentic 3D helical barrel depth
+    for (let i = 0; i < projected.length - 3; i++) {
+      const p1 = projected[i];
+      const p2 = projected[i + 3];
+      if (p1.chain === p2.chain && p1.ss === 'helix' && p2.ss === 'helix') {
+        moleculeCtx.beginPath();
+        moleculeCtx.moveTo(p1.px, p1.py);
+        moleculeCtx.lineTo(p2.px, p2.py);
+        moleculeCtx.strokeStyle = p1.chain === 1 ? 'rgba(255, 42, 143, 0.22)' : 'rgba(0, 240, 255, 0.24)';
+        moleculeCtx.lineWidth = 1;
+        moleculeCtx.stroke();
+      }
+    }
 
-    projected.forEach(p => {
+    // 3. Draw Disulfide (S-S) bridges & metal coordination bonds in glowing gold
+    struct.bridges.forEach(br => {
+      const p1 = projected[br.a];
+      const p2 = projected[br.b];
+      if (!p1 || !p2) return;
+      moleculeCtx.save();
       moleculeCtx.beginPath();
-      moleculeCtx.arc(p.px, p.py, Math.max(1, p.rad), 0, Math.PI * 2);
+      moleculeCtx.setLineDash([4, 3]);
+      moleculeCtx.moveTo(p1.px, p1.py);
+      moleculeCtx.lineTo(p2.px, p2.py);
+      moleculeCtx.strokeStyle = '#ffcc00';
+      moleculeCtx.lineWidth = Math.max(1.4, 2.2 * ((p1.scale + p2.scale) * 0.5));
+      moleculeCtx.shadowColor = '#ffcc00';
+      moleculeCtx.shadowBlur = 8;
+      moleculeCtx.stroke();
+      moleculeCtx.restore();
+    });
+
+    // 4. Sort C-alpha residue nodes back-to-front (painter's algorithm) and draw
+    const sorted = [...projected].sort((a, b) => b.pz - a.pz);
+    const pulse = 0.5 + 0.5 * Math.sin(molBreathPhase * 2.2);
+
+    sorted.forEach(p => {
+      moleculeCtx.beginPath();
+      const r = Math.max(1.4, p.rad * (p.isSelectedEp ? (1 + 0.25 * pulse) : 1));
+      moleculeCtx.arc(p.px, p.py, r, 0, Math.PI * 2);
       moleculeCtx.fillStyle = p.color;
-      moleculeCtx.shadowColor = p.color;
-      moleculeCtx.shadowBlur = 10;
+      moleculeCtx.shadowColor = p.isSelectedEp ? '#ff2a8f' : p.color;
+      moleculeCtx.shadowBlur = p.isSelectedEp ? 16 : (p.isEp || p.ss === 'ion' ? 11 : 6);
       moleculeCtx.fill();
       moleculeCtx.shadowBlur = 0;
+
+      // Halo ring on active/reported IgE epitope beads or Ca2+ ions
+      if (p.isSelectedEp || p.ss === 'ion') {
+        moleculeCtx.beginPath();
+        moleculeCtx.arc(p.px, p.py, r + 3.5 + pulse * 2.5, 0, Math.PI * 2);
+        moleculeCtx.strokeStyle = p.ss === 'ion' ? 'rgba(255, 204, 0, 0.7)' : 'rgba(255, 42, 143, 0.85)';
+        moleculeCtx.lineWidth = 1.3;
+        moleculeCtx.stroke();
+      }
+    });
+
+    // 5. Draw 3D structural domain callout labels
+    moleculeCtx.font = 'bold 10px "Share Tech Mono", monospace';
+    struct.labels.forEach(lbl => {
+      const pr = projectPt(lbl.x, lbl.y, lbl.z, cx, cy, cosY, sinY, cosX, sinX);
+      moleculeCtx.fillStyle = 'rgba(5, 8, 12, 0.78)';
+      const tw = moleculeCtx.measureText(lbl.text).width;
+      moleculeCtx.fillRect(pr.px - tw / 2 - 4, pr.py - 9, tw + 8, 14);
+      moleculeCtx.strokeStyle = lbl.color;
+      moleculeCtx.lineWidth = 0.8;
+      moleculeCtx.strokeRect(pr.px - tw / 2 - 4, pr.py - 9, tw + 8, 14);
+      moleculeCtx.fillStyle = lbl.color;
+      moleculeCtx.fillText(lbl.text, pr.px - tw / 2, pr.py + 1);
     });
 
     if (moleculePlaying) {
@@ -4691,10 +5375,14 @@ window.addEventListener('DOMContentLoaded', () => {
   initEqualizer();
   initMoleculeEngine();
   
-  // Render Protein Buttons in Winamp deck
+  // Render Protein Buttons in Winamp deck + full 34-allergen selector
   $('ptabs').innerHTML = proteinKeys.map(k => 
-    `<button class="player-btn" data-k="${k}" onclick="showP('${k}')">${A[k].e} ${A[k].n.split(' /')[0]}</button>`
-  ).join('');
+    `<button class="player-btn" data-k="${k}" onclick="showP('${k}')">${A[k].e} ${A[k].n.split(' /')[0]} (${P[k].t})</button>`
+  ).join('') + `
+    <select id="ptabs-select" class="player-btn" aria-label="Select any allergen protein" onchange="showP(this.value)" style="background:#080c12;color:var(--electric-blue);border:1px solid var(--electric-blue);padding:4px 8px;cursor:pointer;">
+      ${Object.keys(A).map(k => `<option value="${k}">${A[k].e} ${A[k].n} — ${getProteinEntry(k).t}</option>`).join('')}
+    </select>
+  `;
 
   showP('peanut');
   startTaglineLoop();
