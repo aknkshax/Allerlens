@@ -607,13 +607,109 @@ body::after {
 }
 
 /* ==========================================================================
-   5. DESKTOP WINDOW SYSTEM
+   5. DESKTOP WINDOW SYSTEM (BROWSER-STYLE CLICKABLE TABS)
    ========================================================================== */
 .main-desktop {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 0;
   position: relative;
+}
+
+/* Browser Tab Strip & Address Bar */
+.browser-tab-shell {
+  background: linear-gradient(180deg, #1b222d 0%, #10151d 100%);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) #0a0e14 var(--bevel-bright);
+  border-bottom: none;
+  padding: 8px 8px 0 8px;
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.65);
+}
+
+.browser-tab-strip {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  overflow-x: auto;
+  padding-bottom: 0;
+}
+
+.browser-tab {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 9px 18px;
+  background: linear-gradient(180deg, #1e2633 0%, #121720 100%);
+  border: 2px solid;
+  border-color: var(--bevel-bright) var(--bevel-dark) transparent var(--bevel-bright);
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  position: relative;
+  top: 2px;
+  transition: all 0.16s ease;
+}
+
+.browser-tab:hover {
+  color: #ffffff;
+  background: linear-gradient(180deg, #283346 0%, #18202c 100%);
+  border-color: var(--electric-blue) var(--bevel-dark) transparent var(--electric-blue);
+}
+
+.browser-tab.active {
+  background: linear-gradient(180deg, #162436 0%, var(--bg-panel) 100%);
+  color: var(--cyber-green);
+  border-color: var(--cyber-green) var(--bevel-bright) transparent var(--cyber-green);
+  box-shadow: 0 -3px 14px rgba(0, 255, 102, 0.25);
+  z-index: 3;
+  padding-top: 11px;
+}
+
+.browser-tab .tab-close-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  display: inline-block;
+}
+
+.browser-tab.active .tab-close-dot {
+  background: var(--cyber-green);
+  box-shadow: 0 0 8px var(--cyber-green);
+}
+
+.browser-address-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0c1017;
+  border-top: 2px solid var(--cyber-green);
+  border-bottom: 1px solid var(--bevel-dark);
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.browser-url-pill {
+  flex: 1;
+  background: #06080d;
+  border: 1px solid rgba(0, 240, 255, 0.32);
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: var(--electric-blue);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .os-window {
@@ -621,11 +717,21 @@ body::after {
   border: 2px solid;
   border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
   box-shadow: 0 8px 30px rgba(0,0,0,0.7), 0 0 20px rgba(0, 240, 255, 0.08);
-  display: flex;
+  display: none;
   flex-direction: column;
   overflow: hidden;
   position: relative;
   scroll-margin-top: 66px;
+}
+
+.os-window.active-tab-window {
+  display: flex;
+  animation: browser-tab-fade 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes browser-tab-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .os-window.minimized {
@@ -700,8 +806,6 @@ body::after {
 
 .win-content {
   padding: 20px;
-  max-height: 80vh;
-  overflow-y: auto;
 }
 
 /* Custom Scrollbars */
@@ -1028,21 +1132,27 @@ body::after {
 
 textarea#txt {
   width: 100%;
-  min-height: 120px;
-  background: #06080d;
-  border: 2px solid;
-  border-color: var(--bevel-dark) var(--bevel-bright) var(--bevel-bright) var(--bevel-dark);
+  min-height: 185px;
+  background: linear-gradient(180deg, rgba(28, 4, 44, 0.94) 0%, rgba(11, 4, 20, 0.98) 100%);
+  border: 2.5px solid #8A00C4;
+  border-radius: 6px;
   color: var(--cyber-green);
-  font: 14px/1.6 var(--font-mono);
-  padding: 12px;
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.85);
+  font: 15.5px/1.65 var(--font-mono);
+  padding: 18px 20px;
+  box-shadow:
+    0 0 0 2px rgba(138, 0, 196, 0.35),
+    0 0 26px rgba(138, 0, 196, 0.72),
+    inset 0 0 20px rgba(138, 0, 196, 0.26);
   resize: vertical;
 }
 
 textarea#txt:focus {
   outline: none;
-  border-color: var(--cyber-green);
-  box-shadow: 0 0 14px var(--cyber-green-soft), inset 0 2px 8px rgba(0,0,0,0.9);
+  border-color: #b429ff;
+  box-shadow:
+    0 0 0 3px rgba(138, 0, 196, 0.5),
+    0 0 34px rgba(138, 0, 196, 0.92),
+    inset 0 0 24px rgba(138, 0, 196, 0.32);
 }
 
 .scan-btn-row {
@@ -1942,92 +2052,102 @@ mark.n {
 }
 
 /* ==========================================================================
-   Y2K NEON UPLOAD / OPTICAL SCAN AREA
+   Y2K NEON UPLOAD / OPTICAL SCAN AREA (BRIGHT #8A00C4 ALWAYS-HIGHLIGHTED BOX)
    ========================================================================== */
 .upload-scan-zone {
   position: relative;
-  border: 2px dashed rgba(0, 240, 255, 0.45);
+  border: 2.5px solid #8A00C4;
   background:
-    radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.1), transparent 70%),
-    linear-gradient(180deg, rgba(14, 20, 32, 0.9) 0%, rgba(7, 10, 16, 0.95) 100%);
-  padding: 16px 18px;
-  margin-bottom: 16px;
-  border-radius: 4px;
+    radial-gradient(circle at 50% 0%, rgba(138, 0, 196, 0.42), rgba(138, 0, 196, 0.16) 72%),
+    linear-gradient(180deg, rgba(44, 6, 68, 0.94) 0%, rgba(18, 4, 30, 0.97) 100%);
+  padding: 24px 26px;
+  min-height: 98px;
+  margin-bottom: 18px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 18px;
   flex-wrap: wrap;
   cursor: pointer;
+  box-shadow:
+    0 0 0 2px rgba(138, 0, 196, 0.35),
+    0 0 26px rgba(138, 0, 196, 0.72),
+    inset 0 0 22px rgba(138, 0, 196, 0.28);
   transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.18s ease, background 0.22s ease;
 }
 
 .upload-scan-zone:hover,
 .upload-scan-zone.drag-over {
-  border-color: #00f0ff;
+  border-color: #b429ff;
   border-style: solid;
-  box-shadow: 0 0 22px rgba(0, 240, 255, 0.35), inset 0 0 18px rgba(0, 240, 255, 0.12);
-  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 3px rgba(138, 0, 196, 0.5),
+    0 0 34px rgba(138, 0, 196, 0.95),
+    inset 0 0 26px rgba(138, 0, 196, 0.36);
+  transform: translateY(-2px);
 }
 
 .upload-zone-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .upload-reticle-icon {
-  width: 44px;
-  height: 44px;
-  border: 1.5px solid #00f0ff;
-  background: rgba(0, 240, 255, 0.1);
+  width: 54px;
+  height: 54px;
+  border: 2px solid #8A00C4;
+  background: rgba(138, 0, 196, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+  font-size: 1.65rem;
+  box-shadow: 0 0 18px rgba(138, 0, 196, 0.8), inset 0 0 10px rgba(138, 0, 196, 0.35);
+  border-radius: 4px;
   flex-shrink: 0;
 }
 
 .upload-zone-title {
   font-family: var(--font-head);
-  font-size: 0.88rem;
+  font-size: 1.02rem;
   font-weight: 800;
-  color: #00f0ff;
+  color: #f0c4ff;
   letter-spacing: 0.06em;
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.45);
+  text-shadow: 0 0 12px #8A00C4, 0 0 22px rgba(138, 0, 196, 0.85);
 }
 
 .upload-zone-sub {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-top: 2px;
+  font-size: 0.86rem;
+  color: #d8b4eb;
+  margin-top: 4px;
 }
 
 .preset-pills-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
 }
 
 .preset-pill {
   font-family: var(--font-mono);
-  font-size: 0.76rem;
-  padding: 5px 10px;
-  background: rgba(191, 95, 255, 0.14);
-  border: 1px solid rgba(191, 95, 255, 0.55);
-  color: #e5c2ff;
+  font-size: 0.82rem;
+  padding: 7px 13px;
+  background: rgba(138, 0, 196, 0.32);
+  border: 1.5px solid #8A00C4;
+  color: #f3d4ff;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(138, 0, 196, 0.45);
   transition: all 0.18s ease;
 }
 
 .preset-pill:hover {
-  background: rgba(191, 95, 255, 0.28);
-  border-color: #bf5fff;
+  background: rgba(138, 0, 196, 0.58);
+  border-color: #c24dff;
   color: #ffffff;
-  box-shadow: 0 0 12px rgba(191, 95, 255, 0.55);
+  box-shadow: 0 0 18px rgba(138, 0, 196, 0.85);
   transform: translateY(-1px);
 }
 
@@ -2192,14 +2312,26 @@ mark.n {
 textarea#txt {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   caret-color: var(--cyber-green);
+  border: 2.5px solid #8A00C4;
+  box-shadow:
+    0 0 0 2px rgba(138, 0, 196, 0.35),
+    0 0 26px rgba(138, 0, 196, 0.72),
+    inset 0 0 20px rgba(138, 0, 196, 0.26);
 }
 textarea#txt:hover {
-  border-color: rgba(0, 240, 255, 0.55);
+  border-color: #a619e8;
+  box-shadow:
+    0 0 0 3px rgba(138, 0, 196, 0.45),
+    0 0 30px rgba(138, 0, 196, 0.85),
+    inset 0 0 22px rgba(138, 0, 196, 0.3);
 }
 textarea#txt:focus {
   outline: none;
-  border-color: var(--cyber-green);
-  box-shadow: 0 0 0 3px rgba(0,255,102,0.18), 0 0 22px rgba(0,255,102,0.28), inset 0 2px 8px rgba(0,0,0,0.9);
+  border-color: #b829ff;
+  box-shadow:
+    0 0 0 3px rgba(138, 0, 196, 0.55),
+    0 0 36px rgba(138, 0, 196, 0.95),
+    inset 0 0 24px rgba(138, 0, 196, 0.34);
 }
 
 .db-search-input {
@@ -2590,11 +2722,46 @@ table.retro-table tr:hover {
       </div>
     </aside>
 
-    <!-- Main Desktop Window Area -->
+    <!-- Main Desktop Window Area (Browser-Style Tabbed View) -->
     <main class="main-desktop">
       
+      <!-- Browser Tab Strip & Address Bar -->
+      <div class="browser-tab-shell">
+        <div class="browser-tab-strip" role="tablist" aria-label="Browser Workspace Tabs">
+          <button type="button" class="browser-tab active" role="tab" aria-selected="true" data-tab="home" onclick="switchTab('home')">
+            <span>🏠 HOME</span>
+            <span class="tab-close-dot" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="browser-tab" role="tab" aria-selected="false" data-tab="scan" onclick="switchTab('scan')">
+            <span>🔍 SCANNER</span>
+            <span class="tab-close-dot" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="browser-tab" role="tab" aria-selected="false" data-tab="database" onclick="switchTab('database')">
+            <span>📊 ALLERGEN DB</span>
+            <span class="tab-close-dot" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="browser-tab" role="tab" aria-selected="false" data-tab="protein" onclick="switchTab('protein')">
+            <span>🧬 PROTEIN LAB</span>
+            <span class="tab-close-dot" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="browser-tab" role="tab" aria-selected="false" data-tab="archives" onclick="switchTab('archives')">
+            <span>💾 ARCHIVES</span>
+            <span class="tab-close-dot" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="browser-tab" role="tab" aria-selected="false" data-tab="about" onclick="switchTab('about')">
+            <span>ℹ ABOUT</span>
+            <span class="tab-close-dot" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="browser-address-bar">
+          <span style="color:var(--cyber-green);font-weight:700;">🔒 HTTPS</span>
+          <div class="browser-url-pill" id="browser-url-display">allerlens://workspace/home-dashboard.exe</div>
+          <span style="font-size:0.72rem;color:var(--text-dim);">[TABBED_VIEW_ACTIVE]</span>
+        </div>
+      </div>
+
       <!-- WINDOW 1: HOME & HERO WINDOW -->
-      <section class="os-window" id="win-home" data-win="home">
+      <section class="os-window active-tab-window" id="win-home" data-win="home">
         <div class="win-titlebar">
           <div class="win-title"><span>🔬</span> ALLERLENS_DASHBOARD.EXE &middot; [HOME]</div>
           <div class="win-controls">
@@ -3994,11 +4161,30 @@ const WIN_TO_TAB = {
   'win-about': 'about'
 };
 
+const TAB_URLS = {
+  home: 'allerlens://workspace/home-dashboard.exe',
+  scan: 'allerlens://workspace/scanner-engine.exe',
+  database: 'allerlens://workspace/allergen-registry.dat',
+  protein: 'allerlens://workspace/protein-lab-player.win',
+  archives: 'allerlens://workspace/inspection-archive.log',
+  about: 'allerlens://workspace/sources-and-limits.txt'
+};
+
 function switchTab(tabId) {
   currentActiveTab = tabId;
   playUiBlip();
   $$('.retro-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  $$('.browser-tab').forEach(b => {
+    const isAct = b.dataset.tab === tabId;
+    b.classList.toggle('active', isAct);
+    b.setAttribute('aria-selected', isAct ? 'true' : 'false');
+  });
   $$('.taskbar-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+
+  const urlDisplay = $('browser-url-display');
+  if (urlDisplay && TAB_URLS[tabId]) {
+    urlDisplay.textContent = TAB_URLS[tabId];
+  }
   
   const winMap = {
     home: 'win-home',
@@ -4011,15 +4197,33 @@ function switchTab(tabId) {
   
   const winId = winMap[tabId];
   if (winId) {
+    // Hide all tab windows, then show only the active tab window (browser-style tab switching)
+    $$('.os-window').forEach(w => {
+      w.classList.remove('active-tab-window');
+    });
     const el = $(winId);
     if (el) {
       el.classList.remove('minimized');
+      el.classList.add('active-tab-window');
       el.classList.remove('sr-hidden');
       el.classList.add('sr-visible');
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.querySelectorAll('.sr-hidden').forEach(child => {
+        child.classList.replace('sr-hidden', 'sr-visible');
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       el.classList.add('nav-focus-pulse');
-      setTimeout(() => el.classList.remove('nav-focus-pulse'), 900);
+      setTimeout(() => el.classList.remove('nav-focus-pulse'), 700);
     }
+  }
+
+  // Ensure 3D molecule canvas resizes properly when Protein Lab tab becomes visible
+  if (tabId === 'protein') {
+    requestAnimationFrame(() => {
+      if (moleculeCanvas) {
+        moleculeCanvas.width = moleculeCanvas.offsetWidth || 640;
+        moleculeCanvas.height = moleculeCanvas.offsetHeight || 300;
+      }
+    });
   }
   
   if (window.innerWidth < 900) {
@@ -4028,10 +4232,9 @@ function switchTab(tabId) {
 }
 
 function minimizeWindow(winId) {
-  const el = $(winId);
-  if (!el) return;
-  el.classList.add('minimized');
-  updateTaskbar();
+  if (winId !== 'win-home') {
+    switchTab('home');
+  }
 }
 
 function maximizeWindow(winId) {
@@ -4041,10 +4244,9 @@ function maximizeWindow(winId) {
 }
 
 function closeWindow(winId) {
-  const el = $(winId);
-  if (!el) return;
-  el.classList.add('minimized');
-  updateTaskbar();
+  if (winId !== 'win-home') {
+    switchTab('home');
+  }
 }
 
 function restoreWindow(winId) {
@@ -5608,7 +5810,7 @@ function initScrollReveal() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) return;
 
-  const targets = document.querySelectorAll('.os-window, .winamp-player, .retro-table-wrap, .db-filter-row, .hero-tagline-wrap, .food-matrix-row, .scan-result-card, .upload-scan-zone');
+  const targets = document.querySelectorAll('#win-home .hero-tagline-wrap, #win-home .food-matrix-row');
   targets.forEach(el => {
     if (!el.classList.contains('sr-hidden')) el.classList.add('sr-hidden');
   });
