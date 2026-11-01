@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.25, maximum-scale=5.0, user-scalable=yes">
 <title>AllerLens – Clinical Allergen &amp; Molecular Protein Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2580,6 +2580,13 @@ table.retro-table tr:hover {
   --text-dim: #415e78;
 }
 
+html,
+body {
+  touch-action: pan-x pan-y pinch-zoom !important;
+  overflow-x: auto !important;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background-color: #c2d2e1 !important;
   background-image:
@@ -2608,7 +2615,30 @@ body::after {
   box-shadow:
     0 18px 50px rgba(6, 35, 60, 0.28),
     0 0 0 1px #ffffff inset !important;
-  overflow: hidden !important;
+  overflow: visible !important;
+  touch-action: pan-x pan-y pinch-zoom !important;
+}
+
+@media (max-width: 900px) {
+  .app-container {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  .retro-header {
+    position: relative !important;
+  }
+  .retro-taskbar {
+    position: relative !important;
+  }
+  .brand-wrap,
+  .nav-extras {
+    padding: 12px 14px !important;
+  }
+  .main-desktop {
+    padding: 12px !important;
+  }
 }
 
 /* Two-Tier XS Engineering Header:
@@ -4166,6 +4196,9 @@ mark.n {
                 <button class="player-btn" onclick="prevProtein()" title="Previous Protein">|&lt;&lt;</button>
                 <button class="player-btn" id="play-pause-btn" onclick="toggleMoleculePlay()" title="Play / Pause">⏸ PAUSE</button>
                 <button class="player-btn" onclick="nextProtein()" title="Next Protein">&gt;&gt;|</button>
+                <button class="player-btn" type="button" onclick="zoomMolecule(-0.2)" title="Zoom Out 3D">🔍−</button>
+                <button class="player-btn" type="button" id="mol-zoom-val" onclick="resetMoleculeZoom()" title="Reset 3D Zoom">100%</button>
+                <button class="player-btn" type="button" onclick="zoomMolecule(0.2)" title="Zoom In 3D">🔍+</button>
               </div>
 
               <div class="slider-wrap">
@@ -6381,10 +6414,23 @@ let moleculePlaying = true;
 let moleculeSpeed = 1.0;
 let molAngleX = 0.28;
 let molAngleY = -0.45;
+let molZoom = 1.0;
 let molDragging = false;
 let molLastX = 0;
 let molLastY = 0;
 let molBreathPhase = 0;
+
+function zoomMolecule(delta) {
+  molZoom = Math.max(0.5, Math.min(2.6, +(molZoom + delta).toFixed(2)));
+  const el = $('mol-zoom-val');
+  if (el) el.textContent = Math.round(molZoom * 100) + '%';
+}
+
+function resetMoleculeZoom() {
+  molZoom = 1.0;
+  const el = $('mol-zoom-val');
+  if (el) el.textContent = '100%';
+}
 
 function initMoleculeEngine() {
   moleculeCanvas = $('molecule-canvas');
@@ -6426,6 +6472,8 @@ function initMoleculeEngine() {
       molDragging = true;
       molLastX = e.touches[0].clientX;
       molLastY = e.touches[0].clientY;
+    } else {
+      molDragging = false;
     }
   }, { passive: true });
   moleculeCanvas.addEventListener('touchmove', e => {
@@ -6449,7 +6497,7 @@ function initMoleculeEngine() {
     const y2 = y * cosX - z1 * sinX;
     const z2 = z1 * cosX + y * sinX;
     const fov = 290;
-    const scale = fov / Math.max(80, fov + z2);
+    const scale = (fov / Math.max(80, fov + z2)) * molZoom;
     return { px: cx + x1 * scale, py: cy + y2 * scale, pz: z2, scale };
   }
 
