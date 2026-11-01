@@ -3,57 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AllerLens – Cybernetic Allergen &amp; Protein OS (v2.4)</title>
+<title>AllerLens – Clinical Allergen &amp; Molecular Protein Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Press+Start+2P&family=Share+Tech+Mono&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&family=Silkscreen:wght@400;700&family=Sora:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
 <style>
 /* ==========================================================================
-   1. CSS VARIABLES & CYBER-SKEUOMORPHIC THEME (WINDOWS 2000 / WINAMP / Y2K)
+   1. CSS VARIABLES & PROFESSIONAL BIO-INFORMATICS SUITE THEME
    ========================================================================== */
 :root {
-  --bg-obsidian: #0d0d12;
-  --bg-panel: #13141c;
-  --bg-panel-inset: #08090d;
-  --bg-panel-light: #1c1e29;
+  --bg-obsidian: #0b0e17;
+  --bg-panel: #111624;
+  --bg-panel-inset: #080b13;
+  --bg-panel-light: #192134;
   
-  --cyber-green: #00ff66;
-  --cyber-green-dim: #00b347;
-  --cyber-green-glow: rgba(0, 255, 102, 0.45);
-  --cyber-green-soft: rgba(0, 255, 102, 0.12);
+  --cyber-green: #00e676;
+  --cyber-green-dim: #00b359;
+  --cyber-green-glow: rgba(0, 230, 118, 0.38);
+  --cyber-green-soft: rgba(0, 230, 118, 0.12);
   
-  --electric-blue: #00f0ff;
-  --electric-blue-dim: #009cb3;
-  --electric-blue-glow: rgba(0, 240, 255, 0.45);
-  --electric-blue-soft: rgba(0, 240, 255, 0.12);
+  --electric-blue: #00d8ff;
+  --electric-blue-dim: #0099b8;
+  --electric-blue-glow: rgba(0, 216, 255, 0.38);
+  --electric-blue-soft: rgba(0, 216, 255, 0.12);
   
-  --alert-red: #ff2a5f;
-  --alert-red-glow: rgba(255, 42, 95, 0.55);
-  --alert-amber: #ffaa00;
-  --alert-amber-glow: rgba(255, 170, 0, 0.45);
+  --alert-red: #ff2a6d;
+  --alert-red-glow: rgba(255, 42, 109, 0.45);
+  --alert-amber: #ffb300;
+  --alert-amber-glow: rgba(255, 179, 0, 0.4);
   
   --chrome-highlight: #ffffff;
-  --chrome-light: #d6e2ed;
-  --chrome-mid: #68798a;
-  --chrome-dark: #222933;
+  --chrome-light: #dce6f2;
+  --chrome-mid: #6e8094;
+  --chrome-dark: #202836;
   
-  --win-titlebar: linear-gradient(90deg, #1b3854 0%, #0c2033 60%, #163048 100%);
-  --win-titlebar-active: linear-gradient(90deg, #094770 0%, #00f0ff 45%, #05507a 100%);
-  --win-metal-grad: linear-gradient(180deg, #2c3340 0%, #1a1e27 45%, #101319 100%);
+  --win-titlebar: linear-gradient(90deg, #162a45 0%, #0f1d30 60%, #162840 100%);
+  --win-titlebar-active: linear-gradient(90deg, #0d3b66 0%, #00b4d8 50%, #09355c 100%);
+  --win-metal-grad: linear-gradient(180deg, #242c3d 0%, #161b26 48%, #0e121a 100%);
   
-  --bevel-light: #3e4856;
-  --bevel-bright: #68778c;
-  --bevel-dark: #07090d;
+  --bevel-light: #334155;
+  --bevel-bright: #475569;
+  --bevel-dark: #060911;
   
-  --text-main: #d8e6f5;
-  --text-dim: #7f95aa;
+  --text-main: #e2e8f0;
+  --text-dim: #94a3b8;
   --text-bright: #ffffff;
   
-  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
-  --font-head: 'Orbitron', 'Share Tech Mono', sans-serif;
-  --font-minecraft: 'Minecraft', 'Minecraftia', 'Silkscreen', 'Press Start 2P', monospace;
+  --font-mono: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+  --font-head: 'Space Grotesk', 'Sora', 'Plus Jakarta Sans', sans-serif;
+  --font-minecraft: 'Sora', 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
   
   box-sizing: border-box;
 }
@@ -63,28 +64,30 @@
 body {
   background-color: var(--bg-obsidian);
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(0, 255, 102, 0.08) 0%, transparent 40%),
-    linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 102, 0.04) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+    radial-gradient(circle at 12% 18%, rgba(0, 216, 255, 0.08) 0%, transparent 42%),
+    radial-gradient(circle at 88% 82%, rgba(138, 0, 196, 0.1) 0%, transparent 42%),
+    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
   color: var(--text-main);
-  font: 15px/1.5 var(--font-mono);
+  font: 15px/1.6 var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
   user-select: text;
 }
 
-/* CRT Scanline Overlay */
+/* Subtle Ambient Vignette (Replaces heavy gaming CRT scanlines) */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0px, rgba(0, 0, 0, 0.18) 1px, transparent 1px, transparent 3px);
+  background: radial-gradient(circle at 50% 35%, transparent 65%, rgba(4, 7, 14, 0.35) 100%);
   pointer-events: none;
   z-index: 99990;
-  opacity: 0.65;
+  opacity: 0.7;
 }
 
 /* Focus styles */
@@ -867,12 +870,11 @@ body::after {
 
 .scramble-tagline {
   font-family: var(--font-minecraft);
-  font-size: clamp(2.1rem, 5.8vw, 4.9rem);
-  font-weight: 700;
-  line-height: 1.18;
-  letter-spacing: 0.03em;
-  image-rendering: pixelated;
-  -webkit-font-smoothing: none;
+  font-size: clamp(2.2rem, 5.8vw, 4.7rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
   background: linear-gradient(
     90deg,
     #00f0ff 0%,
@@ -892,7 +894,7 @@ body::after {
     tagline-glitch-flicker 18s infinite;
   display: inline-block;
   position: relative;
-  filter: drop-shadow(3px 3px 0px #060911) drop-shadow(0 0 14px rgba(0, 240, 255, 0.45));
+  filter: drop-shadow(0 4px 18px rgba(0, 216, 255, 0.35));
 }
 
 .scramble-tagline::before,
@@ -1106,11 +1108,12 @@ body::after {
 
 .chip {
   font-family: var(--font-mono);
+  font-weight: 500;
   font-size: 0.88rem;
-  padding: 6px 14px;
-  background: linear-gradient(180deg, #222a36 0%, #11161d 100%);
-  border: 2px solid;
-  border-color: var(--bevel-bright) var(--bevel-dark) var(--bevel-dark) var(--bevel-bright);
+  padding: 7px 15px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #1e2636 0%, #111622 100%);
+  border: 1.5px solid var(--bevel-light);
   color: var(--text-main);
   cursor: pointer;
   transition: all 0.15s ease;
@@ -1457,11 +1460,12 @@ mark.n {
 .molecule-hud {
   position: absolute;
   top: 8px; left: 10px;
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
   font-size: 0.76rem;
   color: var(--electric-blue);
   background: rgba(4, 8, 14, 0.85);
   padding: 4px 10px;
+  border-radius: 4px;
   border: 1px solid rgba(0, 240, 255, 0.35);
   pointer-events: none;
   z-index: 2;
@@ -1608,8 +1612,9 @@ mark.n {
 .bead {
   width: 26px;
   height: 26px;
+  border-radius: 3px;
   border: 1.5px solid var(--bevel-light);
-  font: 700 0.7rem/23px var(--font-mono);
+  font: 700 0.72rem/23px var(--font-code);
   text-align: center;
   background: #111620;
   color: var(--text-dim);
@@ -2556,6 +2561,1183 @@ table.retro-table tr:hover {
     display: none !important;
   }
 }
+/* ==========================================================================
+   XS ENGINEERING / 2ADVANCED METALLIC SILVER + OCEAN-BLUE & EMERALD-GREEN THEME
+   ========================================================================== */
+:root {
+  --bg-void: #c5d4e2;
+  --bg-panel: #e6eff7;
+  --bg-window: #dce7f2;
+  --bg-inset: #f3f8fc;
+  --cyber-green: #047857;
+  --electric-blue: #075985;
+  --alert-amber: #b45309;
+  --danger-red: #be123c;
+  --neon-magenta: #0d9488;
+  --neon-purple: #0284c7;
+  --text-bright: #072238;
+  --text-main: #12304a;
+  --text-dim: #415e78;
+}
+
+body {
+  background-color: #c2d2e1 !important;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(8, 58, 94, 0.035) 0px, rgba(8, 58, 94, 0.035) 1px, transparent 1px, transparent 3px),
+    radial-gradient(circle at 50% 0%, #e8f2fa 0%, #c6d6e6 55%, #aebfd0 100%) !important;
+  color: #102a42 !important;
+}
+
+/* Remove dark CRT scanlines for crisp corporate metallic finish */
+body::after {
+  background: none !important;
+  display: none !important;
+}
+
+#bg-canvas {
+  opacity: 0.35 !important;
+}
+
+/* Framed XS Engineering Corporate Portal Container */
+.app-container {
+  max-width: 1380px !important;
+  margin: 14px auto !important;
+  background: #d8e4ef !important;
+  border: 2px solid #587591 !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 18px 50px rgba(6, 35, 60, 0.28),
+    0 0 0 1px #ffffff inset !important;
+  overflow: hidden !important;
+}
+
+/* Two-Tier XS Engineering Header:
+   Tier 1: Glossy Ocean-Blue & Emerald-Green Architectural Banner
+   Tier 2: Brushed Silver-Aluminum Navigation Bar */
+.retro-header {
+  background: transparent !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+  box-shadow: 0 3px 10px rgba(7, 42, 71, 0.18) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+}
+
+.retro-nav-inner {
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  grid-template-rows: auto auto !important;
+  gap: 0 !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Top Tier Left & Right: Deep Ocean-Blue to Emerald-Green Glossy Banner */
+.brand-wrap {
+  grid-column: 1 / 2 !important;
+  grid-row: 1 / 2 !important;
+  padding: 18px 24px !important;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 28px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 18px),
+    linear-gradient(125deg, #062b49 0%, #095280 42%, #087a62 82%, #199a7e 100%) !important;
+  border-bottom: 2px solid #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+.nav-extras {
+  grid-column: 2 / 3 !important;
+  grid-row: 1 / 2 !important;
+  padding: 18px 24px !important;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 28px),
+    linear-gradient(125deg, #087a62 0%, #0b8f72 45%, #55c3b5 100%) !important;
+  border-bottom: 2px solid #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+}
+
+/* Chrome-Silver & Ice-White Header Wordmark inside the Blue-Green Banner — ORBITRON FONT (same as original AllerLens website) */
+.wordmark,
+.wordmark-text,
+.header-wordmark .wordmark-text,
+.hero-wordmark .wordmark-text {
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  image-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+.wordmark-glitch::before,
+.wordmark-glitch::after {
+  display: none !important;
+  content: none !important;
+}
+
+.header-wordmark .wordmark-text {
+  color: #ffffff !important;
+  background: linear-gradient(180deg, #ffffff 0%, #d8f3fa 55%, #8fd9ca 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: none !important;
+  font-size: clamp(1.25rem, 3.5vw, 1.7rem) !important;
+}
+
+.logo-badge {
+  background: linear-gradient(180deg, #10b981 0%, #047857 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #a7f3d0 !important;
+  padding: 3px 9px !important;
+  border-radius: 4px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+}
+
+.retro-clock {
+  background: linear-gradient(180deg, #062842 0%, #044338 100%) !important;
+  color: #7ef7d4 !important;
+  border: 1.5px solid #99e6d8 !important;
+  border-radius: 999px !important;
+  padding: 5px 14px !important;
+  font-weight: 600 !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Bottom Tier of Header: Brushed Silver-Aluminum Navigation Bar */
+.retro-tabs {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 / 3 !important;
+  background: linear-gradient(180deg, #f3f7fb 0%, #d9e4ee 48%, #bcccd9 100%) !important;
+  border-top: 1px solid #ffffff !important;
+  border-bottom: 2px solid #6b859e !important;
+  padding: 6px 20px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 5px rgba(8, 38, 64, 0.12) !important;
+}
+
+.retro-tab {
+  background: linear-gradient(180deg, #f8fbfd 0%, #dfe8f0 52%, #c7d5e2 100%) !important;
+  color: #0b2e4a !important;
+  border: 1px solid #7f97ae !important;
+  border-radius: 4px !important;
+  padding: 6px 14px !important;
+  font-weight: 700 !important;
+  font-size: 0.78rem !important;
+  text-shadow: 0 1px 0 #ffffff !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(9, 40, 68, 0.12) !important;
+  transition: all 0.16s ease !important;
+}
+
+.retro-tab:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #d4ebf7 55%, #b3dced 100%) !important;
+  color: #064e78 !important;
+  border-color: #0284c7 !important;
+}
+
+.retro-tab.active {
+  background: linear-gradient(135deg, #074f7c 0%, #0a6e8a 52%, #078466 100%) !important;
+  color: #ffffff !important;
+  border-color: #053b5e !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 2px 6px rgba(7, 79, 124, 0.35) !important;
+}
+
+/* Workspace Layout: Left Steel-Blue Halftone Sidebar + Right Brushed Platinum Workspace */
+.workspace-grid {
+  background: #dce7f1 !important;
+  gap: 0 !important;
+  padding: 0 !important;
+}
+
+.sidebar-panel {
+  background:
+    repeating-linear-gradient(0deg, rgba(9, 68, 108, 0.055) 0px, rgba(9, 68, 108, 0.055) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(9, 68, 108, 0.055) 0px, rgba(9, 68, 108, 0.055) 1px, transparent 1px, transparent 4px),
+    linear-gradient(180deg, #b8cde0 0%, #cfdeeb 48%, #b3c8dc 100%) !important;
+  border-right: 2px solid #ffffff !important;
+  box-shadow: 1px 0 0 #7590aa !important;
+  padding: 16px 14px !important;
+  border-radius: 0 !important;
+}
+
+.sidebar-titlebar {
+  background: linear-gradient(115deg, #eef4f9 0%, #cfdce8 58%, #8aa3ba 59.5%, #09517d 61%, #077d62 100%) !important;
+  color: #072b47 !important;
+  border: 1px solid #7590aa !important;
+  border-radius: 8px 8px 4px 4px !important;
+  padding: 8px 12px !important;
+  font-weight: 800 !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 5px rgba(8, 42, 70, 0.14) !important;
+  margin-bottom: 14px !important;
+}
+
+.sidebar-titlebar span:last-child {
+  color: #e6fff8 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.sidebar-content {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* XS Engineering Left Sidebar Module Cards (PRODUCTS & SERVICES style) */
+.tree-group {
+  background: #dce6f0 !important;
+  border: 1.5px solid #738fa8 !important;
+  border-radius: 10px 10px 6px 6px !important;
+  box-shadow: 0 5px 14px rgba(7, 40, 68, 0.15), inset 0 1px 0 #ffffff !important;
+  margin-bottom: 14px !important;
+  overflow: hidden !important;
+}
+
+.tree-head {
+  background: linear-gradient(115deg, #f0f6fa 0%, #d2dfe9 58%, #8ca4ba 59.2%, #084f7a 60.5%, #077d62 86%, #0ea57f 100%) !important;
+  color: #072b47 !important;
+  padding: 8px 12px !important;
+  font-weight: 800 !important;
+  font-size: 0.76rem !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 1.5px solid #738fa8 !important;
+  box-shadow: inset 0 1px 0 #ffffff !important;
+}
+
+.tree-head .tree-indicator {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.tree-items {
+  background: #dce6f0 !important;
+  padding: 4px !important;
+}
+
+.tree-item {
+  background: linear-gradient(90deg, #d3e0ec 0%, #e7f0f7 100%) !important;
+  color: #0b2b45 !important;
+  font-weight: 700 !important;
+  font-size: 0.77rem !important;
+  padding: 7px 10px !important;
+  margin-bottom: 2px !important;
+  border-top: 1px solid #ffffff !important;
+  border-bottom: 1px solid #b3c5d6 !important;
+  border-left: 7px solid #084f7a !important;
+  border-radius: 2px !important;
+  transition: all 0.15s ease !important;
+}
+
+.tree-item:nth-child(even) {
+  background: linear-gradient(90deg, #dde8f2 0%, #eef5fa 100%) !important;
+  border-left-color: #077a60 !important;
+}
+
+.tree-item:hover {
+  background: linear-gradient(90deg, #bce3f0 0%, #dcf4ec 100%) !important;
+  color: #043959 !important;
+  border-left: 9px solid #00a878 !important;
+  padding-left: 12px !important;
+}
+
+/* Main Desktop Workspace Column */
+.main-desktop {
+  background:
+    radial-gradient(circle at 90% 8%, rgba(14, 165, 127, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 10% 20%, rgba(8, 86, 133, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #dbe6f0 0%, #edf3f8 35%, #dde8f2 100%) !important;
+  padding: 18px 22px !important;
+}
+
+/* Browser Tab Strip & Address Bar in Brushed Silver + Ocean-Blue/Emerald-Green */
+.browser-tab-shell {
+  background: linear-gradient(180deg, #eef4f9 0%, #d4e1ec 100%) !important;
+  border: 1.5px solid #7b95ae !important;
+  border-radius: 10px 10px 6px 6px !important;
+  box-shadow: 0 5px 16px rgba(7, 40, 68, 0.14), inset 0 1px 0 #ffffff !important;
+  margin-bottom: 16px !important;
+}
+
+.browser-tab-strip {
+  background: linear-gradient(180deg, #dde8f2 0%, #c6d5e3 100%) !important;
+  border-bottom: 1px solid #7b95ae !important;
+  padding: 8px 10px 0 10px !important;
+}
+
+.browser-tab {
+  background: linear-gradient(180deg, #ebf2f8 0%, #cfdce8 100%) !important;
+  color: #214361 !important;
+  border: 1px solid #7f99b2 !important;
+  border-bottom: none !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 0 #ffffff !important;
+  box-shadow: inset 0 1px 0 #ffffff !important;
+}
+
+.browser-tab:hover {
+  background: linear-gradient(180deg, #f7fbfe 0%, #d9ecf7 100%) !important;
+  color: #074f7c !important;
+}
+
+.browser-tab.active {
+  background: linear-gradient(135deg, #075280 0%, #09738a 52%, #078768 100%) !important;
+  color: #ffffff !important;
+  border-color: #053e63 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 -2px 10px rgba(7, 82, 128, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+.browser-tab.active .tab-close-dot {
+  background: #5eead4 !important;
+  box-shadow: 0 0 6px #5eead4 !important;
+}
+
+.browser-address-bar {
+  background: linear-gradient(180deg, #f4f8fb 0%, #e1ebf3 100%) !important;
+  border-top: 1px solid #ffffff !important;
+  padding: 7px 14px !important;
+  color: #0d3656 !important;
+}
+
+.browser-url-pill {
+  background: #ffffff !important;
+  border: 1px solid #8ea7be !important;
+  color: #075985 !important;
+  font-weight: 600 !important;
+  box-shadow: inset 0 1px 3px rgba(8, 42, 71, 0.1) !important;
+}
+
+/* Main Content Window Cards (WELCOME TO XS ENGINEERING / XS NEWS style) */
+.os-window {
+  background: linear-gradient(180deg, #eef4f9 0%, #d5e2ee 100%) !important;
+  border: 1.5px solid #7893ad !important;
+  border-radius: 12px !important;
+  box-shadow:
+    0 10px 28px rgba(7, 40, 68, 0.16),
+    inset 0 1px 0 #ffffff !important;
+  overflow: hidden !important;
+  margin-bottom: 18px !important;
+}
+
+/* Signature XS Two-Tone Diagonal Window Titlebar:
+   Left Brushed Silver-Platinum -> Right Glossy Ocean-Blue & Emerald-Green Cap */
+.win-titlebar {
+  background: linear-gradient(112deg, #d8e4ef 0%, #f1f6fa 58%, #8ea7be 59.2%, #084f7c 60.5%, #077b61 84%, #0ca67e 100%) !important;
+  border-bottom: 1.5px solid #7590aa !important;
+  padding: 10px 16px !important;
+  box-shadow: inset 0 1px 0 #ffffff !important;
+}
+
+.win-title {
+  color: #072b47 !important;
+  font-weight: 800 !important;
+  font-size: 0.86rem !important;
+  letter-spacing: 0.05em !important;
+  text-shadow: 0 1px 0 #ffffff !important;
+}
+
+.win-btn {
+  background: linear-gradient(180deg, #f8fbfd 0%, #cfdce8 100%) !important;
+  color: #083354 !important;
+  border: 1px solid #55728d !important;
+  border-radius: 4px !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+}
+
+.win-btn:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #bae6fd 100%) !important;
+  color: #0369a1 !important;
+}
+
+.win-btn.close:hover {
+  background: linear-gradient(180deg, #10b981 0%, #047857 100%) !important;
+  color: #ffffff !important;
+  border-color: #064e3b !important;
+}
+
+/* Inset Platinum-Ice Window Content Well */
+.win-content {
+  margin: 10px !important;
+  background: linear-gradient(180deg, #e7f0f8 0%, #f5f9fc 45%, #eaf2f9 100%) !important;
+  border: 1px solid #9ab1c6 !important;
+  border-radius: 8px !important;
+  padding: 22px !important;
+  color: #102a42 !important;
+  box-shadow:
+    inset 0 1px 4px rgba(8, 42, 70, 0.07),
+    0 1px 0 #ffffff !important;
+}
+
+/* Home Hero Showcase Panel */
+.hero-tagline-wrap {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.14) 0%, transparent 48%),
+    radial-gradient(circle at 15% 80%, rgba(2, 132, 199, 0.14) 0%, transparent 52%),
+    linear-gradient(180deg, #dce9f5 0%, #eef5fb 55%, #dfeaf4 100%) !important;
+  border: 1.5px solid #8ba5bd !important;
+  border-radius: 10px !important;
+  padding: 28px 24px !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 4px 14px rgba(7, 42, 71, 0.1) !important;
+}
+
+.hero-sys-badge {
+  background: linear-gradient(90deg, #075280 0%, #077d62 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #38bdf8 !important;
+  border-radius: 999px !important;
+  padding: 5px 16px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(7, 82, 128, 0.25) !important;
+}
+
+.hero-wordmark {
+  filter: none !important;
+}
+
+.hero-wordmark .wordmark-text {
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(2.6rem, 7.5vw, 4.8rem) !important;
+  letter-spacing: 0.08em !important;
+  image-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  background: linear-gradient(180deg, #06395e 0%, #09698a 52%, #058566 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: none !important;
+}
+
+/* "Decode the label. Meet the protein." subheading back to original AllerLens Formal font */
+.scramble-tagline,
+#dynamic-tagline,
+#tagline-text-span {
+  font-family: 'Sora', 'Space Grotesk', 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  background: linear-gradient(90deg, #064e78 0%, #047857 32%, #0284c7 66%, #059669 100%) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.scramble-tagline::before,
+.scramble-tagline::after {
+  display: none !important;
+  content: none !important;
+}
+
+.tagline-subtext {
+  color: #1e3a54 !important;
+  font-weight: 500 !important;
+}
+
+/* Section Titles & Inset Boxes */
+.section-title {
+  color: #073b61 !important;
+  border-bottom: 2px solid #8ba5bd !important;
+  padding-bottom: 6px !important;
+  text-shadow: 0 1px 0 #ffffff !important;
+}
+
+.bevel-inset,
+.pep-communicator,
+.beads-box,
+.scan-result-card,
+.why-card {
+  background: linear-gradient(180deg, #eef4f9 0%, #e1ebf4 100%) !important;
+  border: 1.5px solid #8da7bf !important;
+  border-radius: 8px !important;
+  color: #102a42 !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 3px 8px rgba(7, 42, 71, 0.08) !important;
+}
+
+.pep-header {
+  color: #047857 !important;
+  font-weight: 800 !important;
+}
+
+.pep-msg {
+  color: #12304a !important;
+}
+
+/* Remove ALL shadows from Allergen Emojis (.food, .chip, .pep-avatar) */
+.food,
+.food:hover,
+.food[aria-pressed="true"],
+.food::after,
+.food:hover::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+.food {
+  background: #f2f7fc !important;
+  border: 1.5px solid #8ea7be !important;
+  animation: float-bob 3.5s ease-in-out infinite !important;
+}
+
+.food:hover {
+  background: #e0f2fe !important;
+  border-color: #0284c7 !important;
+}
+
+.food[aria-pressed="true"] {
+  background: #d1fae5 !important;
+  border: 2px solid #059669 !important;
+  animation: float-bob 3.5s ease-in-out infinite !important;
+}
+
+.food::after,
+.food:hover::after {
+  display: none !important;
+  border: none !important;
+}
+
+.pep-avatar {
+  filter: none !important;
+  text-shadow: none !important;
+  animation: none !important;
+}
+
+/* Allergen Chips & Profile Pills (No shadow on emojis/text) */
+.food-chip,
+.chip {
+  background: linear-gradient(180deg, #f7fafd 0%, #dce7f1 100%) !important;
+  color: #0d324f !important;
+  border: 1.5px solid #7f9ab3 !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  animation: none !important;
+}
+
+.food-chip:hover,
+.chip:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #cbe6f6 100%) !important;
+  border-color: #0284c7 !important;
+  color: #064e78 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.food-chip.on,
+.chip[aria-pressed="true"] {
+  background: linear-gradient(135deg, #075985 0%, #087f63 55%, #059669 100%) !important;
+  color: #ffffff !important;
+  border-color: #044363 !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+/* Primary & Secondary Action Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #075985 0%, #087f63 52%, #10b981 100%) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #043e5e !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 4px 14px rgba(7, 89, 133, 0.32) !important;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #059669 52%, #34d399 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 6px 18px rgba(5, 150, 105, 0.42) !important;
+}
+
+.btn-secondary,
+.preset-pill {
+  background: linear-gradient(180deg, #f8fbfd 0%, #d8e5f0 100%) !important;
+  color: #0a3454 !important;
+  border: 1.5px solid #7591ab !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 0 #ffffff !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 4px rgba(7, 42, 71, 0.1) !important;
+}
+
+.btn-secondary:hover,
+.preset-pill:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #c6e6f7 100%) !important;
+  border-color: #0284c7 !important;
+  color: #064e78 !important;
+}
+
+/* PERMANENTLY HIGHLIGHTED UPLOAD / SCAN BOX & INGREDIENT TEXTAREA IN GREEN & BLUE */
+.upload-scan-zone {
+  border: 2.5px solid #0284c7 !important;
+  border-style: solid !important;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.14) 0%, rgba(16, 185, 129, 0.14) 55%, #f0f8ff 100%) !important;
+  box-shadow:
+    0 0 0 3px rgba(2, 132, 199, 0.2),
+    0 8px 24px rgba(7, 89, 133, 0.18),
+    inset 0 0 20px rgba(16, 185, 129, 0.12) !important;
+  padding: 20px 24px !important;
+  min-height: 98px !important;
+  border-radius: 10px !important;
+}
+
+.upload-scan-zone:hover,
+.upload-scan-zone.drag-over {
+  border-color: #059669 !important;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.2) 0%, rgba(16, 185, 129, 0.22) 55%, #ffffff 100%) !important;
+  box-shadow:
+    0 0 0 4px rgba(16, 185, 129, 0.28),
+    0 10px 28px rgba(7, 89, 133, 0.25),
+    inset 0 0 24px rgba(2, 132, 199, 0.15) !important;
+}
+
+.upload-reticle-icon {
+  background: linear-gradient(135deg, #075985 0%, #059669 100%) !important;
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(7, 89, 133, 0.35) !important;
+}
+
+.upload-zone-title {
+  color: #06395e !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 0 #ffffff !important;
+}
+
+.upload-zone-sub {
+  color: #046c4e !important;
+  font-weight: 600 !important;
+}
+
+textarea#txt {
+  min-height: 185px !important;
+  padding: 16px 18px !important;
+  font-size: 1.02rem !important;
+  background: linear-gradient(180deg, #ffffff 0%, #eef7fc 100%) !important;
+  color: #072238 !important;
+  border: 2.5px solid #0284c7 !important;
+  border-style: solid !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 0 0 3px rgba(16, 185, 129, 0.22),
+    0 8px 24px rgba(7, 89, 133, 0.16),
+    inset 0 2px 6px rgba(7, 42, 71, 0.06) !important;
+}
+
+textarea#txt:focus {
+  outline: none !important;
+  border-color: #059669 !important;
+  box-shadow:
+    0 0 0 4px rgba(2, 132, 199, 0.28),
+    0 10px 28px rgba(5, 150, 105, 0.22),
+    inset 0 2px 6px rgba(7, 42, 71, 0.06) !important;
+}
+
+textarea#txt::placeholder {
+  color: #4b6a84 !important;
+}
+
+/* ==========================================================================
+   WARNING / CAUTION / CLEAR SIGN AFTER SCANNING — HIGH-CONTRAST DARK TEXT
+   ========================================================================== */
+.verdict {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  animation: none !important;
+  text-shadow: none !important;
+}
+
+.verdict.v-r,
+.v-r {
+  background: #fee2e2 !important;
+  border: 2px solid #dc2626 !important;
+  color: #450a0a !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.verdict.v-r b,
+.v-r b {
+  color: #7f1d1d !important;
+  text-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+.verdict.v-a,
+.v-a {
+  background: #fef3c7 !important;
+  border: 2px solid #d97706 !important;
+  color: #451a03 !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.verdict.v-a b,
+.v-a b {
+  color: #78350f !important;
+  text-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+.verdict.v-g,
+.v-g {
+  background: #d1fae5 !important;
+  border: 2px solid #059669 !important;
+  color: #022c22 !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+.verdict.v-g b,
+.v-g b {
+  color: #064e3b !important;
+  text-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+.scan-badges-bar {
+  background: #f0f6fc !important;
+  border: 1.5px solid #9ab2c8 !important;
+  border-radius: 6px !important;
+}
+
+/* Decoded Output Box & Highlights (Dark legible text on light background) */
+.scan-output-box {
+  background: #ffffff !important;
+  border: 1.5px solid #829db6 !important;
+  border-radius: 8px !important;
+  color: #0c263d !important;
+  box-shadow: inset 0 2px 5px rgba(7, 42, 71, 0.06) !important;
+}
+
+mark.r {
+  background: #fecaca !important;
+  color: #7f1d1d !important;
+  border: 1.5px solid #dc2626 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+mark.a {
+  background: #fde68a !important;
+  color: #78350f !important;
+  border: 1.5px solid #d97706 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+mark.n {
+  background: #dbeafe !important;
+  color: #075985 !important;
+  border: 1px dashed #0284c7 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+#tip {
+  color: #064e3b !important;
+  font-weight: 600 !important;
+}
+
+/* ==========================================================================
+   CLINICAL RISK TABS (ALLERGEN DB) & VERDICT BADGES (ARCHIVES) — NO GLOW + DARK TEXT
+   ========================================================================== */
+.badge-risk {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  border-radius: 5px !important;
+  font-weight: 800 !important;
+}
+
+.badge-risk:hover {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.badge-risk.high {
+  background: #fee2e2 !important;
+  border: 1.5px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.badge-risk.high::before {
+  color: #b91c1c !important;
+}
+
+.badge-risk.med {
+  background: #fef3c7 !important;
+  border: 1.5px solid #d97706 !important;
+  color: #78350f !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.badge-risk.med::before {
+  color: #b45309 !important;
+}
+
+.badge-risk.safe,
+.badge-risk.low {
+  background: #d1fae5 !important;
+  border: 1.5px solid #059669 !important;
+  color: #064e3b !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.badge-risk.safe::before,
+.badge-risk.low::before {
+  color: #047857 !important;
+}
+
+/* ==========================================================================
+   BIO-EXPLANATION & CROSS-REACTIVITY POPUP + INLINE CARDS + PROTEIN LAB 4 BOXES (LIGHT THEME + DARK TEXT)
+   ========================================================================== */
+.exp,
+.exp:hover,
+.y2k-modal-body .exp,
+#why .exp {
+  background: #ffffff !important;
+  border: 1.5px solid #8ea7be !important;
+  border-left: 5px solid #0284c7 !important;
+  border-radius: 8px !important;
+  color: #072238 !important;
+  box-shadow: 0 2px 6px rgba(7, 42, 71, 0.06) !important;
+}
+
+.exp.t,
+#why .exp.t {
+  border-left-color: #d97706 !important;
+}
+
+.exp h3,
+.y2k-modal-body .exp h3 {
+  color: #062238 !important;
+  font-weight: 800 !important;
+}
+
+.exp p,
+.y2k-modal-body .exp p {
+  color: #102a42 !important;
+  font-weight: 500 !important;
+}
+
+.exp p b,
+.y2k-modal-body .exp p b {
+  color: #046c4e !important;
+  font-weight: 700 !important;
+}
+
+/* 4 Readout Boxes in Protein Lab (#pbox) & Modal Readout Cells — Light Theme with Dark Text */
+.protein-readout-grid .readout-cell,
+#pbox .readout-cell,
+.y2k-modal-body .readout-cell {
+  background: #ffffff !important;
+  border: 1.5px solid #8ea7be !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  color: #072238 !important;
+  box-shadow: 0 2px 6px rgba(7, 42, 71, 0.06) !important;
+}
+
+.readout-cell span {
+  color: #35526b !important;
+  font-weight: 700 !important;
+  font-size: 0.74rem !important;
+  margin-bottom: 4px !important;
+}
+
+.readout-cell strong {
+  color: #072238 !important;
+  font-weight: 800 !important;
+}
+
+/* Known Hidden Label Aliases — Light Pill with Dark Legible Text */
+.alias-tag {
+  background: #e2eef8 !important;
+  border: 1px solid #7594b0 !important;
+  color: #072238 !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+  text-shadow: none !important;
+}
+
+/* 3D Protein Lab Deck: Brushed Silver Outer Frame + Deep Glossy Ocean-Blue & Teal 3D Viewport (like the XS-ENGINEERING right inset card) */
+.winamp-player {
+  background: linear-gradient(180deg, #e7f0f8 0%, #cfdce8 100%) !important;
+  border: 1.5px solid #7590aa !important;
+  border-radius: 10px !important;
+  padding: 14px !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 6px 18px rgba(7, 42, 71, 0.14) !important;
+}
+
+.winamp-display-screen {
+  background: linear-gradient(135deg, #05263f 0%, #084c73 55%, #066954 100%) !important;
+  border: 2px solid #ffffff !important;
+  border-radius: 8px !important;
+  color: #e2f8ff !important;
+  box-shadow: 0 4px 12px rgba(6, 38, 63, 0.25), inset 0 1px 6px rgba(0, 0, 0, 0.45) !important;
+}
+
+.winamp-lcd-header {
+  color: #7ef7d4 !important;
+}
+
+.winamp-lcd-track {
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 240, 255, 0.45) !important;
+}
+
+.eq-bar {
+  background: linear-gradient(180deg, #38bdf8 0%, #10b981 60%, #047857 100%) !important;
+}
+
+.molecule-viewer-frame {
+  background: radial-gradient(circle at 50% 42%, #0c4368 0%, #052238 68%, #031321 100%) !important;
+  border: 3px solid #ffffff !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(6, 38, 63, 0.32), 0 0 0 1px #7590aa !important;
+}
+
+.winamp-controls-row {
+  background: #e2ecf5 !important;
+  border: 1px solid #8ea7be !important;
+  border-radius: 6px !important;
+}
+
+.player-btn {
+  background: linear-gradient(180deg, #f8fbfd 0%, #d5e2ee 100%) !important;
+  color: #083354 !important;
+  border: 1px solid #7590aa !important;
+  border-radius: 5px !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 0 #ffffff !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 1px 2px rgba(7, 42, 71, 0.12) !important;
+}
+
+.player-btn:hover,
+.player-btn.active {
+  background: linear-gradient(135deg, #075985 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border-color: #043e5e !important;
+  text-shadow: none !important;
+}
+
+#ptabs-select {
+  background: #ffffff !important;
+  color: #075985 !important;
+  border: 1.5px solid #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+/* Amino Acid Beads */
+.bead {
+  background: linear-gradient(180deg, #f8fbfd 0%, #d8e5f0 100%) !important;
+  color: #12304a !important;
+  border: 1px solid #8ba5bd !important;
+}
+
+.bead.e,
+.bead.ep {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  border-color: #075985 !important;
+  box-shadow: none !important;
+}
+
+.bead.p,
+.bead.pr {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+  color: #ffffff !important;
+  border-color: #065f46 !important;
+  box-shadow: none !important;
+}
+
+/* Database & Archives Tables (XS NEWS / Corporate Data Grid style) */
+.db-search-input {
+  background: #ffffff !important;
+  color: #072238 !important;
+  border: 1.5px solid #7b95ae !important;
+  border-radius: 6px !important;
+  box-shadow: inset 0 1px 3px rgba(7, 42, 71, 0.08) !important;
+}
+
+.retro-table-wrap {
+  background: #ffffff !important;
+  border: 1.5px solid #7b95ae !important;
+  border-radius: 8px !important;
+  box-shadow: 0 3px 10px rgba(7, 42, 71, 0.08) !important;
+}
+
+.retro-table th {
+  background: linear-gradient(180deg, #08527e 0%, #063d61 100%) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #047857 !important;
+}
+
+.retro-table td {
+  background: #f6f9fc !important;
+  color: #102a42 !important;
+  border-bottom: 1px solid #d5e2ee !important;
+}
+
+.retro-table tr:nth-child(even) td {
+  background: #eaf2f8 !important;
+}
+
+.retro-table tr:hover td {
+  background: #d8eef8 !important;
+}
+
+/* About Tab: About AllerLens Intro + 4-Square Creators Grid */
+.about-intro-card {
+  background: #ffffff !important;
+  border: 1.5px solid #8ea7be !important;
+  border-left: 5px solid #0284c7 !important;
+  border-radius: 8px !important;
+  padding: 20px 22px !important;
+  margin-bottom: 22px !important;
+  color: #102a42 !important;
+  box-shadow: 0 2px 8px rgba(7, 42, 71, 0.06) !important;
+}
+
+.about-intro-card p {
+  color: #12304a !important;
+  font-size: 0.96rem !important;
+  line-height: 1.68 !important;
+  margin-bottom: 12px !important;
+}
+
+.about-intro-card p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.creators-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 16px !important;
+  margin: 12px 0 26px 0 !important;
+}
+
+@media (max-width: 720px) {
+  .creators-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.creator-card {
+  background: #ffffff !important;
+  border: 1.5px solid #8ea7be !important;
+  border-top: 4px solid #075985 !important;
+  border-radius: 10px !important;
+  padding: 18px 20px !important;
+  color: #102a42 !important;
+  box-shadow: 0 3px 10px rgba(7, 42, 71, 0.07) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.creator-card:nth-child(even) {
+  border-top-color: #059669 !important;
+}
+
+.creator-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  border-bottom: 1px solid #d5e2ee !important;
+  padding-bottom: 8px !important;
+}
+
+.creator-name {
+  font-family: var(--font-head) !important;
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: #072238 !important;
+}
+
+.creator-role {
+  display: inline-block !important;
+  font-family: var(--font-head) !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  color: #046c4e !important;
+  background: #e6f7f1 !important;
+  border: 1px solid #6ee7b7 !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+}
+
+.creator-desc {
+  color: #16324a !important;
+  font-size: 0.92rem !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+}
+
+/* Bottom Metallic Taskbar / Footer (matches XS Engineering bottom copyright bar) */
+.retro-taskbar {
+  background: linear-gradient(180deg, #f0f5fa 0%, #d4e0ec 50%, #b8c9d9 100%) !important;
+  border-top: 2px solid #ffffff !important;
+  color: #0b2e4a !important;
+  box-shadow: 0 -2px 6px rgba(7, 42, 71, 0.12) !important;
+}
+
+.btn-start {
+  background: linear-gradient(135deg, #075985 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid #043e5e !important;
+  border-radius: 4px !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+.taskbar-tab {
+  background: linear-gradient(180deg, #f8fbfd 0%, #d8e4ef 100%) !important;
+  color: #0d324f !important;
+  border: 1px solid #7f99b2 !important;
+  border-radius: 4px !important;
+  font-weight: 700 !important;
+}
+
+.taskbar-tab.active {
+  background: linear-gradient(135deg, #075985 0%, #077d62 100%) !important;
+  color: #ffffff !important;
+  border-color: #043e5e !important;
+}
+
+/* Modal Dossier Window in XS Engineering Metallic + Blue-Green */
+.y2k-modal-window {
+  background: linear-gradient(180deg, #eef4f9 0%, #d5e2ee 100%) !important;
+  border: 2px solid #587591 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 50px rgba(6, 35, 60, 0.4), inset 0 1px 0 #ffffff !important;
+}
+
+.y2k-modal-body {
+  background: linear-gradient(180deg, #f2f7fc 0%, #ffffff 100%) !important;
+  color: #072238 !important;
+  margin: 10px !important;
+  border: 1px solid #9ab1c6 !important;
+  border-radius: 8px !important;
+}
 </style>
 </head>
 <body>
@@ -2639,7 +3821,7 @@ table.retro-table tr:hover {
           </svg>
           <span class="wordmark-text wordmark-glitch" data-text="ALLERLENS">ALLERLENS</span>
         </div>
-        <span class="logo-badge">v2.4_CYBER</span>
+        <span class="logo-badge">v2.4 CLINICAL</span>
       </div>
 
       <!-- Clickable Tabs -->
@@ -2654,7 +3836,7 @@ table.retro-table tr:hover {
 
       <!-- Extras: Clock & Mobile Drawer Toggle -->
       <div class="nav-extras">
-        <div class="retro-clock" id="live-clock" title="System Clock">200X-10-30 00:00:00</div>
+        <div class="retro-clock" id="live-clock" title="System Clock">2026-11-01 00:00:00</div>
         <button class="mobile-nav-toggle" onclick="toggleSidebar()" aria-label="Toggle Sidebar Menu">☰ MENU</button>
       </div>
     </div>
@@ -2666,8 +3848,8 @@ table.retro-table tr:hover {
     <!-- Collapsible Sidebar -->
     <aside class="sidebar-panel" id="sidebar-panel">
       <div class="sidebar-titlebar">
-        <span>EXPLORER.EXE // LAB_TREE</span>
-        <span style="font-size:10px;color:var(--cyber-green);">[SYS_READY]</span>
+        <span>NAVIGATION // MODULES</span>
+        <span style="font-size:10px;color:var(--cyber-green);">[READY]</span>
       </div>
       <div class="sidebar-content">
         
@@ -2690,7 +3872,7 @@ table.retro-table tr:hover {
             <span class="tree-indicator">▼</span>
           </div>
           <div class="tree-items">
-            <div class="tree-item" onclick="switchTab('database');">Major 9 Group Records</div>
+            <div class="tree-item" onclick="switchTab('database');">Allergen Group Records</div>
             <div class="tree-item" onclick="switchTab('database'); document.getElementById('db-search').focus();">Cross-Reactivity Matrix</div>
           </div>
         </div>
@@ -2702,7 +3884,7 @@ table.retro-table tr:hover {
             <span class="tree-indicator">▼</span>
           </div>
           <div class="tree-items">
-            <div class="tree-item" onclick="switchTab('protein');">Winamp Molecule Player</div>
+            <div class="tree-item" onclick="switchTab('protein');">3D Molecule Viewer</div>
             <div class="tree-item" onclick="switchTab('protein');">Epitope Residue Beads</div>
           </div>
         </div>
@@ -2755,15 +3937,15 @@ table.retro-table tr:hover {
         </div>
         <div class="browser-address-bar">
           <span style="color:var(--cyber-green);font-weight:700;">🔒 HTTPS</span>
-          <div class="browser-url-pill" id="browser-url-display">allerlens://workspace/home-dashboard.exe</div>
-          <span style="font-size:0.72rem;color:var(--text-dim);">[TABBED_VIEW_ACTIVE]</span>
+          <div class="browser-url-pill" id="browser-url-display">https://allerlens.bio/workspace/home</div>
+          <span style="font-size:0.72rem;color:var(--text-dim);">[VERIFIED CLINICAL SUITE]</span>
         </div>
       </div>
 
       <!-- WINDOW 1: HOME & HERO WINDOW -->
       <section class="os-window active-tab-window" id="win-home" data-win="home">
         <div class="win-titlebar">
-          <div class="win-title"><span>🔬</span> ALLERLENS_DASHBOARD.EXE &middot; [HOME]</div>
+          <div class="win-title"><span>🔬</span> ALLERLENS CLINICAL DASHBOARD &middot; [HOME]</div>
           <div class="win-controls">
             <button class="win-btn" onclick="minimizeWindow('win-home')" aria-label="Minimize">_</button>
             <button class="win-btn" onclick="maximizeWindow('win-home')" aria-label="Maximize">□</button>
@@ -2773,7 +3955,7 @@ table.retro-table tr:hover {
         <div class="win-content">
           
           <div class="hero-tagline-wrap">
-            <span class="hero-sys-badge">✦ QUANTUM BIO-SPECTROSCOPY &middot; RESIDUE MAPPING v2.4 ✦</span>
+            <span class="hero-sys-badge">✦ MOLECULAR BIO-SPECTROSCOPY &middot; RESIDUE MAPPING v2.4 ✦</span>
             
             <div class="hero-wordmark-row">
               <div class="wordmark hero-wordmark" aria-label="AllerLens">
@@ -2819,7 +4001,7 @@ table.retro-table tr:hover {
           <div class="food-matrix-row">
             <div>
               <div style="font-family:var(--font-head);font-size:0.85rem;color:var(--electric-blue);margin-bottom:8px;">
-                [ FAST_SELECT: TAP ALLERGEN TO ADD/REMOVE ]
+                [ QUICK SELECT: TAP ALLERGEN TO ADD OR REMOVE ]
               </div>
               <div class="foods" id="foods"></div>
             </div>
@@ -2827,7 +4009,7 @@ table.retro-table tr:hover {
             <div class="pep-communicator">
               <span class="pep-avatar" aria-hidden="true">🧬</span>
               <div>
-                <div class="pep-header">// PEP_TRANSMISSION [SYS_ACTIVE] //</div>
+                <div class="pep-header">// MOLECULAR ASSISTANT [ACTIVE] //</div>
                 <div class="pep-msg" id="pepsay" aria-live="polite">
                   Greetings. I'm Pep the peptide. Tap any food above to adjust your personal profile, and I'll detail the molecular risks.
                 </div>
@@ -2862,7 +4044,7 @@ table.retro-table tr:hover {
       <!-- WINDOW 2: SCANNER & DECODER WINDOW -->
       <section class="os-window" id="win-scan" data-win="scan">
         <div class="win-titlebar">
-          <div class="win-title"><span>🔍</span> SCANNER_ENGINE.EXE &middot; [LABEL DECODER]</div>
+          <div class="win-title"><span>🔍</span> INGREDIENT SCANNER &amp; DECODER &middot; [LABEL ANALYSIS]</div>
           <div class="win-controls">
             <button class="win-btn" onclick="minimizeWindow('win-scan')" aria-label="Minimize">_</button>
             <button class="win-btn" onclick="maximizeWindow('win-scan')" aria-label="Maximize">□</button>
@@ -2938,10 +4120,10 @@ table.retro-table tr:hover {
         </div>
       </section>
 
-      <!-- WINDOW 3: WINAMP-STYLE PROTEIN LAB -->
+      <!-- WINDOW 3: 3D MOLECULAR PROTEIN LAB -->
       <section class="os-window" id="win-protein" data-win="protein">
         <div class="win-titlebar">
-          <div class="win-title"><span>🧬</span> PROTEIN_LAB_PLAYER.WIN &middot; [WINAMP MOLECULE EXPLORER]</div>
+          <div class="win-title"><span>🧬</span> 3D MOLECULAR STRUCTURE EXPLORER &middot; [PROTEIN LAB]</div>
           <div class="win-controls">
             <button class="win-btn" onclick="minimizeWindow('win-protein')" aria-label="Minimize">_</button>
             <button class="win-btn" onclick="maximizeWindow('win-protein')" aria-label="Maximize">□</button>
@@ -2951,14 +4133,14 @@ table.retro-table tr:hover {
         <div class="win-content">
           
           <div class="winamp-player">
-            <!-- Winamp LCD Display -->
+            <!-- Molecular Display Screen -->
             <div class="winamp-display-screen">
               <div class="winamp-lcd-header">
-                <span>WINAMP v2.000 // PROTEIN LAB</span>
-                <span id="winamp-status">PLAYING [320 KBPS &middot; 44.1kHz]</span>
+                <span>MOLECULAR SPECTROSCOPY // PROTEIN LAB</span>
+                <span id="winamp-status">ACTIVE [3D CONFORMATION &middot; 60 FPS]</span>
               </div>
               <div class="winamp-lcd-track" id="winamp-track-title">
-                TRACK 01: ARA_H_2 [PEANUT ALLERGEN STORAGE PROTEIN]
+                STRUCTURE: ARA H 2 [PEANUT ALLERGEN STORAGE PROTEIN]
               </div>
               
               <!-- Graphic Equalizer Bars -->
@@ -2978,7 +4160,7 @@ table.retro-table tr:hover {
               </div>
             </div>
 
-            <!-- Winamp Control Deck -->
+            <!-- Control Deck -->
             <div class="winamp-controls-row">
               <div class="player-btns">
                 <button class="player-btn" onclick="prevProtein()" title="Previous Protein">|&lt;&lt;</button>
@@ -3022,7 +4204,7 @@ table.retro-table tr:hover {
       <!-- WINDOW 4: ALLERGEN DATABASE -->
       <section class="os-window" id="win-database" data-win="database">
         <div class="win-titlebar">
-          <div class="win-title"><span>📊</span> ALLERGEN_REGISTRY.DAT &middot; [DATABASE TABLE]</div>
+          <div class="win-title"><span>📊</span> CLINICAL ALLERGEN REGISTRY &middot; [DATABASE TABLE]</div>
           <div class="win-controls">
             <button class="win-btn" onclick="minimizeWindow('win-database')" aria-label="Minimize">_</button>
             <button class="win-btn" onclick="maximizeWindow('win-database')" aria-label="Maximize">□</button>
@@ -3033,7 +4215,7 @@ table.retro-table tr:hover {
           
           <div class="db-filter-row">
             <input type="text" class="db-search-input" id="db-search" placeholder="Filter allergen database (e.g. casein, peanut, parvalbumin)..." oninput="filterDb(this.value)">
-            <span style="font-size:0.8rem;color:var(--text-dim);" id="db-count">Displaying 9 Major Groups</span>
+            <span style="font-size:0.8rem;color:var(--text-dim);" id="db-count">Displaying 34 Records</span>
           </div>
 
           <div class="retro-table-wrap">
@@ -3059,7 +4241,7 @@ table.retro-table tr:hover {
       <!-- WINDOW 5: ARCHIVES / SCAN LOG -->
       <section class="os-window" id="win-archives" data-win="archives">
         <div class="win-titlebar">
-          <div class="win-title"><span>💾</span> INSPECTION_ARCHIVE.LOG &middot; [SCAN HISTORY]</div>
+          <div class="win-title"><span>💾</span> INSPECTION ARCHIVE &middot; [SCAN HISTORY]</div>
           <div class="win-controls">
             <button class="win-btn" onclick="minimizeWindow('win-archives')" aria-label="Minimize">_</button>
             <button class="win-btn" onclick="maximizeWindow('win-archives')" aria-label="Maximize">□</button>
@@ -3093,7 +4275,7 @@ table.retro-table tr:hover {
       <!-- WINDOW 6: ABOUT & LIMITS -->
       <section class="os-window" id="win-about" data-win="about">
         <div class="win-titlebar">
-          <div class="win-title"><span>ℹ</span> SOURCES_AND_LIMITS.TXT &middot; [DOCUMENTATION]</div>
+          <div class="win-title"><span>ℹ</span> ABOUT ALLERLENS, CREATORS &amp; DOCUMENTATION &middot; [ABOUT]</div>
           <div class="win-controls">
             <button class="win-btn" onclick="minimizeWindow('win-about')" aria-label="Minimize">_</button>
             <button class="win-btn" onclick="maximizeWindow('win-about')" aria-label="Maximize">□</button>
@@ -3101,6 +4283,62 @@ table.retro-table tr:hover {
           </div>
         </div>
         <div class="win-content">
+          <h2 class="section-title">About AllerLens</h2>
+          <div class="about-intro-card">
+            <p>
+              AllerLens was developed by second-year Biotechnology students <strong>Keisha Taneja</strong>, <strong>Madhulekha D</strong>, <strong>Reva C</strong>, and <strong>Varsha Sriram</strong> as part of their Design Thinking and Methodology (DTM) project. Driven by their interest in immunoinformatics, the team explored real-world problems in the field and identified food allergies as an area of concern.
+            </p>
+            <p>
+              Through a consumer survey, they discovered that many people struggled to understand allergens, the proteins responsible for allergic reactions, and how to identify potential allergens hidden in packaged food ingredient lists. This inspired the creation of AllerLens, a web-based tool that brings these two aspects together by simplifying food label interpretation while connecting allergens to their underlying protein science.
+            </p>
+            <p>
+              By bridging the gap between scientific knowledge and everyday food choices, AllerLens aims to make allergen information more accessible, understandable, and transparent, helping users make more informed decisions.
+            </p>
+          </div>
+
+          <h2 class="section-title">Meet Our Team</h2>
+          <div class="creators-grid">
+            <div class="creator-card">
+              <div class="creator-header">
+                <span class="creator-name">1. Varsha Sriram</span>
+                <span class="creator-role">Literature &amp; Review Lead</span>
+              </div>
+              <p class="creator-desc">
+                Varsha leads literature research and scientific writing, managing paper reviews, and the integration of the final manuscript.
+              </p>
+            </div>
+
+            <div class="creator-card">
+              <div class="creator-header">
+                <span class="creator-name">2. Madhulekha D.</span>
+                <span class="creator-role">Immunoinformatics Lead</span>
+              </div>
+              <p class="creator-desc">
+                Madhulekha focuses on allergenic protein research, sequence and epitope data, UniProt/IEDB resources, and scientific validation of the immunoinformatics workflow.
+              </p>
+            </div>
+
+            <div class="creator-card">
+              <div class="creator-header">
+                <span class="creator-name">3. Keisha Taneja</span>
+                <span class="creator-role">Prototype/Tech Lead</span>
+              </div>
+              <p class="creator-desc">
+                Keisha leads the technical development of AllerLens, including UI/UX prototyping, OCR and input flow, database implementation, search logic, evidence display and integrated the work done by the other members in the website.
+              </p>
+            </div>
+
+            <div class="creator-card">
+              <div class="creator-header">
+                <span class="creator-name">4. Reva C.</span>
+                <span class="creator-role">Risk Communication Lead</span>
+              </div>
+              <p class="creator-desc">
+                Reva focuses on making AllerLens user-friendly and informative through risk-communication wording, user input and documentation/presentation.
+              </p>
+            </div>
+          </div>
+
           <h3 style="color:var(--cyber-green);font-family:var(--font-head);font-size:1.1rem;margin-bottom:6px;">PLANNED SOURCES &amp; ARCHIVES</h3>
           <p style="color:var(--text-dim);margin-bottom:16px;">
             UniProt Knowledgebase, Immune Epitope Database (IEDB), FSSAI, Codex Alimentarius, and FAO/WHO Allergen Guidelines.
@@ -3119,7 +4357,7 @@ table.retro-table tr:hover {
   <!-- Bottom Taskbar & Status Bar -->
   <footer class="retro-taskbar" role="region" aria-label="Desktop Taskbar">
     <div class="taskbar-left">
-      <button class="btn-start" onclick="toggleStartMenu()">⊞ START</button>
+      <button class="btn-start" onclick="toggleStartMenu()">⊞ MENU</button>
       
       <div class="taskbar-windows" id="taskbar-windows" role="navigation" aria-label="Bottom Section Tabs">
         <button type="button" class="taskbar-tab active" data-tab="home" data-for="win-home" onclick="switchTab('home')">🔬 Home</button>
@@ -3137,15 +4375,15 @@ table.retro-table tr:hover {
         <span>SCANNER ONLINE</span>
       </div>
 
-      <div class="memory-meter" title="Simulated Memory Consumption">
-        <span>MEM:</span>
+      <div class="memory-meter" title="System Buffer Load">
+        <span>LOAD:</span>
         <div class="mem-bar-bg">
           <div class="mem-bar-fill" id="mem-fill"></div>
         </div>
         <span id="mem-text">64.2 MB</span>
       </div>
 
-      <span style="font-size:0.75rem;color:var(--text-dim);">&copy; 200X ALLERLENS LABS</span>
+      <span style="font-size:0.75rem;color:var(--text-dim);">&copy; 2026 ALLERLENS BIO</span>
     </div>
   </footer>
 
@@ -3157,7 +4395,7 @@ table.retro-table tr:hover {
 <div class="y2k-modal-backdrop" id="allergen-modal" role="dialog" aria-modal="true" aria-labelledby="modal-allergen-title" aria-hidden="true" onclick="if(event.target===this)closeAllergenModal()">
   <div class="y2k-modal-window">
     <div class="win-titlebar" style="cursor:default;">
-      <div class="win-title" id="modal-allergen-title"><span>🧬</span> ALLERGEN_DOSSIER.DAT</div>
+      <div class="win-title" id="modal-allergen-title"><span>🧬</span> CLINICAL ALLERGEN DOSSIER</div>
       <div class="win-controls">
         <button type="button" class="win-btn close" id="modal-close-btn" onclick="closeAllergenModal()" aria-label="Close modal">✕</button>
       </div>
@@ -4162,12 +5400,12 @@ const WIN_TO_TAB = {
 };
 
 const TAB_URLS = {
-  home: 'allerlens://workspace/home-dashboard.exe',
-  scan: 'allerlens://workspace/scanner-engine.exe',
-  database: 'allerlens://workspace/allergen-registry.dat',
-  protein: 'allerlens://workspace/protein-lab-player.win',
-  archives: 'allerlens://workspace/inspection-archive.log',
-  about: 'allerlens://workspace/sources-and-limits.txt'
+  home: 'https://allerlens.bio/workspace/home',
+  scan: 'https://allerlens.bio/workspace/label-scanner',
+  database: 'https://allerlens.bio/workspace/allergen-registry',
+  protein: 'https://allerlens.bio/workspace/3d-protein-lab',
+  archives: 'https://allerlens.bio/workspace/inspection-archive',
+  about: 'https://allerlens.bio/workspace/clinical-documentation'
 };
 
 function switchTab(tabId) {
@@ -4419,12 +5657,12 @@ function openAllergenModal(k) {
     </div>
 
     <div class="protein-readout-grid" style="margin-bottom:14px;">
-      <div class="readout-cell"><span>3D Structural Architecture</span><strong>${esc(pEntry.fold)} (${esc(pEntry.pdb)})</strong></div>
-      <div class="readout-cell"><span>Cross-Reactivity Network</span><strong style="color:var(--cyber-green);font-size:0.86rem;">${esc(a.x)}</strong></div>
+      <div class="readout-cell"><span>3D Structural Architecture</span><strong style="color:#072238;">${esc(pEntry.fold)} (${esc(pEntry.pdb)})</strong></div>
+      <div class="readout-cell"><span>Cross-Reactivity Network</span><strong style="color:#046c4e;font-size:0.86rem;">${esc(a.x)}</strong></div>
     </div>
 
-    <div>
-      <span style="font-family:var(--font-head);font-size:0.78rem;color:var(--electric-blue);letter-spacing:0.08em;">
+    <div style="background:#ffffff;border:1.5px solid #8ea7be;border-radius:8px;padding:12px 14px;">
+      <span style="font-family:var(--font-head);font-size:0.8rem;font-weight:800;color:#072238;letter-spacing:0.06em;">
         KNOWN HIDDEN LABEL ALIASES (${a.t.length} TERMS):
       </span>
       <div class="alias-tags-wrap">
@@ -4432,7 +5670,7 @@ function openAllergenModal(k) {
       </div>
     </div>
 
-    <div style="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:12px;border-top:1px dashed rgba(0,240,255,0.25);">
+    <div style="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:12px;border-top:1px solid #9ab2c8;">
       <button type="button" class="btn-primary" onclick="closeAllergenModal();showP('${k}');switchTab('protein');">🧬 INSPECT ${esc(pEntry.t.toUpperCase())} IN 3D PROTEIN LAB</button>
       <button type="button" class="btn-secondary" onclick="closeAllergenModal()">CLOSE [ESC]</button>
     </div>
@@ -4693,10 +5931,10 @@ function showP(k) {
 
   $('pbox').innerHTML = `
     <div class="protein-readout-grid">
-      <div class="readout-cell"><span>Protein Symbol</span><strong>${p.t}</strong></div>
-      <div class="readout-cell"><span>UniProt / PDB ID</span><strong>${p.id} · PDB: ${p.pdb}</strong></div>
-      <div class="readout-cell"><span>3D Fold Architecture</span><strong style="color:var(--accent);">${p.fold} (${p.f})</strong></div>
-      <div class="readout-cell"><span>Structural & Clinical Notes</span><strong style="color:var(--text-main);font-size:0.85rem;">${p.n}</strong></div>
+      <div class="readout-cell"><span>Protein Symbol</span><strong style="color:#072238;">${p.t}</strong></div>
+      <div class="readout-cell"><span>UniProt / PDB ID</span><strong style="color:#075985;">${p.id} · PDB: ${p.pdb}</strong></div>
+      <div class="readout-cell"><span>3D Fold Architecture</span><strong style="color:#046c4e;">${p.fold} (${p.f})</strong></div>
+      <div class="readout-cell"><span>Structural & Clinical Notes</span><strong style="color:#102a42;font-size:0.86rem;font-weight:600;">${p.n}</strong></div>
     </div>
   `;
 
@@ -5359,7 +6597,7 @@ function initMoleculeEngine() {
     });
 
     // 5. Draw 3D structural domain callout labels
-    moleculeCtx.font = 'bold 10px "Share Tech Mono", monospace';
+    moleculeCtx.font = '600 10.5px "Plus Jakarta Sans", "Inter", sans-serif';
     struct.labels.forEach(lbl => {
       const pr = projectPt(lbl.x, lbl.y, lbl.z, cx, cy, cosY, sinY, cosX, sinX);
       moleculeCtx.fillStyle = 'rgba(5, 8, 12, 0.78)';
@@ -5387,7 +6625,7 @@ function toggleMoleculePlay() {
   const btn = $('play-pause-btn');
   const status = $('winamp-status');
   if (btn) btn.textContent = moleculePlaying ? '⏸ PAUSE' : '▶ PLAY';
-  if (status) status.textContent = moleculePlaying ? 'PLAYING [320 KBPS &middot; 44.1kHz]' : 'PAUSED [STANDBY]';
+  if (status) status.textContent = moleculePlaying ? 'ACTIVE [3D CONFORMATION &middot; 60 FPS]' : 'PAUSED [STANDBY]';
 }
 
 function setMoleculeSpeed(val) {
@@ -5474,9 +6712,9 @@ function sortDb(colIndex) {
    H. ARCHIVES & RECENT SCANS
    ========================================================================== */
 const DEFAULT_ARCHIVES = [
-  { time: '200X-10-30 19:42', sample: 'Crispy Chocolate Wafers', allergens: 'Milk, Soy', verdict: 'CONTAINS ALLERGEN', text: 'Wheat flour, milk powder, sugar, soy lecithin. May contain traces of peanut.' },
-  { time: '200X-10-30 17:15', sample: 'Natural Fruit Puree', allergens: 'None', verdict: 'CLEAR', text: 'Organic apples, strawberries, ascorbic acid.' },
-  { time: '200X-10-30 14:02', sample: 'Spicy Instant Ramen', allergens: 'Wheat, Shellfish', verdict: 'CONTAINS ALLERGEN', text: 'Wheat flour, palm oil, salt, dehydrated shrimp extract, MSG.' }
+  { time: '2026-10-30 19:42', sample: 'Crispy Chocolate Wafers', allergens: 'Milk, Soy', verdict: 'CONTAINS ALLERGEN', text: 'Wheat flour, milk powder, sugar, soy lecithin. May contain traces of peanut.' },
+  { time: '2026-10-30 17:15', sample: 'Natural Fruit Puree', allergens: 'None', verdict: 'CLEAR', text: 'Organic apples, strawberries, ascorbic acid.' },
+  { time: '2026-10-30 14:02', sample: 'Spicy Instant Ramen', allergens: 'Wheat, Shellfish', verdict: 'CONTAINS ALLERGEN', text: 'Wheat flour, palm oil, salt, dehydrated shrimp extract, MSG.' }
 ];
 
 function initArchives() {
@@ -5510,7 +6748,7 @@ function recordArchiveScan(rawText, verdictText) {
   try {
     let scans = JSON.parse(localStorage.getItem('al_scans')) || [...DEFAULT_ARCHIVES];
     const now = new Date();
-    const timeStr = `200X-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     const detected = hits.map(([k]) => A[k].n).join(', ') || 'None';
     const vUp = String(verdictText || '').toUpperCase();
     
@@ -5534,16 +6772,19 @@ function loadArchiveScan(text) {
 }
 
 /* ==========================================================================
-   I. LIVE CLOCK & FAKE FLUCTUATING MEMORY METER
+   I. LIVE CLOCK & SYSTEM LOAD METER
    ========================================================================== */
 function startLiveClock() {
   const clockEl = $('live-clock');
   function tick() {
     const d = new Date();
+    const yr = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const dy = String(d.getDate()).padStart(2, '0');
     const h = String(d.getHours()).padStart(2, '0');
     const m = String(d.getMinutes()).padStart(2, '0');
     const s = String(d.getSeconds()).padStart(2, '0');
-    if (clockEl) clockEl.textContent = `200X-10-30 ${h}:${m}:${s}`;
+    if (clockEl) clockEl.textContent = `${yr}-${mo}-${dy} ${h}:${m}:${s}`;
   }
   tick();
   setInterval(tick, 1000);
@@ -5621,7 +6862,7 @@ window.addEventListener('DOMContentLoaded', () => {
 (function() {
   'use strict';
 
-  const BG_PALETTE = ['#00f0ff', '#ff2a8f', '#39ff14', '#bf5fff'];
+  const BG_PALETTE = ['#0284c7', '#059669', '#0891b2', '#10b981'];
   let bgCanvas, bgCtx, bgW = 0, bgH = 0, bgDpr = 1;
   let bgRAF = null, bgPaused = false;
   let gridScroll = 0;
@@ -5702,8 +6943,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const gridSpread = w * 1.9;
 
     ctx.save();
-    // Horizon subtle neon line
-    ctx.strokeStyle = 'rgba(255, 42, 143, 0.16)';
+    // Horizon subtle emerald-green line
+    ctx.strokeStyle = 'rgba(5, 150, 105, 0.18)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, horizon);
@@ -5711,7 +6952,7 @@ window.addEventListener('DOMContentLoaded', () => {
     ctx.stroke();
 
     // Converging perspective rays
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.11)';
+    ctx.strokeStyle = 'rgba(2, 132, 199, 0.12)';
     for (let i = 0; i <= gridLines; i++) {
       const t = i / gridLines;
       const bx = -gridSpread * 0.5 + t * gridSpread;
@@ -5728,7 +6969,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const t = (i + gridScroll) / hLines;
       const y = horizon + Math.pow(t, 2.15) * (h - horizon);
       const xw = (t * gridSpread) * 0.5;
-      ctx.strokeStyle = `rgba(191, 95, 255, ${(0.04 + t * 0.1).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(4, 120, 87, ${(0.04 + t * 0.1).toFixed(3)})`;
       ctx.beginPath();
       ctx.moveTo(vp.x - xw, y);
       ctx.lineTo(vp.x + xw, y);
