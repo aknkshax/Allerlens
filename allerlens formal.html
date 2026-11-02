@@ -3768,6 +3768,713 @@ mark.n {
   border: 1px solid #9ab1c6 !important;
   border-radius: 8px !important;
 }
+
+/* ==========================================================================
+   MOBILE APP EXPERIENCE (<= 900px): DEDICATED PHONE UI ON THE SAME LINK
+   ========================================================================== */
+@media (max-width: 900px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .app-container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px)) !important;
+    min-height: 100dvh !important;
+  }
+
+  /* Compact App Top Bar */
+  .retro-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1200 !important;
+    box-shadow: 0 2px 10px rgba(6, 35, 60, 0.22) !important;
+  }
+
+  .retro-nav-inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: linear-gradient(125deg, #062b49 0%, #095280 48%, #087a62 100%) !important;
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+    padding: 10px 14px !important;
+  }
+
+  .brand-wrap {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    gap: 8px !important;
+  }
+
+  .header-wordmark .wordmark-lens-icon {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .header-wordmark .wordmark-text {
+    font-size: 1.15rem !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .logo-badge {
+    font-size: 0.62rem !important;
+    padding: 2px 6px !important;
+  }
+
+  .nav-extras {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .retro-clock {
+    display: none !important;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(180deg, #ffffff 0%, #d8eef8 100%) !important;
+    color: #06395e !important;
+    border: 1px solid #7dd3fc !important;
+    border-radius: 6px !important;
+    font-family: var(--font-head) !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    padding: 6px 11px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22) !important;
+  }
+
+  /* Hide redundant desktop top tab bar and fake browser tab strip on phone (use native bottom tab bar instead) */
+  .retro-tabs,
+  .browser-tab-shell {
+    display: none !important;
+  }
+
+  /* Slide-Over Mobile Drawer */
+  .sidebar-panel {
+    position: fixed !important;
+    top: 50px !important;
+    left: 0 !important;
+    bottom: 68px !important;
+    width: min(82vw, 300px) !important;
+    z-index: 99950 !important;
+    overflow-y: auto !important;
+    box-shadow: 8px 0 30px rgba(6, 35, 60, 0.45) !important;
+  }
+
+  /* Clean Full-Width Mobile View Area */
+  .workspace-grid {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .main-desktop {
+    padding: 10px 10px 20px 10px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Phone Card Styling for OS Windows */
+  .os-window {
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+    border-width: 1.5px !important;
+  }
+
+  .win-titlebar {
+    padding: 9px 12px !important;
+  }
+
+  .win-title {
+    font-size: 0.74rem !important;
+    letter-spacing: 0.03em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+
+  /* Hide desktop window minimize/maximize/close buttons on mobile */
+  .os-window > .win-titlebar > .win-controls {
+    display: none !important;
+  }
+
+  .win-content {
+    margin: 6px !important;
+    padding: 14px 12px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Mobile Hero Section */
+  .hero-tagline-wrap {
+    padding: 16px 14px !important;
+    margin-bottom: 14px !important;
+    text-align: center !important;
+  }
+
+  .hero-sys-badge {
+    font-size: 0.6rem !important;
+    padding: 4px 10px !important;
+    letter-spacing: 0.05em !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
+  }
+
+  .hero-wordmark {
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  .hero-wordmark .wordmark-lens-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .hero-wordmark .wordmark-text {
+    font-size: clamp(1.75rem, 8.5vw, 2.5rem) !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .scramble-tagline-container {
+    min-height: 3.4rem !important;
+    justify-content: center !important;
+    margin: 4px 0 8px 0 !important;
+  }
+
+  .scramble-tagline,
+  #dynamic-tagline,
+  #tagline-text-span {
+    font-size: clamp(1.22rem, 5.4vw, 1.65rem) !important;
+    line-height: 1.22 !important;
+    text-align: center !important;
+  }
+
+  .tagline-subtext {
+    font-size: 0.88rem !important;
+    line-height: 1.5 !important;
+    margin: 6px auto 0 auto !important;
+  }
+
+  .hero-tagline-wrap .btn-primary {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    font-size: 0.86rem !important;
+    border-radius: 8px !important;
+  }
+
+  /* Allergen Emoji Grid & Pep Assistant on Phone */
+  .food-matrix-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-top: 12px !important;
+  }
+
+  .foods {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)) !important;
+    gap: 7px !important;
+    max-height: 195px !important;
+    padding: 8px !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    border: 1px solid #9ab1c6 !important;
+    border-radius: 8px !important;
+    justify-items: center !important;
+  }
+
+  .food {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1.3rem !important;
+    animation: none !important;
+  }
+
+  .pep-communicator {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+
+  .pep-avatar {
+    font-size: 1.85rem !important;
+  }
+
+  .pep-msg {
+    font-size: 0.83rem !important;
+    line-height: 1.45 !important;
+  }
+
+  /* 2x2 Survey Stats Grid on Mobile */
+  #win-home .win-content > div[style*="grid-template-columns"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  #win-home .bevel-inset {
+    padding: 10px 8px !important;
+  }
+
+  #win-home .bevel-inset b {
+    font-size: 1.35rem !important;
+  }
+
+  #win-home .bevel-inset span {
+    font-size: 0.74rem !important;
+    line-height: 1.3 !important;
+    display: block !important;
+  }
+
+  /* Scanner View on Phone */
+  .section-title {
+    font-size: 1.02rem !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .allergen-chips-wrap {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 7px !important;
+    padding: 4px 2px 10px 2px !important;
+    margin: 6px 0 12px 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+  }
+
+  .allergen-chips-wrap .chip {
+    flex: 0 0 auto !important;
+    font-size: 0.8rem !important;
+    padding: 8px 12px !important;
+    border-radius: 999px !important;
+  }
+
+  .upload-scan-zone {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 14px !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .upload-zone-left {
+    gap: 12px !important;
+  }
+
+  .upload-reticle-icon {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1.3rem !important;
+  }
+
+  .upload-zone-title {
+    font-size: 0.86rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .upload-zone-sub {
+    font-size: 0.76rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .preset-pills-row {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .preset-pill {
+    font-size: 0.72rem !important;
+    padding: 7px 6px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  textarea#txt {
+    font-size: 16px !important; /* Prevents iOS Safari auto-zoom on input focus */
+    min-height: 125px !important;
+    padding: 12px 14px !important;
+  }
+
+  .scan-btn-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .scan-btn-row #go {
+    grid-column: 1 / -1 !important;
+    padding: 12px 16px !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important;
+  }
+
+  .scan-btn-row .btn-secondary {
+    padding: 10px 8px !important;
+    font-size: 0.78rem !important;
+    text-align: center !important;
+    border-radius: 6px !important;
+  }
+
+  .scan-result-card {
+    padding: 12px !important;
+  }
+
+  .verdict {
+    padding: 12px !important;
+    gap: 10px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .verdict .ic {
+    font-size: 1.65rem !important;
+  }
+
+  .verdict b {
+    font-size: 0.95rem !important;
+  }
+
+  .scan-output-box {
+    padding: 10px 12px !important;
+    font-size: 0.92rem !important;
+    line-height: 1.9 !important;
+  }
+
+  .exp {
+    padding: 12px !important;
+  }
+
+  .exp .btn-secondary {
+    flex: 1 1 100% !important;
+    text-align: center !important;
+    padding: 9px 10px !important;
+  }
+
+  /* 3D Protein Lab on Phone */
+  .winamp-player {
+    padding: 10px !important;
+  }
+
+  .winamp-display-screen {
+    padding: 8px 10px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .winamp-lcd-header {
+    font-size: 0.62rem !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+
+  .winamp-lcd-track {
+    font-size: 0.85rem !important;
+    white-space: normal !important;
+    line-height: 1.3 !important;
+  }
+
+  .winamp-equalizer {
+    height: 18px !important;
+  }
+
+  .molecule-viewer-frame {
+    height: 235px !important;
+    margin-bottom: 10px !important;
+    border-radius: 8px !important;
+  }
+
+  .molecule-hud {
+    font-size: 0.62rem !important;
+    padding: 3px 7px !important;
+    top: 6px !important;
+    left: 6px !important;
+    max-width: 56% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .molecule-fold-badge {
+    font-size: 0.6rem !important;
+    padding: 3px 7px !important;
+    top: 6px !important;
+    right: 6px !important;
+    max-width: 42% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .molecule-legend {
+    font-size: 0.62rem !important;
+    padding: 4px 7px !important;
+    bottom: 6px !important;
+    left: 6px !important;
+    right: 6px !important;
+    gap: 4px !important;
+  }
+
+  .winamp-controls-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 10px !important;
+  }
+
+  .player-btns {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 5px !important;
+    width: 100% !important;
+  }
+
+  .player-btns .player-btn {
+    padding: 8px 4px !important;
+    font-size: 0.72rem !important;
+    text-align: center !important;
+  }
+
+  .slider-wrap {
+    width: 100% !important;
+    justify-content: space-between !important;
+    font-size: 0.75rem !important;
+  }
+
+  .winamp-slider {
+    flex: 1 !important;
+  }
+
+  #ptabs {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  #ptabs button.player-btn {
+    font-size: 0.72rem !important;
+    padding: 7px 6px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  #ptabs-select {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    padding: 9px 10px !important;
+    font-size: 15px !important;
+    border-radius: 6px !important;
+  }
+
+  .protein-readout-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .protein-readout-grid .readout-cell:last-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  .bead {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.68rem !important;
+    line-height: 21px !important;
+  }
+
+  /* Mobile Card-View for Allergen DB & Archives Tables (No Horizontal Table Cutoff!) */
+  .db-filter-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+  }
+
+  .db-search-input {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 16px !important;
+    padding: 10px 12px !important;
+  }
+
+  .retro-table-wrap {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow-x: visible !important;
+  }
+
+  table.retro-table,
+  table.retro-table tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  table.retro-table thead {
+    display: none !important;
+  }
+
+  table.retro-table tr {
+    display: block !important;
+    background: #ffffff !important;
+    border: 1.5px solid #8ea7be !important;
+    border-top: 4px solid #075985 !important;
+    border-radius: 10px !important;
+    padding: 10px 12px !important;
+    margin-bottom: 10px !important;
+    box-shadow: 0 3px 9px rgba(7, 42, 71, 0.08) !important;
+  }
+
+  table.retro-table tr:nth-child(even) {
+    border-top-color: #059669 !important;
+  }
+
+  table.retro-table td {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px dashed #d5e2ee !important;
+    padding: 6px 0 !important;
+    font-size: 0.82rem !important;
+    text-align: right !important;
+    word-break: break-word !important;
+  }
+
+  table.retro-table td:last-child {
+    border-bottom: none !important;
+    padding-bottom: 2px !important;
+  }
+
+  table.retro-table td::before {
+    font-family: var(--font-head) !important;
+    font-size: 0.68rem !important;
+    font-weight: 800 !important;
+    color: #075985 !important;
+    text-transform: uppercase !important;
+    text-align: left !important;
+    flex-shrink: 0 !important;
+    max-width: 44% !important;
+  }
+
+  /* Labels for Allergen Database Mobile Cards */
+  #db-table td:nth-child(1)::before { content: "Allergen"; }
+  #db-table td:nth-child(2)::before { content: "Trigger Protein"; }
+  #db-table td:nth-child(3)::before { content: "Hidden Labels"; }
+  #db-table td:nth-child(4)::before { content: "Clinical Risk"; }
+  #db-table td:nth-child(5)::before { content: "Cross-Reactivity"; }
+
+  /* Labels for Archives Mobile Cards */
+  #win-archives table.retro-table td:nth-child(1)::before { content: "Timestamp"; }
+  #win-archives table.retro-table td:nth-child(2)::before { content: "Product"; }
+  #win-archives table.retro-table td:nth-child(3)::before { content: "Detected"; }
+  #win-archives table.retro-table td:nth-child(4)::before { content: "Verdict"; }
+  #win-archives table.retro-table td:nth-child(5)::before { content: "Action"; }
+
+  /* Fixed App-Style 6-Tab Bottom Navigation Dock on Phone */
+  .retro-taskbar {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: auto !important;
+    min-height: 62px !important;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px)) 6px !important;
+    background: linear-gradient(180deg, #f5f9fc 0%, #dbe7f2 100%) !important;
+    border-top: 2px solid #7590aa !important;
+    box-shadow: 0 -4px 18px rgba(6, 35, 60, 0.22) !important;
+    z-index: 99900 !important;
+    display: block !important;
+  }
+
+  .taskbar-left {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .btn-start,
+  .taskbar-right {
+    display: none !important;
+  }
+
+  .taskbar-windows {
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 4px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .taskbar-tab {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 5px 2px !important;
+    font-family: var(--font-head) !important;
+    font-size: 0.62rem !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    gap: 2px !important;
+  }
+
+  .taskbar-tab .tb-ico {
+    font-size: 1.08rem !important;
+    line-height: 1 !important;
+    display: block !important;
+  }
+
+  .taskbar-tab .tb-lbl {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.01em !important;
+    display: block !important;
+  }
+
+  /* Bottom Sheet Modal on Mobile */
+  .y2k-modal-backdrop {
+    padding: 10px !important;
+    align-items: flex-end !important;
+  }
+
+  .y2k-modal-window {
+    max-width: 100% !important;
+    border-radius: 14px 14px 10px 10px !important;
+    max-height: 88dvh !important;
+  }
+
+  .y2k-modal-body {
+    padding: 14px !important;
+    max-height: 75dvh !important;
+  }
+
+  #intro-skip-btn {
+    bottom: 20px !important;
+    right: 16px !important;
+    font-size: 0.72rem !important;
+    padding: 8px 14px !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -4393,12 +5100,12 @@ mark.n {
       <button class="btn-start" onclick="toggleStartMenu()">⊞ MENU</button>
       
       <div class="taskbar-windows" id="taskbar-windows" role="navigation" aria-label="Bottom Section Tabs">
-        <button type="button" class="taskbar-tab active" data-tab="home" data-for="win-home" onclick="switchTab('home')">🔬 Home</button>
-        <button type="button" class="taskbar-tab" data-tab="scan" data-for="win-scan" onclick="switchTab('scan')">🔍 Scanner</button>
-        <button type="button" class="taskbar-tab" data-tab="protein" data-for="win-protein" onclick="switchTab('protein')">🧬 Protein Lab</button>
-        <button type="button" class="taskbar-tab" data-tab="database" data-for="win-database" onclick="switchTab('database')">📊 Database</button>
-        <button type="button" class="taskbar-tab" data-tab="archives" data-for="win-archives" onclick="switchTab('archives')">💾 Archives</button>
-        <button type="button" class="taskbar-tab" data-tab="about" data-for="win-about" onclick="switchTab('about')">ℹ About</button>
+        <button type="button" class="taskbar-tab active" data-tab="home" data-for="win-home" onclick="switchTab('home')"><span class="tb-ico">🏠</span><span class="tb-lbl">Home</span></button>
+        <button type="button" class="taskbar-tab" data-tab="scan" data-for="win-scan" onclick="switchTab('scan')"><span class="tb-ico">🔍</span><span class="tb-lbl">Scanner</span></button>
+        <button type="button" class="taskbar-tab" data-tab="protein" data-for="win-protein" onclick="switchTab('protein')"><span class="tb-ico">🧬</span><span class="tb-lbl">Protein</span></button>
+        <button type="button" class="taskbar-tab" data-tab="database" data-for="win-database" onclick="switchTab('database')"><span class="tb-ico">📊</span><span class="tb-lbl">Database</span></button>
+        <button type="button" class="taskbar-tab" data-tab="archives" data-for="win-archives" onclick="switchTab('archives')"><span class="tb-ico">💾</span><span class="tb-lbl">Archives</span></button>
+        <button type="button" class="taskbar-tab" data-tab="about" data-for="win-about" onclick="switchTab('about')"><span class="tb-ico">ℹ️</span><span class="tb-lbl">About</span></button>
       </div>
     </div>
 
